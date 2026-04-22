@@ -37,7 +37,7 @@ export default function Gradescout() {
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl flex items-center justify-center"
               style={{ background: 'linear-gradient(135deg, #10B981, #059669)', boxShadow: '0 0 30px rgba(16,185,129,0.4)' }}>
-              <TrendingIcon className="w-6 h-6 text-white" />
+              <TrendingUp className="w-6 h-6 text-white" />
             </div>
             <div>
               <h1 className="text-3xl font-black malum-text-gradient">GradeScout</h1>
