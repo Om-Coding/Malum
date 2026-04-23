@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Shield, RefreshCw, Mail, Calendar, Hash, BookOpen, FileText, School, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { useTheme } from './ThemeContext';
 
 const API_ROOT = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function AdminDashboard() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const [users, setUsers] = useState([]);
   const [classes, setClasses] = useState([]);
   const [assignments, setAssignments] = useState([]);
@@ -85,13 +89,13 @@ export default function AdminDashboard() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
-        <div className="absolute w-[600px] h-[600px] rounded-full"
-          style={{ top: '-120px', right: '-120px', background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+        {isDark && <div className="absolute w-[600px] h-[600px] rounded-full"
+          style={{ top: '-120px', right: '-120px', background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)', filter: 'blur(40px)' }} />}
         
         <div className="w-full max-w-md space-y-8 relative z-10 malum-fadeInUp">
           <div className="text-center">
             <div className="w-24 h-24 rounded-[2rem] mx-auto flex items-center justify-center mb-8"
-              style={{ background: 'linear-gradient(135deg, #8B5CF6, #6366F1)', boxShadow: '0 0 50px rgba(139,92,246,0.3)' }}>
+              style={{ background: 'linear-gradient(135deg, #8B5CF6, #6366F1)', boxShadow: isDark ? '0 0 50px rgba(139,92,246,0.3)' : 'none' }}>
               <Shield className="w-12 h-12 text-white" />
             </div>
             <h1 className="text-4xl md:text-5xl font-black malum-text-gradient mb-4">Admin Security</h1>
@@ -121,7 +125,7 @@ export default function AdminDashboard() {
               type="submit"
               disabled={loading}
               className="w-full h-16 rounded-2xl font-black text-white transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, #8B5CF6, #6366F1)', boxShadow: '0 0 30px rgba(139,92,246,0.4)' }}
+              style={{ background: 'linear-gradient(135deg, #8B5CF6, #6366F1)', boxShadow: isDark ? '0 0 30px rgba(139,92,246,0.4)' : 'none' }}
             >
               {loading ? <RefreshCw className="w-6 h-6 animate-spin mx-auto" /> : 'Enter Dashboard'}
             </button>
@@ -135,12 +139,14 @@ export default function AdminDashboard() {
     <div className="min-h-screen overflow-x-hidden transition-colors duration-300" style={{ background: 'var(--bg-primary)' }}>
 
       {/* Ambient glow */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute w-[600px] h-[600px] rounded-full"
-          style={{ top: '-120px', right: '-120px', background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)', filter: 'blur(40px)' }} />
-        <div className="absolute w-[400px] h-[400px] rounded-full"
-          style={{ bottom: '80px', left: '-100px', background: 'radial-gradient(circle, rgba(255,107,0,0.05) 0%, transparent 70%)', filter: 'blur(40px)' }} />
-      </div>
+      {isDark && (
+        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+          <div className="absolute w-[600px] h-[600px] rounded-full"
+            style={{ top: '-120px', right: '-120px', background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+          <div className="absolute w-[400px] h-[400px] rounded-full"
+            style={{ bottom: '80px', left: '-100px', background: 'radial-gradient(circle, rgba(255,107,0,0.05) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+        </div>
+      )}
 
       <div className="relative z-10 max-w-6xl mx-auto p-8 md:p-14 space-y-10">
 
@@ -149,7 +155,7 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, #8B5CF6, #6366F1)', boxShadow: '0 0 30px rgba(139,92,246,0.5)' }}>
+                style={{ background: 'linear-gradient(135deg, #8B5CF6, #6366F1)', boxShadow: isDark ? '0 0 30px rgba(139,92,246,0.5)' : 'none' }}>
                 <Shield className="w-7 h-7 text-white" />
               </div>
               <div>
@@ -185,7 +191,7 @@ export default function AdminDashboard() {
               style={{
                 background: activeTab === tab.id ? tab.bg : 'var(--bg-elevated)',
                 border: `1.5px solid ${activeTab === tab.id ? tab.color + '40' : 'var(--border-color)'}`,
-                boxShadow: activeTab === tab.id ? `0 0 24px ${tab.color}20` : '0 4px 16px rgba(0,0,0,0.15)',
+                boxShadow: (isDark && activeTab === tab.id) ? `0 0 24px ${tab.color}20` : '0 4px 16px rgba(0,0,0,0.05)',
               }}
             >
               <div className="flex items-center gap-4">

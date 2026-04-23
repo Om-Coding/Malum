@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, Calendar, TrendingUp, Sparkles, Award, Users, Brain, ArrowRight, CheckCircle, Zap, Target, Clock, FileText, Bot, BarChart3, Star, Flame, Atom, GraduationCap } from 'lucide-react';
+import { useTheme } from './ThemeContext';
 
 // Floating particle component
 function Particle({ style }) {
@@ -37,6 +38,9 @@ function AnimatedCounter({ target, suffix = '', duration = 2000 }) {
 
 const MalumHomePage = () => {
   const navigate = useNavigate();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const [userName, setUserName] = useState('');
   const [hoveredFeature, setHoveredFeature] = useState(null);
 
@@ -49,8 +53,8 @@ const MalumHomePage = () => {
     }
   }, []);
 
-  // Generate particles
-  const particles = Array.from({ length: 20 }, (_, i) => ({
+  // Generate particles (only for dark mode)
+  const particles = isDark ? Array.from({ length: 20 }, (_, i) => ({
     width: `${Math.random() * 4 + 2}px`,
     height: `${Math.random() * 4 + 2}px`,
     left: `${Math.random() * 100}%`,
@@ -61,7 +65,7 @@ const MalumHomePage = () => {
       : i % 3 === 1
         ? 'rgba(139,92,246,0.6)'
         : 'rgba(59,130,246,0.5)',
-  }));
+  })) : [];
 
   const features = [
     {
@@ -70,8 +74,8 @@ const MalumHomePage = () => {
       icon: Brain,
       path: '/study',
       gradient: 'linear-gradient(135deg, #8B5CF6, #6366F1)',
-      glowColor: 'rgba(139,92,246,0.4)',
-      borderHover: 'rgba(139,92,246,0.5)',
+      glowColor: isDark ? 'rgba(139,92,246,0.4)' : 'transparent',
+      borderHover: isDark ? 'rgba(139,92,246,0.5)' : 'rgba(139,92,246,0.2)',
       highlights: ['AI document analysis', 'Topic explanations', 'Exam preparation tools'],
       badge: 'Most Popular',
       badgeColor: '#8B5CF6',
@@ -84,8 +88,8 @@ const MalumHomePage = () => {
       icon: Users,
       path: '/classroom',
       gradient: 'linear-gradient(135deg, #3B82F6, #06B6D4)',
-      glowColor: 'rgba(59,130,246,0.4)',
-      borderHover: 'rgba(59,130,246,0.5)',
+      glowColor: isDark ? 'rgba(59,130,246,0.4)' : 'transparent',
+      borderHover: isDark ? 'rgba(59,130,246,0.5)' : 'rgba(59,130,246,0.2)',
       highlights: ['Google Classroom sync', 'Global to-do list', 'Assignment tracking'],
       stat: '∞',
       statLabel: 'Classes',
@@ -96,8 +100,8 @@ const MalumHomePage = () => {
       icon: Calendar,
       path: '/schedule',
       gradient: 'linear-gradient(135deg, #F59E0B, #EF4444)',
-      glowColor: 'rgba(245,158,11,0.4)',
-      borderHover: 'rgba(245,158,11,0.5)',
+      glowColor: isDark ? 'rgba(245,158,11,0.4)' : 'transparent',
+      borderHover: isDark ? 'rgba(245,158,11,0.5)' : 'rgba(245,158,11,0.2)',
       highlights: ['AI daily planner', 'Calendar view', 'Deadline reminders'],
       stat: '24/7',
       statLabel: 'Planning',

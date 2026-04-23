@@ -308,7 +308,7 @@ export default function Layout() {
         <div className="space-y-1 px-2">
             {/* Brand in sidebar */}
             <div className="flex items-center gap-2.5 px-3 py-3 mb-2">
-                <img src="/malum-logo.png" alt="Malum" className="object-contain" style={{ width: '36px', height: '36px', filter: 'drop-shadow(0 0 8px rgba(255,107,0,0.5))' }} />
+                <img src="/malum-logo.png" alt="Malum" className="object-contain" style={{ width: '36px', height: '36px', filter: isDark ? 'drop-shadow(0 0 8px rgba(255,107,0,0.5))' : 'none' }} />
                 <span className="font-black text-lg malum-text-gradient">Malum</span>
             </div>
 
@@ -348,13 +348,13 @@ export default function Layout() {
                                     <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-all group-hover:scale-110 flex-shrink-0"
                                         style={{
                                             background: isActive ? `${item.color}25` : `${item.color}12`,
-                                            boxShadow: isActive ? `0 0 12px ${item.glow}` : 'none',
+                                            boxShadow: (isDark && isActive) ? `0 0 12px ${item.glow}` : 'none',
                                         }}>
-                                        <item.icon className="h-4 w-4" style={{ color: item.color, filter: isActive ? `drop-shadow(0 0 6px ${item.color})` : 'none' }} />
+                                        <item.icon className="h-4 w-4" style={{ color: item.color, filter: (isDark && isActive) ? `drop-shadow(0 0 6px ${item.color})` : 'none' }} />
                                     </div>
                                     <span className="font-semibold text-sm flex-1">{item.label}</span>
                                     {isActive && (
-                                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.color, boxShadow: `0 0 8px ${item.color}`, animation: 'pulse-glow 2s infinite', flexShrink: 0 }} />
+                                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.color, boxShadow: isDark ? `0 0 8px ${item.color}` : 'none', animation: isDark ? 'pulse-glow 2s infinite' : 'none', flexShrink: 0 }} />
                                     )}
                                 </>
                             )}
@@ -396,8 +396,8 @@ export default function Layout() {
 
                     <NavLink to="/home" className="font-black flex items-center gap-2 group">
                         <div className="relative">
-                            <div className="absolute inset-0 rounded-full blur-md" style={{ background: 'rgba(255,107,0,0.4)', animation: 'glow-breathe 3s ease-in-out infinite' }} />
-                            <img src="/malum-logo.png" alt="Malum" className="relative z-10 object-contain group-hover:rotate-12 transition-transform duration-500" style={{ width: '32px', height: '32px', filter: 'drop-shadow(0 0 6px rgba(255,107,0,0.6))' }} />
+                            <div className="absolute inset-0 rounded-full blur-md" style={{ background: isDark ? 'rgba(255,107,0,0.4)' : 'transparent', animation: isDark ? 'glow-breathe 3s ease-in-out infinite' : 'none' }} />
+                            <img src="/malum-logo.png" alt="Malum" className="relative z-10 object-contain group-hover:rotate-12 transition-transform duration-500" style={{ width: '32px', height: '32px', filter: isDark ? 'drop-shadow(0 0 6px rgba(255,107,0,0.6))' : 'none' }} />
                         </div>
                         <span className="text-xl malum-text-gradient tracking-tight">Malum</span>
                     </NavLink>
@@ -436,10 +436,10 @@ export default function Layout() {
                         className="p-2 rounded-xl transition-all hover:scale-110"
                         style={{
                             background: settingsOpen
-                                ? 'linear-gradient(135deg, rgba(139,92,246,0.2), rgba(99,102,241,0.1))'
+                                ? (isDark ? 'linear-gradient(135deg, rgba(139,92,246,0.2), rgba(99,102,241,0.1))' : 'rgba(139,92,246,0.1)')
                                 : (isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)'),
                             color: settingsOpen ? '#8B5CF6' : 'var(--text-secondary)',
-                            boxShadow: settingsOpen ? '0 0 16px rgba(139,92,246,0.3)' : 'none',
+                            boxShadow: (isDark && settingsOpen) ? '0 0 16px rgba(139,92,246,0.3)' : 'none',
                         }}
                         title="Settings"
                     >
@@ -469,8 +469,8 @@ export default function Layout() {
                                 animation: 'slideInLeft 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)',
                             }}
                         >
-                            {/* Top glow strip */}
-                            <div style={{ position: 'absolute', top: 80, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,107,0,0.3), transparent)' }} />
+                            {/* Top glow strip - hide in light mode */}
+                            {isDark && <div style={{ position: 'absolute', top: 80, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,107,0,0.3), transparent)' }} />}
 
                             <nav className="flex-1 py-4">
                                 <NavContent onItemClick={() => setSidebarOpen(false)} />

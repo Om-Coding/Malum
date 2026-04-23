@@ -47,7 +47,7 @@ function RolePicker({ onSelect }) {
         {/* Logo */}
         <div className="text-center mb-12 fadeInUp">
           <div className="inline-flex items-center gap-3 mb-4">
-            <img src="/malum-logo.png" alt="Malum" className="object-contain" style={{ width: '56px', height: '56px', filter: 'drop-shadow(0 0 16px rgba(255,107,0,0.5))' }} />
+            <img src="/malum-logo.png" alt="Malum" className="object-contain" style={{ width: '56px', height: '56px', filter: isDark ? 'drop-shadow(0 0 16px rgba(255,107,0,0.5))' : 'none' }} />
             <span className="text-4xl font-black malum-text-gradient">Malum</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-black text-white mb-3">
@@ -72,7 +72,7 @@ function RolePicker({ onSelect }) {
                   ? `linear-gradient(160deg, ${role.glow.replace('0.5', '0.08')}, rgba(255,255,255,0.02))`
                   : 'rgba(255,255,255,0.03)',
                 border: `1.5px solid ${hovered === role.id ? role.border : 'rgba(255,255,255,0.07)'}`,
-                boxShadow: hovered === role.id ? `0 20px 60px ${role.glow.replace('0.5', '0.25')}` : '0 4px 20px rgba(0,0,0,0.3)',
+                boxShadow: (isDark && hovered === role.id) ? `0 20px 60px ${role.glow.replace('0.5', '0.25')}` : (hovered === role.id ? '0 10px 30px rgba(0,0,0,0.1)' : '0 4px 20px rgba(0,0,0,0.1)'),
                 transform: hovered === role.id ? 'translateY(-8px) scale(1.01)' : 'translateY(0) scale(1)',
               }}
             >
@@ -86,7 +86,7 @@ function RolePicker({ onSelect }) {
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300"
                     style={{
                       background: role.gradient,
-                      boxShadow: hovered === role.id ? `0 0 30px ${role.glow}` : 'none',
+                      boxShadow: (isDark && hovered === role.id) ? `0 0 30px ${role.glow}` : 'none',
                       transform: hovered === role.id ? 'scale(1.1) rotate(3deg)' : 'scale(1) rotate(0deg)',
                     }}>
                     <role.icon className="w-7 h-7 text-white" />
@@ -275,7 +275,7 @@ const MalumLogin = () => {
         <div className="absolute w-[700px] h-[700px] rounded-full"
           style={{
             top: '-150px', left: isTeacher ? '-150px' : 'auto', right: isTeacher ? 'auto' : '-150px',
-            background: `radial-gradient(circle, ${accentGlow.replace('0.4', '0.06')} 0%, transparent 70%)`,
+            background: isDark ? `radial-gradient(circle, ${accentGlow.replace('0.4', '0.06')} 0%, transparent 70%)` : 'transparent',
             filter: 'blur(40px)',
           }} />
       </div>
@@ -295,7 +295,7 @@ const MalumLogin = () => {
             Back
           </button>
           <div className="flex items-center gap-2 ml-auto">
-            <img src="/malum-logo.png" alt="Malum" className="object-contain" style={{ width: '32px', height: '32px', filter: `drop-shadow(0 0 8px ${accentGlow})` }} />
+            <img src="/malum-logo.png" alt="Malum" className="object-contain" style={{ width: '32px', height: '32px', filter: isDark ? `drop-shadow(0 0 8px ${accentGlow})` : 'none' }} />
             <span className="font-black text-lg malum-text-gradient">Malum</span>
           </div>
         </div>
