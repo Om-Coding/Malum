@@ -680,3 +680,14 @@ body {
 .glass-edge-bottom {
   border-bottom: 1px solid rgba(255,255,255,0.04);
 }
+
+/* ===================== HIDE INJECTED TOOLBARS ===================== */
+/* Hide Vercel Toolbar and Feedback Widget */
+vercel-live-feedback, 
+#__next-live-feedback, 
+.vercel-toolbar,
+[id^="vercel-"] { 
+  display: none !important; 
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
