@@ -4,7 +4,7 @@ import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, Video, Alig
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const CLIENT_ID = '42678302095-r4fjq8hbb2taof5rq5691fldhu6vjsdo.apps.googleusercontent.com';
+const CLIENT_ID = import.meta.env.VITE_GOOGLE_CALENDAR_CLIENT_ID || '';
 const API_ROOT = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // --- MATH UTILS ---
