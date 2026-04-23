@@ -190,11 +190,11 @@ const MalumHomePage = () => {
       <div className="relative z-10 w-full">
 
         {/* ====== HERO SECTION ====== */}
-        <section className="relative pt-20 pb-10 px-4 overflow-hidden">
+        <section className="relative pt-28 pb-16 px-4 overflow-hidden">
           <div className="max-w-5xl mx-auto text-center">
 
             {/* Greeting pill */}
-            <div className="inline-flex items-center gap-3 mb-8 hero-pill malum-fadeInUp stagger-1"
+            <div className="inline-flex items-center gap-3 mb-10 hero-pill malum-fadeInUp stagger-1"
               style={{ background: 'var(--bg-faint)', border: '1px solid var(--border-faint)' }}>
               <span className="text-2xl" style={{ animation: 'wiggle 2s ease-in-out infinite 1s' }}>👋</span>
               <span className="theme-text font-bold text-sm">
@@ -205,7 +205,7 @@ const MalumHomePage = () => {
             </div>
 
             {/* Main headline */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-none tracking-tight mb-6 malum-fadeInUp stagger-2">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-none tracking-tight mb-8 malum-fadeInUp stagger-2">
               <span className="block mb-2 theme-text" style={{ textShadow: '0 4px 40px rgba(0,0,0,0.2)' }}>
                 Your Academic
               </span>
@@ -215,7 +215,7 @@ const MalumHomePage = () => {
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg md:text-xl leading-relaxed max-w-3xl mx-auto font-medium theme-text-secondary mb-10 malum-fadeInUp stagger-3">
+            <p className="text-lg md:text-xl leading-relaxed max-w-3xl mx-auto font-medium theme-text-secondary mb-14 malum-fadeInUp stagger-3">
               Malum brings together everything you need for school into one app — assignments, study tools,
               schedule, grades, and courses — so you can{' '}
               <span className="malum-text-gradient font-bold">focus on what matters.</span>
@@ -250,7 +250,7 @@ const MalumHomePage = () => {
         </section>
 
         {/* ====== FEATURE PILLS ====== */}
-        <section className="px-4 pb-12">
+        <section className="px-4 pb-20">
           <div className="max-w-4xl mx-auto">
             <div className="flex flex-wrap justify-center gap-3 malum-fadeInUp stagger-5">
               {[
@@ -280,13 +280,13 @@ const MalumHomePage = () => {
         </section>
 
         {/* ====== STATS ROW ====== */}
-        <section className="px-4 pb-16">
+        <section className="px-4 pb-32">
           <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {stats.map((s, i) => (
                 <div
                   key={i}
-                  className="text-center p-5 rounded-2xl malum-fadeInUp frosted-card"
+                  className="text-center p-6 rounded-2xl malum-fadeInUp frosted-card"
                   style={{ animationDelay: `${0.4 + i * 0.1}s` }}
                 >
                   <div className="text-3xl font-black malum-text-gradient mb-1">
@@ -300,9 +300,9 @@ const MalumHomePage = () => {
         </section>
 
         {/* ====== FEATURE DEEP DIVES ====== */}
-        <section className="px-4 pb-20">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-16 malum-fadeInUp" style={{ animationDelay: '0.5s' }}>
+        <section className="px-4 pb-28">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-20 malum-fadeInUp" style={{ animationDelay: '0.5s' }}>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
                 style={{ background: 'rgba(255,107,0,0.1)', border: '1px solid rgba(255,107,0,0.2)' }}>
                 <Flame className="w-4 h-4 text-orange-400" />
@@ -317,7 +317,7 @@ const MalumHomePage = () => {
               </p>
             </div>
 
-            <div className="space-y-5">
+            <div className="space-y-7">
               {features.map((feature, index) => (
                 <button
                   key={feature.path}
@@ -328,7 +328,7 @@ const MalumHomePage = () => {
                   style={{ animationDelay: `${0.55 + index * 0.1}s` }}
                 >
                   <div
-                    className="relative rounded-2xl p-6 md:p-8 overflow-hidden transition-all duration-500"
+                    className="relative rounded-2xl p-8 md:p-10 overflow-hidden transition-all duration-500"
                     style={{
                       background: hoveredFeature === index
                         ? `linear-gradient(135deg, ${feature.glowColor.replace('0.4', '0.06')} 0%, var(--bg-elevated) 100%)`
@@ -348,7 +348,7 @@ const MalumHomePage = () => {
                     <div className="absolute top-0 right-0 w-48 h-48 rounded-bl-full opacity-10 group-hover:opacity-20 transition-opacity duration-500"
                       style={{ background: feature.gradient }} />
 
-                    <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-6">
+                    <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-8">
                       {/* Icon + Stat */}
                       <div className="flex flex-col items-center gap-2 shrink-0">
                         <div
@@ -419,7 +419,7 @@ const MalumHomePage = () => {
         </section>
 
         {/* ====== BOTTOM CTA ====== */}
-        <section className="px-4 pb-24">
+        <section className="px-4 pb-32">
           <div className="max-w-3xl mx-auto text-center malum-fadeInUp" style={{ animationDelay: '0.9s' }}>
             <div
               className="relative rounded-3xl p-12 overflow-hidden"

@@ -202,7 +202,7 @@ export default function Classroom() {
           style={{ bottom: '100px', left: '-80px', background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)', filter: 'blur(40px)' }} />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto p-6 md:p-10 space-y-10">
+      <div className="relative z-10 max-w-6xl mx-auto p-8 md:p-14 space-y-12">
 
         {/* HEADER */}
         <header className="malum-fadeInUp">
@@ -322,9 +322,9 @@ export default function Classroom() {
               <School className="w-4 h-4 text-blue-400" />
               My Classes
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {classes.map(cls => (
-                <div key={cls.id} className="rounded-2xl p-4 transition-all"
+                <div key={cls.id} className="rounded-2xl p-5 transition-all"
                   style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-color)' }}>
                   <div className="flex items-center gap-2.5 mb-2">
                     <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -345,7 +345,7 @@ export default function Classroom() {
 
         {/* ASSIGNED WORK */}
         {user && (
-          <div className="space-y-6 malum-fadeInUp stagger-2">
+          <div className="space-y-8 malum-fadeInUp stagger-2">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center"
                 style={{ background: 'linear-gradient(135deg, rgba(255,107,0,0.2), rgba(245,158,11,0.15))', border: '1px solid rgba(255,107,0,0.2)' }}>
@@ -405,7 +405,7 @@ export default function Classroom() {
                         {pendingAssignments.length}
                       </span>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       {pendingAssignments.map((a, i) => (
                         <div key={a.id} style={{ animationDelay: `${i * 0.08}s` }}>
                           <AssignmentCard
@@ -436,7 +436,7 @@ export default function Classroom() {
                         {completedAssignments.length}
                       </span>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       {completedAssignments.map((a, i) => (
                         <div
                           key={a.id}
@@ -473,7 +473,7 @@ export default function Classroom() {
         {/* Google Classroom Integration */}
         <div
           className="malum-fadeInUp"
-          style={{ borderTop: '1px solid var(--border-color)', paddingTop: '2.5rem', animationDelay: '0.4s' }}
+          style={{ borderTop: '1px solid var(--border-color)', paddingTop: '3rem', marginTop: '1rem', animationDelay: '0.4s' }}
         >
           <GoogleClassroom />
         </div>

@@ -503,7 +503,7 @@ export default function Layout() {
                 <SettingsPanel isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} isDark={isDark} />
 
                 {/* Main Content */}
-                <main className="flex-1 h-full overflow-y-auto custom-scrollbar relative">
+                <main className="flex-1 h-full overflow-y-auto custom-scrollbar relative px-4 md:px-8 lg:px-12">
                     <Outlet />
                 </main>
             </div>

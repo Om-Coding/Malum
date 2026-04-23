@@ -30,7 +30,7 @@ export default function Gradescout() {
           style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.04) 0%, transparent 70%)', filter: 'blur(60px)' }} />
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto p-6 md:p-10 space-y-8">
+      <div className="relative z-10 max-w-4xl mx-auto p-8 md:p-14 space-y-10">
 
         {/* ── Header ── */}
         <header className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">

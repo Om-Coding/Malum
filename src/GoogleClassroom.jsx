@@ -282,7 +282,7 @@ function ClassroomCore() {
   }
 
   return (
-    <div className="space-y-10 mt-10 pb-20">
+    <div className="space-y-12 mt-12 pb-24">
       
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -322,7 +322,7 @@ function ClassroomCore() {
       )}
 
       {/* Loading State Overlay / Global To-Do Dashboard */}
-      <div className="bg-[#141418] border border-white/5 rounded-2xl p-6 relative overflow-hidden">
+      <div className="bg-[#141418] border border-white/5 rounded-2xl p-8 relative overflow-hidden">
         <div className="absolute -top-32 -right-32 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2.5 bg-white/5 text-gray-400 rounded-lg">
@@ -337,7 +337,7 @@ function ClassroomCore() {
             <p className="font-medium animate-pulse">Aggregating coursework from all {courses.length ? courses.length : ''} classrooms...</p>
           </div>
         ) : (
-          <div className="space-y-6 relative z-10 p-2">
+          <div className="space-y-8 relative z-10 p-2">
             
             {/* MISSING FOLDER */}
             {globalTodos.filter(todo => todo.parsedDate && todo.parsedDate < new Date()).length > 0 && (
@@ -579,7 +579,7 @@ function ClassroomCore() {
       </div>
 
       {/* Specific Class Cards with Mini To-Do Lists */}
-      <h3 className="text-2xl font-black theme-text mt-12 mb-6">Your Courses</h3>
+      <h3 className="text-2xl font-black theme-text mt-16 mb-8">Your Courses</h3>
       
       {!loading && courses.length === 0 && !error && (
         <div className="text-center py-20 theme-text-secondary theme-glass rounded-3xl">
@@ -587,7 +587,7 @@ function ClassroomCore() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
         {courses.map(course => (
           <div key={course.id} className="theme-glass rounded-3xl p-6 relative overflow-hidden flex flex-col h-full shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
             
