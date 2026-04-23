@@ -7,40 +7,129 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const [classes, setClasses] = useState([]);
   const [assignments, setAssignments] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('users');
   const [expandedRow, setExpandedRow] = useState(null);
+  
+  const [isAuthenticated, setIsAuthenticated] = useState(!!sessionStorage.getItem('admin_authenticated'));
+  const [adminPass, setAdminPass] = useState('');
+  const [loginError, setLoginError] = useState('');
 
-  const fetchAll = async () => {
+  const fetchAll = async (pass) => {
+    const token = pass || adminPass || sessionStorage.getItem('admin_pass');
+    if (!token) return;
+
     setLoading(true);
     setError('');
     try {
+      const headers = { 'x-admin-password': token };
       const [uRes, cRes, aRes] = await Promise.all([
-        fetch(`${API_ROOT}/api/admin/users`),
-        fetch(`${API_ROOT}/api/admin/classes`),
-        fetch(`${API_ROOT}/api/admin/assignments`),
+        fetch(`${API_ROOT}/api/admin/users`, { headers }),
+        fetch(`${API_ROOT}/api/admin/classes`, { headers }),
+        fetch(`${API_ROOT}/api/admin/assignments`, { headers }),
       ]);
+
+      if (uRes.status === 401) {
+        setIsAuthenticated(false);
+        sessionStorage.removeItem('admin_authenticated');
+        sessionStorage.removeItem('admin_pass');
+        setError('Session expired or incorrect password.');
+        return;
+      }
+
       const uData = await uRes.json();
       const cData = await cRes.json();
       const aData = await aRes.json();
+      
       setUsers(uData.users || []);
       setClasses(cData.classes || []);
       setAssignments(aData.assignments || []);
+      
+      setIsAuthenticated(true);
+      sessionStorage.setItem('admin_authenticated', 'true');
+      sessionStorage.setItem('admin_pass', token);
+      setLoginError('');
     } catch (err) {
       console.error(err);
-      setError('Could not reach the backend. Make sure it is running.');
+      setError('Could not reach the backend.');
     }
     setLoading(false);
   };
 
-  useEffect(() => { fetchAll(); }, []);
+  useEffect(() => { 
+    if (isAuthenticated) fetchAll(); 
+  }, []);
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (!adminPass) return;
+    fetchAll(adminPass);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem('admin_authenticated');
+    sessionStorage.removeItem('admin_pass');
+    setUsers([]);
+    setClasses([]);
+    setAssignments([]);
+  };
 
   const tabs = [
     { id: 'users', label: 'Users', icon: Users, count: users.length, color: '#8B5CF6', bg: 'rgba(139,92,246,0.12)' },
     { id: 'classes', label: 'Classes', icon: School, count: classes.length, color: '#3B82F6', bg: 'rgba(59,130,246,0.12)' },
     { id: 'assignments', label: 'Assignments', icon: FileText, count: assignments.length, color: '#FF6B00', bg: 'rgba(255,107,0,0.12)' },
   ];
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
+        <div className="absolute w-[600px] h-[600px] rounded-full"
+          style={{ top: '-120px', right: '-120px', background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+        
+        <div className="w-full max-w-md space-y-8 relative z-10 malum-fadeInUp">
+          <div className="text-center">
+            <div className="w-24 h-24 rounded-[2rem] mx-auto flex items-center justify-center mb-8"
+              style={{ background: 'linear-gradient(135deg, #8B5CF6, #6366F1)', boxShadow: '0 0 50px rgba(139,92,246,0.3)' }}>
+              <Shield className="w-12 h-12 text-white" />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-black malum-text-gradient mb-4">Admin Security</h1>
+            <p className="theme-text-secondary text-lg font-medium">Authentication required to proceed.</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div className="relative group">
+              <input
+                type="password"
+                placeholder="Enter password..."
+                value={adminPass}
+                onChange={(e) => setAdminPass(e.target.value)}
+                className="w-full h-16 bg-white/[0.03] border-2 border-white/[0.08] rounded-2xl px-12 text-white font-bold outline-none transition-all group-hover:border-purple-500/30 focus:border-purple-500/60 focus:bg-white/[0.05]"
+              />
+              <Shield className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400/50" />
+            </div>
+            
+            {error && (
+              <div className="text-sm font-bold text-red-400 text-center flex items-center justify-center gap-2">
+                <AlertCircle className="w-4 h-4" />
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full h-16 rounded-2xl font-black text-white transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+              style={{ background: 'linear-gradient(135deg, #8B5CF6, #6366F1)', boxShadow: '0 0 30px rgba(139,92,246,0.4)' }}
+            >
+              {loading ? <RefreshCw className="w-6 h-6 animate-spin mx-auto" /> : 'Enter Dashboard'}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen overflow-x-hidden transition-colors duration-300" style={{ background: 'var(--bg-primary)' }}>
@@ -68,13 +157,21 @@ export default function AdminDashboard() {
                 <p className="theme-text-secondary text-sm font-medium">View all backend data</p>
               </div>
             </div>
-            <button
-              onClick={fetchAll}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl theme-bg-elevated border theme-border theme-text-secondary hover:theme-text text-sm font-bold transition-all hover:scale-105"
-            >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-              Refresh
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={fetchAll}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl theme-bg-elevated border theme-border theme-text-secondary hover:theme-text text-sm font-bold transition-all hover:scale-105"
+              >
+                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                Refresh
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:text-red-300 text-sm font-bold transition-all hover:scale-105"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </header>
 
