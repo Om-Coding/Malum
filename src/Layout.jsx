@@ -308,7 +308,7 @@ export default function Layout() {
         <div className="space-y-1 px-2">
             {/* Brand in sidebar */}
             <div className="flex items-center gap-2.5 px-3 py-3 mb-2">
-                <img src="/malum-logo.png" alt="Malum" className="w-9 h-9 object-contain" style={{ filter: 'drop-shadow(0 0 8px rgba(255,107,0,0.5))' }} />
+                <img src="/malum-logo.png" alt="Malum" className="object-contain" style={{ width: '36px', height: '36px', filter: 'drop-shadow(0 0 8px rgba(255,107,0,0.5))' }} />
                 <span className="font-black text-lg malum-text-gradient">Malum</span>
             </div>
 
@@ -397,7 +397,7 @@ export default function Layout() {
                     <NavLink to="/home" className="font-black flex items-center gap-2 group">
                         <div className="relative">
                             <div className="absolute inset-0 rounded-full blur-md" style={{ background: 'rgba(255,107,0,0.4)', animation: 'glow-breathe 3s ease-in-out infinite' }} />
-                            <img src="/malum-logo.png" alt="Malum" className="h-8 w-8 relative z-10 object-contain group-hover:rotate-12 transition-transform duration-500" style={{ filter: 'drop-shadow(0 0 6px rgba(255,107,0,0.6))' }} />
+                            <img src="/malum-logo.png" alt="Malum" className="relative z-10 object-contain group-hover:rotate-12 transition-transform duration-500" style={{ width: '32px', height: '32px', filter: 'drop-shadow(0 0 6px rgba(255,107,0,0.6))' }} />
                         </div>
                         <span className="text-xl malum-text-gradient tracking-tight">Malum</span>
                     </NavLink>
