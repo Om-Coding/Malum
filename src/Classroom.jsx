@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { CheckCircle2, Clock, Calendar, GraduationCap, Sparkles, Trophy, AlertCircle, BookOpen, Zap, Hash, X, UserPlus, School } from 'lucide-react';
 import GoogleClassroom from './GoogleClassroom';
 
-const API_URL = 'http://localhost:5000/api/assignments';
+const API_ROOT = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = `${API_ROOT}/api/assignments`;
 
 function AssignmentCard({ assignment, user, onMarkComplete, completing }) {
   const isOverdue = assignment.dueDate && new Date(assignment.dueDate) < new Date();
@@ -138,7 +139,7 @@ export default function Classroom() {
 
   const fetchClasses = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/classes?email=${encodeURIComponent(user.email)}&role=student`);
+      const res = await fetch(`${API_ROOT}/api/classes?email=${encodeURIComponent(user.email)}&role=student`);
       const data = await res.json();
       setClasses(data.classes || []);
     } catch { }
@@ -150,7 +151,7 @@ export default function Classroom() {
     setJoinError('');
     setJoinSuccess('');
     try {
-      const res = await fetch('http://localhost:5000/api/classes/join', {
+      const res = await fetch(`${API_ROOT}/api/classes/join`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ joinCode: joinCode.toUpperCase().trim(), studentEmail: user.email }),

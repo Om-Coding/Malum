@@ -6,7 +6,8 @@ import {
   BarChart2, Award, LogOut, Eye, EyeOff
 } from 'lucide-react';
 
-const API_URL = 'http://localhost:5000/api';
+const API_ROOT = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = `${API_ROOT}/api`;
 
 function toast_show(setToast, msg) {
   setToast(msg);

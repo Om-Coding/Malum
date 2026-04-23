@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BookOpen, Atom, Calculator, FlaskConical, PlayCircle, ChevronRight, Search, CheckCircle2, HelpCircle, Send, X, MessageCircle, Sparkles, RefreshCw, ArrowLeft, Youtube, ExternalLink, Loader2, Trophy, XCircle, ChevronDown, ChevronUp, Dna, Zap, Globe, PenTool, Coins, Brain, Leaf, Languages, Music } from 'lucide-react';
 
-const API_URL = 'http://localhost:5000/api/study';
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api/study';
 
 const SUBJECTS = [
   {

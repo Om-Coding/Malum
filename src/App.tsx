@@ -11,6 +11,7 @@ import TeacherDashboard from './TeacherDashboard'
 import CollegeAI from './CollegeAI'
 import Antigravity from './Antigravity'
 import StudyGames from './StudyGames'
+import AdminDashboard from './AdminDashboard'
 import Layout from './Layout'
 import './App.css'
 
@@ -32,6 +33,7 @@ function App() {
             <Route path="/college" element={<CollegeAI />} />
             <Route path="/antigravity" element={<Antigravity />} />
             <Route path="/games" element={<StudyGames />} />
+            <Route path="/admin" element={<AdminDashboard />} />
           </Route>
 
           <Route path="/" element={<Navigate to="/login" replace />} />

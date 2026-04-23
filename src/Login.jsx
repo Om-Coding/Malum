@@ -210,7 +210,8 @@ const MalumLogin = () => {
         ? { email: formData.email, password: formData.password }
         : { name: formData.name, email: formData.email, password: formData.password, confirmPassword: formData.confirmPassword, role };
 
-      const res = await fetch(`http://localhost:5000${endpoint}`, {
+      const apiRoot = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${apiRoot}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
