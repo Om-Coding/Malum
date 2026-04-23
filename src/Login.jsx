@@ -47,7 +47,7 @@ function RolePicker({ onSelect }) {
         {/* Logo */}
         <div className="text-center mb-12 fadeInUp">
           <div className="inline-flex items-center gap-3 mb-4">
-            <img src="/malum-logo.png" alt="Malum" className="object-contain" style={{ width: '56px', height: '56px', filter: isDark ? 'drop-shadow(0 0 16px rgba(255,107,0,0.5))' : 'none' }} />
+            <img src="/malum-logo-round.png" alt="Malum" className="object-contain rounded-full" style={{ width: '56px', height: '56px', filter: isDark ? 'drop-shadow(0 0 16px rgba(255,107,0,0.5))' : 'none' }} />
             <span className="text-4xl font-black malum-text-gradient">Malum</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-black text-white mb-3">
@@ -295,7 +295,7 @@ const MalumLogin = () => {
             Back
           </button>
           <div className="flex items-center gap-2 ml-auto">
-            <img src="/malum-logo.png" alt="Malum" className="object-contain" style={{ width: '32px', height: '32px', filter: isDark ? `drop-shadow(0 0 8px ${accentGlow})` : 'none' }} />
+            <img src="/malum-logo-round.png" alt="Malum" className="object-contain rounded-full" style={{ width: '32px', height: '32px', filter: isDark ? `drop-shadow(0 0 8px ${accentGlow})` : 'none' }} />
             <span className="font-black text-lg malum-text-gradient">Malum</span>
           </div>
         </div>
