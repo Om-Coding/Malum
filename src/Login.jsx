@@ -47,10 +47,7 @@ function RolePicker({ onSelect }) {
         {/* Logo */}
         <div className="text-center mb-12 fadeInUp">
           <div className="inline-flex items-center gap-3 mb-4">
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
-              style={{ background: 'linear-gradient(135deg, #FF6B00, #FF8E53)', boxShadow: '0 0 40px rgba(255,107,0,0.5)' }}>
-              <Sparkles className="w-7 h-7 text-white" />
-            </div>
+            <img src="/malum-logo.png" alt="Malum" className="w-14 h-14 object-contain" style={{ filter: 'drop-shadow(0 0 16px rgba(255,107,0,0.5))' }} />
             <span className="text-4xl font-black malum-text-gradient">Malum</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-black text-white mb-3">
@@ -298,10 +295,7 @@ const MalumLogin = () => {
             Back
           </button>
           <div className="flex items-center gap-2 ml-auto">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center"
-              style={{ background: accentGradient, boxShadow: `0 0 16px ${accentGlow}` }}>
-              <Sparkles className="w-3.5 h-3.5 text-white" />
-            </div>
+            <img src="/malum-logo.png" alt="Malum" className="w-8 h-8 object-contain" style={{ filter: `drop-shadow(0 0 8px ${accentGlow})` }} />
             <span className="font-black text-lg malum-text-gradient">Malum</span>
           </div>
         </div>

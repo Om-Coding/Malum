@@ -308,9 +308,7 @@ export default function Layout() {
         <div className="space-y-1 px-2">
             {/* Brand in sidebar */}
             <div className="flex items-center gap-2.5 px-3 py-3 mb-2">
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #FF6B00, #FF8E53)', boxShadow: '0 0 16px rgba(255,107,0,0.5)' }}>
-                    <Sparkles className="w-4 h-4 text-white" style={{ animation: 'pulse 2s ease-in-out infinite' }} />
-                </div>
+                <img src="/malum-logo.png" alt="Malum" className="w-9 h-9 object-contain" style={{ filter: 'drop-shadow(0 0 8px rgba(255,107,0,0.5))' }} />
                 <span className="font-black text-lg malum-text-gradient">Malum</span>
             </div>
 
@@ -399,7 +397,7 @@ export default function Layout() {
                     <NavLink to="/home" className="font-black flex items-center gap-2 group">
                         <div className="relative">
                             <div className="absolute inset-0 rounded-full blur-md" style={{ background: 'rgba(255,107,0,0.4)', animation: 'glow-breathe 3s ease-in-out infinite' }} />
-                            <Sparkles className="h-6 w-6 text-orange-500 relative z-10 group-hover:rotate-12 transition-transform duration-500 icon-glow-orange" />
+                            <img src="/malum-logo.png" alt="Malum" className="h-8 w-8 relative z-10 object-contain group-hover:rotate-12 transition-transform duration-500" style={{ filter: 'drop-shadow(0 0 6px rgba(255,107,0,0.6))' }} />
                         </div>
                         <span className="text-xl malum-text-gradient tracking-tight">Malum</span>
                     </NavLink>
