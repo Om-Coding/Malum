@@ -686,9 +686,10 @@ function PlayableUnlocker({ onExit }) {
 
   const gameOptions = [
     { name: 'Slither.io World', id: 'HGeu_F8v9-Y', type: 'youtube' },
-    { name: 'Hextris (Classic)', url: 'https://hextris.io/', type: 'web' },
-    { name: 'Scratch Puzzle', url: 'https://scratch.mit.edu/projects/10128407/embed', type: 'web' },
-    { name: 'Google Pacman', url: 'https://www.google.com/logos/2010/pacman10-i.html', type: 'web' }
+    { name: 'Crossy Road', url: 'https://scratch.mit.edu/projects/630043516/embed', type: 'web' },
+    { name: 'Geometry Dash', url: 'https://scratch.mit.edu/projects/105500895/embed', type: 'web' },
+    { name: 'Doodle Jump', url: 'https://scratch.mit.edu/projects/23675037/embed', type: 'web' },
+    { name: 'Hextris (Classic)', url: 'https://hextris.io/', type: 'web' }
   ];
 
   const [activeUrl, setActiveUrl] = useState('');
