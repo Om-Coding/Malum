@@ -738,10 +738,12 @@ function PlayableUnlocker() {
   };
 
   const gameOptions = [
-    { name: 'YouTube Classics', url: 'https://www.youtube.com/embed/videoseries?list=PLPZvx_G09ZMTuF-XfO_9zQkO2yX-h6u4Y' },
-    { name: 'Retro Arcade', url: 'https://www.youtube.com/embed/rVAt7mAn2eM?autoplay=1&mute=1' },
-    { name: 'Slither.io Inspired', url: 'https://www.youtube.com/embed/HGeu_F8v9-Y?autoplay=1&mute=1' }
+    { name: 'YouTube Gaming Mix', url: 'https://www.youtube.com/embed/videoseries?list=PLPZvx_G09ZMTuF-XfO_9zQkO2yX-h6u4Y' },
+    { name: 'Arcade Classics', url: 'https://www.youtube.com/embed/videoseries?list=PLPZvx_G09ZMQT6f0h7eK6h_mD_LHe0RzI' },
+    { name: 'Relaxing Puzzles', url: 'https://www.youtube.com/embed/videoseries?list=PLPZvx_G09ZMRE7fUu_1r8f8u6Z9Z7Z7Z7' }
   ];
+
+  const [customGameUrl, setCustomGameUrl] = useState('');
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -842,6 +844,22 @@ function PlayableUnlocker() {
                   {gameUrl === opt.url && <Check className="w-4 h-4 text-blue-400" />}
                 </button>
               ))}
+            </div>
+            
+            <div className="pt-2">
+              <input type="text" placeholder="Or paste any YouTube Video/Game URL..."
+                value={customGameUrl} onChange={(e) => {
+                  const val = e.target.value;
+                  setCustomGameUrl(val);
+                  if (val.includes('youtube.com/watch?v=')) {
+                    setGameUrl(val.replace('watch?v=', 'embed/'));
+                  } else if (val.includes('youtu.be/')) {
+                    setGameUrl(val.replace('youtu.be/', 'youtube.com/embed/'));
+                  } else {
+                    setGameUrl(val);
+                  }
+                }}
+                className="w-full px-4 py-2 rounded-xl text-[10px] theme-bg border theme-border theme-text focus:outline-none focus:ring-1 focus:ring-blue-500/50" />
             </div>
           </div>
         </div>
