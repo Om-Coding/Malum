@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1771010993156,
+    "name": "Om Sharma",
+    "email": "jimmybobcurnal@gmail.com",
+    "password": "$2a$10$rTgjfZhHQzECENHWYGaqmuilSepbrCNsl3B24LoAtiCIuK6AbUfXe",
+    "created_at": "2026-02-13T19:29:53.156Z"
+  },
+  {
+    "id": 1771015934855,
+    "name": "Avi MAtha",
+    "email": "bob@slayyy.com",
+    "password": "$2a$10$rmU4dJCM89Sua0u82R.Vuuol1tJxtgIazUeBm4/0p/Reaztntv2la",
+    "created_at": "2026-02-13T20:52:14.855Z"
+  },
+  {
+    "id": 1774801571582,
+    "name": "Om Sharma",
+    "email": "Jimmybobcurnal@gmail.com",
+    "password": "$2a$10$HPpLp3pJyTazsYm7BQvfXeJV4IbdUzDtb/Ujr4VjpYFMxgBBIcIxy",
+    "created_at": "2026-03-29T16:26:11.582Z"
+  },
+  {
+    "id": 1775017993167,
+    "name": "Om",
+    "email": "30004820@sbstudents.org",
+    "password": "$2a$10$C3FHBUkrE6lxqVDec4aw0u3KhGPqBUe86g3oEfywk9ttU9H2tN7hC",
+    "created_at": "2026-04-01T04:33:13.167Z"
+  }
+]
