@@ -678,7 +678,64 @@ function PlayableUnlocker() {
   const [correctCount, setCorrectCount] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [fileContent, setFileContent] = useState('');
-  const [gameUrl, setGameUrl] = useState('https://www.youtube.com/embed/videoseries?list=PLPZvx_G09ZMTuF-XfO_9zQkO2yX-h6u4Y'); // Default placeholder
+  const [gameUrl, setGameUrl] = useState('https://www.youtube.com/embed/videoseries?list=PLPZvx_G09ZMTuF-XfO_9zQkO2yX-h6u4Y');
+
+  // New states for Google API
+  const [tokenClient, setTokenClient] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
+
+  useEffect(() => {
+    // Initialize Google Identity Services
+    if (window.google) {
+      const client = window.google.accounts.oauth2.initTokenClient({
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+        scope: 'https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/presentations.readonly',
+        callback: (response) => {
+          if (response.access_token) {
+            setAccessToken(response.access_token);
+            createPicker(response.access_token);
+          }
+        },
+      });
+      setTokenClient(client);
+    }
+  }, []);
+
+  const createPicker = (token) => {
+    if (!window.google) return;
+    window.gapi.load('picker', () => {
+      const view = new window.google.picker.DocsView(window.google.picker.ViewId.PRESENTATIONS);
+      view.setIncludeFolders(true);
+      const picker = new window.google.picker.PickerBuilder()
+        .enableFeature(window.google.picker.Feature.NAV_HIDDEN)
+        .setAppId(import.meta.env.VITE_GOOGLE_CLIENT_ID.split('-')[0])
+        .setOAuthToken(token)
+        .addView(view)
+        .setCallback(pickerCallback)
+        .build();
+      picker.setVisible(true);
+    });
+  };
+
+  const pickerCallback = async (data) => {
+    if (data.action === window.google.picker.Action.PICKED) {
+      const doc = data.docs[0];
+      setLoading(true);
+      setFileContent(`Context from Google Slide: ${doc.name}`);
+      // Simulate real slide analysis for now, or use the doc.id to fetch content in a real API setup
+      setTimeout(() => {
+        generateQuestions(`Advanced topics about ${doc.name}`);
+      }, 1000);
+    }
+  };
+
+  const handleGooglePicker = () => {
+    if (tokenClient) {
+      tokenClient.requestAccessToken();
+    } else {
+      alert("Google API not loaded yet. Please refresh.");
+    }
+  };
 
   const gameOptions = [
     { name: 'YouTube Classics', url: 'https://www.youtube.com/embed/videoseries?list=PLPZvx_G09ZMTuF-XfO_9zQkO2yX-h6u4Y' },
@@ -748,13 +805,27 @@ function PlayableUnlocker() {
               <FileIcon className="w-5 h-5" />
               <span className="font-bold">Step 1: Your Slides</span>
             </div>
-            <label className="block w-full cursor-pointer">
-              <div className="py-8 border-2 border-dashed theme-border rounded-xl flex flex-col items-center justify-center gap-2 hover:border-orange-400/50 transition-all">
-                {loading ? <Loader2 className="w-8 h-8 text-orange-400 animate-spin" /> : <Monitor className="w-8 h-8 text-orange-400" />}
-                <span className="text-xs font-bold theme-text-muted">{loading ? 'Analyzing Slides...' : 'Click to Upload Slides (PDF/PPT)'}</span>
+            
+            <div className="grid grid-cols-1 gap-2">
+              <button onClick={handleGooglePicker} disabled={loading}
+                className="w-full py-4 rounded-xl flex flex-col items-center justify-center gap-2 bg-orange-500/10 border-2 border-orange-500/20 hover:bg-orange-500/20 transition-all">
+                <Monitor className={`w-6 h-6 text-orange-400 ${loading ? 'animate-spin' : ''}`} />
+                <span className="text-xs font-black uppercase text-orange-400">Select Google Slides</span>
+              </button>
+              
+              <div className="relative py-2">
+                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10"></div></div>
+                <div className="relative flex justify-center text-[10px]"><span className="bg-var(--bg-elevated) px-2 theme-text-muted font-bold">OR UPLOAD</span></div>
               </div>
-              <input type="file" className="hidden" onChange={handleFileUpload} accept=".pdf,.ppt,.pptx,.txt" disabled={loading} />
-            </label>
+
+              <label className="block w-full cursor-pointer">
+                <div className="py-3 border border-dashed theme-border rounded-xl flex items-center justify-center gap-2 hover:bg-white/5 transition-all">
+                  <FileIcon className="w-4 h-4 theme-text-muted" />
+                  <span className="text-[10px] font-bold theme-text-muted">Local PDF/PPT</span>
+                </div>
+                <input type="file" className="hidden" onChange={handleFileUpload} accept=".pdf,.ppt,.pptx,.txt" disabled={loading} />
+              </label>
+            </div>
           </div>
 
           <div className="p-6 rounded-2xl border theme-border theme-bg-card space-y-4">
