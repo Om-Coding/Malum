@@ -685,10 +685,25 @@ function PlayableUnlocker({ onExit }) {
   const playerRef = useRef(null);
 
   const gameOptions = [
-    { name: 'Slither.io World', id: 'HGeu_F8v9-Y' },
-    { name: 'Space Arcade', id: 'f5U_wD7LqIs' },
-    { name: 'Mystery Puzzle', id: 'F6pWn-P7T4k' }
+    { name: 'Slither.io World', id: 'HGeu_F8v9-Y', type: 'youtube' },
+    { name: 'Hextris (Classic)', url: 'https://hextris.io/', type: 'web' },
+    { name: 'Scratch Puzzle', url: 'https://scratch.mit.edu/projects/10128407/embed', type: 'web' },
+    { name: 'Google Pacman', url: 'https://www.google.com/logos/2010/pacman10-i.html', type: 'web' }
   ];
+
+  const [activeUrl, setActiveUrl] = useState('');
+
+  // Handle URL generation
+  useEffect(() => {
+    const selected = gameOptions.find(o => o.id === gameUrl || o.url === gameUrl);
+    if (selected) {
+      if (selected.type === 'youtube') setActiveUrl(`https://www.youtube.com/embed/${selected.id}?autoplay=1&mute=1&origin=${window.location.origin}`);
+      else setActiveUrl(selected.url);
+    } else if (gameUrl.length > 5) {
+      // Custom URL handling
+      setActiveUrl(gameUrl);
+    }
+  }, [gameUrl]);
 
   // Initialize YT Player
   useEffect(() => {
@@ -812,11 +827,11 @@ function PlayableUnlocker({ onExit }) {
             <span className="font-bold text-blue-400 flex items-center gap-2"><Gamepad className="w-4 h-4"/> Step 2: Game</span>
             <div className="space-y-2">
               {gameOptions.map((opt) => (
-                <button key={opt.id} onClick={() => setGameUrl(opt.id)}
+                <button key={opt.id || opt.url} onClick={() => setGameUrl(opt.id || opt.url)}
                   className="w-full px-4 py-2.5 rounded-xl text-xs font-bold text-left flex items-center justify-between border theme-border hover:bg-white/5 transition-all"
-                  style={{ borderColor: gameUrl === opt.id ? '#3B82F6' : '' }}>
+                  style={{ borderColor: (gameUrl === opt.id || gameUrl === opt.url) ? '#3B82F6' : '' }}>
                   {opt.name}
-                  {gameUrl === opt.id && <Check className="w-4 h-4 text-blue-400" />}
+                  {(gameUrl === opt.id || gameUrl === opt.url) && <Check className="w-4 h-4 text-blue-400" />}
                 </button>
               ))}
               <input type="text" placeholder="Or paste YouTube ID (e.g. dQw4w9WgXcQ)"
@@ -861,7 +876,13 @@ function PlayableUnlocker({ onExit }) {
         </div>
 
         <div className="relative rounded-3xl overflow-hidden border-4 border-orange-500/20 bg-black aspect-video shadow-2xl">
-          <div id="yt-player" className="w-full h-full"></div>
+          {gameOptions.find(o => o.id === gameUrl)?.type === 'youtube' ? (
+            <div id="yt-player" className="w-full h-full"></div>
+          ) : (
+            <iframe key={activeUrl} src={activeUrl} className="w-full h-full" frameBorder="0" 
+              allow="autoplay; encrypted-media; gyroscope; picture-in-picture; accelerometer" 
+              allowFullScreen />
+          )}
         </div>
       </div>
     );
@@ -912,7 +933,7 @@ function PlayableUnlocker({ onExit }) {
     );
   }
 }
-}
+
 
 /* ════════════════════════════════════════════════════════════════
    MAIN STUDY GAMES PAGE
