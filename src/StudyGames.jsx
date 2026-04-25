@@ -8,7 +8,7 @@ import {
 
 const API_ROOT = typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL
   ? import.meta.env.VITE_API_URL
-  : 'http://localhost:5000';
+  : (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://malum-backen.onrender.com');
 
 /* ════════════════════════════════════════════════════════════════
    GAME 1 — Speed Math
@@ -676,7 +676,7 @@ function PlayableUnlocker({ onExit }) {
   const [questions, setQuestions] = useState([]);
   const [currentQ, setCurrentQ] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [gameUrl, setGameUrl] = useState('HGeu_F8v9-Y'); // Video ID now
+  const [gameUrl, setGameUrl] = useState('https://scratch.mit.edu/projects/105500895/embed'); // Stable default
   const [customGameUrl, setCustomGameUrl] = useState('');
   const [timeLeft, setTimeLeft] = useState(60);
   const [isPaused, setIsPaused] = useState(false);
