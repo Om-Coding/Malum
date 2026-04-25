@@ -684,6 +684,55 @@ function PlayableUnlocker({ onExit }) {
   const timerRef = useRef(null);
   const playerRef = useRef(null);
 
+  // Google API states
+  const [tokenClient, setTokenClient] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
+
+  useEffect(() => {
+    if (window.google) {
+      const client = window.google.accounts.oauth2.initTokenClient({
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+        scope: 'https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/presentations.readonly',
+        callback: (response) => {
+          if (response.access_token) {
+            setAccessToken(response.access_token);
+            createPicker(response.access_token);
+          }
+        },
+      });
+      setTokenClient(client);
+    }
+  }, []);
+
+  const createPicker = (token) => {
+    if (!window.google) return;
+    window.gapi.load('picker', () => {
+      const view = new window.google.picker.DocsView(window.google.picker.ViewId.PRESENTATIONS);
+      view.setIncludeFolders(true);
+      const picker = new window.google.picker.PickerBuilder()
+        .enableFeature(window.google.picker.Feature.NAV_HIDDEN)
+        .setAppId(import.meta.env.VITE_GOOGLE_CLIENT_ID.split('-')[0])
+        .setOAuthToken(token)
+        .addView(view)
+        .setCallback(pickerCallback)
+        .build();
+      picker.setVisible(true);
+    });
+  };
+
+  const pickerCallback = async (data) => {
+    if (data.action === window.google.picker.Action.PICKED) {
+      const doc = data.docs[0];
+      setLoading(true);
+      generateQuestions(`Advanced topics from Google Slide: ${doc.name}`);
+    }
+  };
+
+  const handleGooglePicker = () => {
+    if (tokenClient) tokenClient.requestAccessToken();
+    else alert("Google API loading... please wait a moment.");
+  };
+
   const gameOptions = [
     { name: 'Slither.io World', id: 'HGeu_F8v9-Y', type: 'youtube' },
     { name: 'Crossy Road', url: 'https://scratch.mit.edu/projects/630043516/embed', type: 'web' },
@@ -815,13 +864,27 @@ function PlayableUnlocker({ onExit }) {
               <span className="font-bold text-orange-400 flex items-center gap-2"><FileIcon className="w-4 h-4"/> Step 1: Slides</span>
               {questions.length > 0 && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-black">READY</span>}
             </div>
-            <label className="block w-full cursor-pointer">
-              <div className="py-8 border-2 border-dashed theme-border rounded-xl flex flex-col items-center justify-center gap-2 hover:border-orange-400/50 transition-all">
-                {loading ? <Loader2 className="w-8 h-8 text-orange-400 animate-spin" /> : <Monitor className="w-8 h-8 text-orange-400" />}
-                <span className="text-xs font-bold theme-text-muted">{loading ? 'Analyzing...' : 'Upload Slides (PDF/PPT)'}</span>
+
+            <div className="space-y-2">
+              <button onClick={handleGooglePicker} disabled={loading}
+                className="w-full py-4 rounded-xl flex flex-col items-center justify-center gap-2 bg-orange-500/10 border-2 border-orange-500/20 hover:bg-orange-500/20 transition-all">
+                <Monitor className={`w-6 h-6 text-orange-400 ${loading ? 'animate-spin' : ''}`} />
+                <span className="text-xs font-black uppercase text-orange-400">Select Google Slides</span>
+              </button>
+
+              <div className="relative py-1">
+                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10"></div></div>
+                <div className="relative flex justify-center text-[8px]"><span className="bg-var(--bg-elevated) px-2 theme-text-muted font-black">OR PICK LOCAL</span></div>
               </div>
-              <input type="file" className="hidden" onChange={handleFileUpload} accept=".pdf,.ppt,.pptx,.txt" />
-            </label>
+
+              <label className="block w-full cursor-pointer">
+                <div className="py-2.5 border border-dashed theme-border rounded-xl flex items-center justify-center gap-2 hover:bg-white/5 transition-all text-orange-400/70">
+                  <FileIcon className="w-4 h-4" />
+                  <span className="text-[10px] font-bold">{loading ? 'Analyzing...' : 'Upload PDF/PPT'}</span>
+                </div>
+                <input type="file" className="hidden" onChange={handleFileUpload} accept=".pdf,.ppt,.pptx,.txt" />
+              </label>
+            </div>
           </div>
 
           <div className="p-6 rounded-2xl border theme-border theme-bg-card space-y-4">
