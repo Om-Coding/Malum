@@ -670,7 +670,7 @@ function MemoryMatch() {
    GAME 5 — Playable Unlocker (YouTube Playables & Slide Q&A)
    Mechanic: Answer 3-5 questions to unlock a YouTube Playable
    ══════════════════════════════════════════════════════════════════ */
-function PlayableUnlocker() {
+function PlayableUnlocker({ onExit }) {
   const [step, setStep] = useState('setup'); // 'setup' | 'playing' | 'quiz' | 'finished'
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([]);
@@ -826,11 +826,16 @@ function PlayableUnlocker() {
           </div>
         </div>
 
-        <button onClick={handleStart} disabled={loading || questions.length === 0}
-          className="w-full py-4 rounded-2xl text-white font-black text-lg hover:scale-[1.01] transition-all disabled:opacity-30"
-          style={{ background: 'linear-gradient(135deg, #F97316, #3B82F6)', boxShadow: '0 8px 32px rgba(249,115,22,0.3)' }}>
-          START SESSION
-        </button>
+        <div className="flex gap-3">
+          <button onClick={onExit} className="flex-1 py-4 rounded-2xl font-black text-sm border theme-border theme-text-muted hover:bg-white/5 transition-all">
+            QUIT AND GO BACK
+          </button>
+          <button onClick={handleStart} disabled={loading || questions.length === 0}
+            className="flex-[2] py-4 rounded-2xl text-white font-black text-lg hover:scale-[1.01] transition-all disabled:opacity-30"
+            style={{ background: 'linear-gradient(135deg, #F97316, #3B82F6)', boxShadow: '0 8px 32px rgba(249,115,22,0.3)' }}>
+            START SESSION
+          </button>
+        </div>
       </div>
     );
   }
@@ -845,8 +850,13 @@ function PlayableUnlocker() {
             </div>
             <span className="font-black theme-text uppercase tracking-widest text-sm">Game Session Active</span>
           </div>
-          <div className="flex items-center gap-2 text-xs font-bold theme-text-muted">
-            <Clock className="w-4 h-4" /> Challenge in {timeLeft}s
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-xs font-bold theme-text-muted">
+              <Clock className="w-4 h-4" /> Challenge in {timeLeft}s
+            </div>
+            <button onClick={onExit} className="p-2 hover:bg-white/5 rounded-lg transition-all text-red-500/60 hover:text-red-500">
+               <RotateCcw className="w-4 h-4" />
+            </button>
           </div>
         </div>
 
@@ -894,6 +904,10 @@ function PlayableUnlocker() {
             })}
           </div>
         </div>
+
+        <button onClick={onExit} className="w-full py-3 mt-4 rounded-xl text-[10px] font-black theme-text-muted hover:text-red-400 transition-all">
+          GIVE UP AND EXIT SESSION
+        </button>
       </div>
     );
   }
@@ -1026,11 +1040,11 @@ export default function StudyGames() {
 
             {/* Game content */}
             <div className="rounded-2xl p-6" style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-color)' }}>
-              {activeGame === 'math' && <SpeedMath />}
-              {activeGame === 'scramble' && <WordScramble />}
-              {activeGame === 'trivia' && <AITrivia />}
-              {activeGame === 'memory' && <MemoryMatch />}
-              {activeGame === 'playables' && <PlayableUnlocker />}
+              {activeGame === 'math' && <SpeedMath onExit={() => setActiveGame(null)} />}
+              {activeGame === 'scramble' && <WordScramble onExit={() => setActiveGame(null)} />}
+              {activeGame === 'trivia' && <AITrivia onExit={() => setActiveGame(null)} />}
+              {activeGame === 'memory' && <MemoryMatch onExit={() => setActiveGame(null)} />}
+              {activeGame === 'playables' && <PlayableUnlocker onExit={() => setActiveGame(null)} />}
             </div>
           </div>
         )}
