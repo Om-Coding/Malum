@@ -671,87 +671,76 @@ function MemoryMatch() {
    Mechanic: Answer 3-5 questions to unlock a YouTube Playable
    ══════════════════════════════════════════════════════════════════ */
 function PlayableUnlocker() {
-  const [step, setStep] = useState('setup'); // 'setup' | 'quiz' | 'play'
+  const [step, setStep] = useState('setup'); // 'setup' | 'playing' | 'quiz' | 'finished'
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [currentQ, setCurrentQ] = useState(0);
-  const [correctCount, setCorrectCount] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [fileContent, setFileContent] = useState('');
-  const [gameUrl, setGameUrl] = useState('https://www.youtube.com/embed/videoseries?list=PLPZvx_G09ZMTuF-XfO_9zQkO2yX-h6u4Y');
-
-  // New states for Google API
-  const [tokenClient, setTokenClient] = useState(null);
-  const [accessToken, setAccessToken] = useState(null);
-
-  useEffect(() => {
-    // Initialize Google Identity Services
-    if (window.google) {
-      const client = window.google.accounts.oauth2.initTokenClient({
-        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-        scope: 'https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/presentations.readonly',
-        callback: (response) => {
-          if (response.access_token) {
-            setAccessToken(response.access_token);
-            createPicker(response.access_token);
-          }
-        },
-      });
-      setTokenClient(client);
-    }
-  }, []);
-
-  const createPicker = (token) => {
-    if (!window.google) return;
-    window.gapi.load('picker', () => {
-      const view = new window.google.picker.DocsView(window.google.picker.ViewId.PRESENTATIONS);
-      view.setIncludeFolders(true);
-      const picker = new window.google.picker.PickerBuilder()
-        .enableFeature(window.google.picker.Feature.NAV_HIDDEN)
-        .setAppId(import.meta.env.VITE_GOOGLE_CLIENT_ID.split('-')[0])
-        .setOAuthToken(token)
-        .addView(view)
-        .setCallback(pickerCallback)
-        .build();
-      picker.setVisible(true);
-    });
-  };
-
-  const pickerCallback = async (data) => {
-    if (data.action === window.google.picker.Action.PICKED) {
-      const doc = data.docs[0];
-      setLoading(true);
-      setFileContent(`Context from Google Slide: ${doc.name}`);
-      // Simulate real slide analysis for now, or use the doc.id to fetch content in a real API setup
-      setTimeout(() => {
-        generateQuestions(`Advanced topics about ${doc.name}`);
-      }, 1000);
-    }
-  };
-
-  const handleGooglePicker = () => {
-    if (tokenClient) {
-      tokenClient.requestAccessToken();
-    } else {
-      alert("Google API not loaded yet. Please refresh.");
-    }
-  };
+  const [gameUrl, setGameUrl] = useState('HGeu_F8v9-Y'); // Video ID now
+  const [customGameUrl, setCustomGameUrl] = useState('');
+  const [timeLeft, setTimeLeft] = useState(60);
+  const [isPaused, setIsPaused] = useState(false);
+  
+  const timerRef = useRef(null);
+  const playerRef = useRef(null);
 
   const gameOptions = [
-    { name: 'YouTube Gaming Mix', url: 'https://www.youtube.com/embed/videoseries?list=PLPZvx_G09ZMTuF-XfO_9zQkO2yX-h6u4Y' },
-    { name: 'Arcade Classics', url: 'https://www.youtube.com/embed/videoseries?list=PLPZvx_G09ZMQT6f0h7eK6h_mD_LHe0RzI' },
-    { name: 'Relaxing Puzzles', url: 'https://www.youtube.com/embed/videoseries?list=PLPZvx_G09ZMRE7fUu_1r8f8u6Z9Z7Z7Z7' }
+    { name: 'Slither.io World', id: 'HGeu_F8v9-Y' },
+    { name: 'Space Arcade', id: 'f5U_wD7LqIs' },
+    { name: 'Mystery Puzzle', id: 'F6pWn-P7T4k' }
   ];
 
-  const [customGameUrl, setCustomGameUrl] = useState('');
+  // Initialize YT Player
+  useEffect(() => {
+    if (step === 'playing' && !playerRef.current) {
+      window.onYouTubeIframeAPIReady = () => {
+        playerRef.current = new window.YT.Player('yt-player', {
+          videoId: gameUrl,
+          playerVars: { 'autoplay': 1, 'controls': 1, 'origin': window.location.origin },
+          events: {
+            'onReady': (e) => e.target.playVideo(),
+          }
+        });
+      };
+      if (window.YT && window.YT.Player) {
+        window.onYouTubeIframeAPIReady();
+      }
+    }
+  }, [step, gameUrl]);
+
+  // Timer logic
+  useEffect(() => {
+    if (step === 'playing' && !isPaused) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft(t => {
+          if (t <= 1) {
+            clearInterval(timerRef.current);
+            setStep('quiz');
+            if (playerRef.current?.pauseVideo) playerRef.current.pauseVideo();
+            return 0;
+          }
+          return t - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timerRef.current);
+  }, [step, isPaused]);
+
+  const handleStart = () => {
+    if (questions.length === 0) {
+      alert("Please upload your slides first so I can prepare your questions!");
+      return;
+    }
+    setStep('playing');
+    setTimeLeft(60);
+  };
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     setLoading(true);
-    setFileContent(`Slide content from ${file.name}`);
     setTimeout(() => {
-      generateQuestions(`Educational topics related to ${file.name}`);
+      generateQuestions(`Educational content from ${file.name}`);
     }, 1000);
   };
 
@@ -762,33 +751,36 @@ function PlayableUnlocker() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: `Create 3 multiple-choice study questions for a kid based on: "${context}". 
-          Return ONLY a JSON array: [{"question": "text", "options": ["A", "B", "C", "D"], "correct": 0}]`
+          prompt: `Create 3 study questions based on: "${context}". Return ONLY JSON: [{"question": "text", "options": ["A", "B", "C", "D"], "correct": 0}]`
         })
       });
       const data = await res.json();
       const raw = (data.result || '').replace(/```json|```/g, '').trim();
       setQuestions(JSON.parse(raw));
-      setStep('quiz');
-    } catch (err) {
-      console.error(err);
-      alert("Failed to generate questions. Please try again.");
-    }
+    } catch (err) { alert("Error generating questions."); }
     setLoading(false);
   };
 
   const handleAnswer = (idx) => {
     if (selectedAnswer !== null) return;
     setSelectedAnswer(idx);
-    if (idx === questions[currentQ].correct) {
-      setCorrectCount(c => c + 1);
-    }
+    const correct = idx === questions[currentQ].correct;
     setTimeout(() => {
-      if (currentQ + 1 < questions.length) {
-        setCurrentQ(c => c + 1);
-        setSelectedAnswer(null);
+      if (correct) {
+        if (currentQ + 1 < questions.length) {
+          setCurrentQ(c => c + 1);
+          setSelectedAnswer(null);
+        } else {
+          // Finished all questions, resume playing!
+          setStep('playing');
+          setTimeLeft(60); // Give another minute
+          setCurrentQ(0);
+          setSelectedAnswer(null);
+          if (playerRef.current?.playVideo) playerRef.current.playVideo();
+        }
       } else {
-        setStep('play');
+        alert("Incorrect! Review your slides and try again.");
+        setSelectedAnswer(null);
       }
     }, 1500);
   };
@@ -797,71 +789,69 @@ function PlayableUnlocker() {
     return (
       <div className="space-y-6 py-4">
         <div className="text-center space-y-2">
-          <h3 className="text-xl font-black theme-text">Unlock Your Playable</h3>
-          <p className="text-sm theme-text-muted">Upload your slides or study notes to generate the unlock challenge.</p>
+          <h3 className="text-xl font-black theme-text">1 Minute Play → Quiz Challenge</h3>
+          <p className="text-sm theme-text-muted">Play for 60 seconds, then answer questions from your slides to keep playing!</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-6 rounded-2xl border theme-border theme-bg-card space-y-4">
-            <div className="flex items-center gap-2 text-orange-400">
-              <FileIcon className="w-5 h-5" />
-              <span className="font-bold">Step 1: Your Slides</span>
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-orange-400 flex items-center gap-2"><FileIcon className="w-4 h-4"/> Step 1: Slides</span>
+              {questions.length > 0 && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-black">READY</span>}
             </div>
-            
-            <div className="grid grid-cols-1 gap-2">
-              <button onClick={handleGooglePicker} disabled={loading}
-                className="w-full py-4 rounded-xl flex flex-col items-center justify-center gap-2 bg-orange-500/10 border-2 border-orange-500/20 hover:bg-orange-500/20 transition-all">
-                <Monitor className={`w-6 h-6 text-orange-400 ${loading ? 'animate-spin' : ''}`} />
-                <span className="text-xs font-black uppercase text-orange-400">Select Google Slides</span>
-              </button>
-              
-              <div className="relative py-2">
-                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10"></div></div>
-                <div className="relative flex justify-center text-[10px]"><span className="bg-var(--bg-elevated) px-2 theme-text-muted font-bold">OR UPLOAD</span></div>
+            <label className="block w-full cursor-pointer">
+              <div className="py-8 border-2 border-dashed theme-border rounded-xl flex flex-col items-center justify-center gap-2 hover:border-orange-400/50 transition-all">
+                {loading ? <Loader2 className="w-8 h-8 text-orange-400 animate-spin" /> : <Monitor className="w-8 h-8 text-orange-400" />}
+                <span className="text-xs font-bold theme-text-muted">{loading ? 'Analyzing...' : 'Upload Slides (PDF/PPT)'}</span>
               </div>
-
-              <label className="block w-full cursor-pointer">
-                <div className="py-3 border border-dashed theme-border rounded-xl flex items-center justify-center gap-2 hover:bg-white/5 transition-all">
-                  <FileIcon className="w-4 h-4 theme-text-muted" />
-                  <span className="text-[10px] font-bold theme-text-muted">Local PDF/PPT</span>
-                </div>
-                <input type="file" className="hidden" onChange={handleFileUpload} accept=".pdf,.ppt,.pptx,.txt" disabled={loading} />
-              </label>
-            </div>
+              <input type="file" className="hidden" onChange={handleFileUpload} accept=".pdf,.ppt,.pptx,.txt" />
+            </label>
           </div>
 
           <div className="p-6 rounded-2xl border theme-border theme-bg-card space-y-4">
-            <div className="flex items-center gap-2 text-blue-400">
-              <Gamepad className="w-5 h-5" />
-              <span className="font-bold">Step 2: Pick Your Game</span>
-            </div>
+            <span className="font-bold text-blue-400 flex items-center gap-2"><Gamepad className="w-4 h-4"/> Step 2: Game</span>
             <div className="space-y-2">
-              {gameOptions.map((opt, i) => (
-                <button key={i} onClick={() => setGameUrl(opt.url)}
-                  className="w-full px-4 py-3 rounded-xl text-xs font-bold text-left flex items-center justify-between border theme-border hover:bg-white/5 transition-all"
-                  style={{ borderColor: gameUrl === opt.url ? '#3B82F6' : '' }}>
+              {gameOptions.map((opt) => (
+                <button key={opt.id} onClick={() => setGameUrl(opt.id)}
+                  className="w-full px-4 py-2.5 rounded-xl text-xs font-bold text-left flex items-center justify-between border theme-border hover:bg-white/5 transition-all"
+                  style={{ borderColor: gameUrl === opt.id ? '#3B82F6' : '' }}>
                   {opt.name}
-                  {gameUrl === opt.url && <Check className="w-4 h-4 text-blue-400" />}
+                  {gameUrl === opt.id && <Check className="w-4 h-4 text-blue-400" />}
                 </button>
               ))}
-            </div>
-            
-            <div className="pt-2">
-              <input type="text" placeholder="Or paste any YouTube Video/Game URL..."
-                value={customGameUrl} onChange={(e) => {
-                  const val = e.target.value;
-                  setCustomGameUrl(val);
-                  if (val.includes('youtube.com/watch?v=')) {
-                    setGameUrl(val.replace('watch?v=', 'embed/'));
-                  } else if (val.includes('youtu.be/')) {
-                    setGameUrl(val.replace('youtu.be/', 'youtube.com/embed/'));
-                  } else {
-                    setGameUrl(val);
-                  }
-                }}
-                className="w-full px-4 py-2 rounded-xl text-[10px] theme-bg border theme-border theme-text focus:outline-none focus:ring-1 focus:ring-blue-500/50" />
+              <input type="text" placeholder="Or paste YouTube ID (e.g. dQw4w9WgXcQ)"
+                value={customGameUrl} onChange={(e) => { setCustomGameUrl(e.target.value); setGameUrl(e.target.value); }}
+                className="w-full px-4 py-2 rounded-xl text-[10px] theme-bg border theme-border theme-text focus:outline-none" />
             </div>
           </div>
+        </div>
+
+        <button onClick={handleStart} disabled={loading || questions.length === 0}
+          className="w-full py-4 rounded-2xl text-white font-black text-lg hover:scale-[1.01] transition-all disabled:opacity-30"
+          style={{ background: 'linear-gradient(135deg, #F97316, #3B82F6)', boxShadow: '0 8px 32px rgba(249,115,22,0.3)' }}>
+          START SESSION
+        </button>
+      </div>
+    );
+  }
+
+  if (step === 'playing') {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full border-4 border-orange-500/30 flex items-center justify-center font-black text-orange-400">
+              {timeLeft}
+            </div>
+            <span className="font-black theme-text uppercase tracking-widest text-sm">Game Session Active</span>
+          </div>
+          <div className="flex items-center gap-2 text-xs font-bold theme-text-muted">
+            <Clock className="w-4 h-4" /> Challenge in {timeLeft}s
+          </div>
+        </div>
+
+        <div className="relative rounded-3xl overflow-hidden border-4 border-orange-500/20 bg-black aspect-video shadow-2xl">
+          <div id="yt-player" className="w-full h-full"></div>
         </div>
       </div>
     );
@@ -871,12 +861,12 @@ function PlayableUnlocker() {
     const q = questions[currentQ];
     return (
       <div className="max-w-xl mx-auto space-y-8 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Lock className="w-5 h-5 text-amber-400" />
-            <span className="font-black theme-text">Unlock Challenge</span>
+        <div className="text-center space-y-2">
+          <div className="w-16 h-16 bg-amber-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+             <Lock className="w-8 h-8 text-amber-500 animate-pulse" />
           </div>
-          <span className="text-xs font-black theme-text-muted">Goal: Answer all to Play! ({currentQ + 1}/{questions.length})</span>
+          <h3 className="text-2xl font-black theme-text">TIME IS UP!</h3>
+          <p className="text-sm theme-text-muted">Answer these 3 questions from your slides to unlock another 60 seconds of playtime.</p>
         </div>
 
         <div className="space-y-4">
@@ -907,37 +897,7 @@ function PlayableUnlocker() {
       </div>
     );
   }
-
-  if (step === 'play') {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-emerald-400">
-            <Unlock className="w-6 h-6" />
-            <span className="font-black text-xl uppercase tracking-tighter">Access Granted</span>
-          </div>
-          <button onClick={() => { setStep('setup'); setCurrentQ(0); setSelectedAnswer(null); }} 
-            className="px-4 py-2 rounded-lg text-xs font-bold theme-text-muted border theme-border hover:bg-white/5">
-            Exit Game Session
-          </button>
-        </div>
-
-        <div className="relative rounded-3xl overflow-hidden border-4 border-emerald-500/30 bg-black aspect-video shadow-2xl shadow-emerald-500/10">
-          <iframe key={gameUrl} src={gameUrl} className="w-full h-full" frameBorder="0" 
-            allow="autoplay; encrypted-media; gyroscope; picture-in-picture; accelerometer" 
-            allowFullScreen />
-          
-          <div className="absolute bottom-4 right-4 opacity-0 hover:opacity-100 transition-opacity">
-            <a href={gameUrl.replace('/embed/', '/watch?v=')} target="_blank" rel="noreferrer"
-               className="px-3 py-1.5 bg-black/80 rounded-lg text-[10px] font-bold text-white border border-white/20">
-               Open in New Tab
-            </a>
-          </div>
-        </div>
-        <p className="text-center text-[10px] theme-text-muted">Tip: If the video says 'Unavailable', click the button in the bottom-right to play it directly on YouTube!</p>
-      </div>
-    );
-  }
+}
 }
 
 /* ════════════════════════════════════════════════════════════════
