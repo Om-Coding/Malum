@@ -923,8 +923,18 @@ function PlayableUnlocker() {
         </div>
 
         <div className="relative rounded-3xl overflow-hidden border-4 border-emerald-500/30 bg-black aspect-video shadow-2xl shadow-emerald-500/10">
-          <iframe src={gameUrl} className="w-full h-full" frameBorder="0" allowFullScreen allow="autoplay; encrypted-media" />
+          <iframe key={gameUrl} src={gameUrl} className="w-full h-full" frameBorder="0" 
+            allow="autoplay; encrypted-media; gyroscope; picture-in-picture; accelerometer" 
+            allowFullScreen />
+          
+          <div className="absolute bottom-4 right-4 opacity-0 hover:opacity-100 transition-opacity">
+            <a href={gameUrl.replace('/embed/', '/watch?v=')} target="_blank" rel="noreferrer"
+               className="px-3 py-1.5 bg-black/80 rounded-lg text-[10px] font-bold text-white border border-white/20">
+               Open in New Tab
+            </a>
+          </div>
         </div>
+        <p className="text-center text-[10px] theme-text-muted">Tip: If the video says 'Unavailable', click the button in the bottom-right to play it directly on YouTube!</p>
       </div>
     );
   }
