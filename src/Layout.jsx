@@ -308,7 +308,7 @@ export default function Layout() {
         <div className="space-y-1 px-2">
             {/* Brand in sidebar */}
             <div className="flex items-center gap-2.5 px-3 py-3 mb-2">
-                <img src="/malum-logo-round.png" alt="Malum" className="object-contain rounded-full" style={{ width: '36px', height: '36px', filter: isDark ? 'drop-shadow(0 0 8px rgba(255,107,0,0.5))' : 'none' }} />
+                <img src="/malum-logo-round.png" alt="Malum" className="object-cover rounded-full overflow-hidden" style={{ width: '36px', height: '36px', clipPath: 'circle(50%)', filter: isDark ? 'drop-shadow(0 0 8px rgba(255,107,0,0.5))' : 'none' }} />
                 <span className="font-black text-lg malum-text-gradient">Malum</span>
             </div>
 
@@ -397,7 +397,7 @@ export default function Layout() {
                     <NavLink to="/home" className="font-black flex items-center gap-2 group">
                         <div className="relative">
                             <div className="absolute inset-0 rounded-full blur-md" style={{ background: isDark ? 'rgba(255,107,0,0.4)' : 'transparent', animation: isDark ? 'glow-breathe 3s ease-in-out infinite' : 'none' }} />
-                            <img src="/malum-logo-round.png" alt="Malum" className="relative z-10 object-contain rounded-full group-hover:rotate-12 transition-transform duration-500" style={{ width: '32px', height: '32px', filter: isDark ? 'drop-shadow(0 0 6px rgba(255,107,0,0.6))' : 'none' }} />
+                            <img src="/malum-logo-round.png" alt="Malum" className="relative z-10 object-cover rounded-full overflow-hidden group-hover:rotate-12 transition-transform duration-500" style={{ width: '32px', height: '32px', clipPath: 'circle(50%)', filter: isDark ? 'drop-shadow(0 0 6px rgba(255,107,0,0.6))' : 'none' }} />
                         </div>
                         <span className="text-xl malum-text-gradient tracking-tight">Malum</span>
                     </NavLink>
@@ -501,7 +501,7 @@ export default function Layout() {
                 <SettingsPanel isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} isDark={isDark} />
 
                 {/* Main Content */}
-                <main className="flex-1 h-full overflow-y-auto custom-scrollbar relative px-4 md:px-8 lg:px-12">
+                <main className="flex-1 h-full overflow-y-auto custom-scrollbar relative px-4 md:px-8 lg:px-12 hud-grid hud-scanline">
                     <Outlet />
                 </main>
             </div>

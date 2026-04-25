@@ -157,6 +157,98 @@ body {
 .theme-text-secondary { color: var(--text-secondary); }
 .theme-text-muted { color: var(--text-muted); }
 .theme-border { border-color: var(--border-color); }
+.theme-border-glow { border-color: var(--accent-primary); box-shadow: 0 0 15px var(--glow-orange); }
+
+/* ===================== FUTURISTIC / HUD UTILITIES ===================== */
+.hud-grid {
+  background-image: 
+    linear-gradient(var(--border-faint) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-faint) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.hud-dots {
+  background-image: radial-gradient(var(--border-faint) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.hud-scanline {
+  position: relative;
+  overflow: hidden;
+}
+
+.hud-scanline::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(180deg, transparent, rgba(255,107,0,0.05), transparent);
+  animation: scan 6s linear infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+@keyframes scan {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(400%); }
+}
+
+.hud-corner {
+  position: relative;
+}
+
+.hud-corner::before,
+.hud-corner::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.hud-corner::before {
+  top: 8px;
+  left: 8px;
+  border-top: 2px solid var(--accent-primary);
+  border-left: 2px solid var(--accent-primary);
+  opacity: 0.6;
+}
+
+.hud-corner::after {
+  bottom: 8px;
+  right: 8px;
+  border-bottom: 2px solid var(--accent-purple);
+  border-right: 2px solid var(--accent-purple);
+  opacity: 0.6;
+}
+
+/* Circuit lines */
+.circuit-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.circuit-line {
+  position: absolute;
+  background: var(--accent-primary);
+  opacity: 0.3;
+}
+
+.circuit-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  box-shadow: 0 0 10px var(--accent-primary);
+}
 
 .theme-glass {
   background: var(--glass-bg);

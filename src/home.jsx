@@ -8,6 +8,29 @@ function Particle({ style }) {
   return <div className="particle" style={style} />;
 }
 
+// Futuristic Circuitry Component
+function Circuitry() {
+  return (
+    <div className="circuit-bg">
+      {/* Horizontal & Vertical lines */}
+      <div className="circuit-line" style={{ top: '20%', left: 0, width: '40%', height: '1px' }} />
+      <div className="circuit-line" style={{ top: '20%', left: '40%', width: '1px', height: '10%' }} />
+      <div className="circuit-dot" style={{ top: '30%', left: '40%', transform: 'translate(-50%, -50%)' }} />
+      
+      <div className="circuit-line" style={{ bottom: '15%', right: 0, width: '30%', height: '1px' }} />
+      <div className="circuit-line" style={{ bottom: '15%', right: '30%', width: '1px', height: '15%' }} />
+      <div className="circuit-dot" style={{ bottom: '30%', right: '30%', transform: 'translate(50%, 50%)' }} />
+
+      {/* Diagonal lines */}
+      <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.2 }}>
+        <path d="M0 100 L100 200 M500 0 L600 100 M1000 400 L1100 500" stroke="var(--accent-primary)" strokeWidth="1" fill="none" />
+        <circle cx="100" cy="200" r="3" fill="var(--accent-primary)" />
+        <circle cx="600" cy="100" r="3" fill="var(--accent-purple)" />
+      </svg>
+    </div>
+  );
+}
+
 // Animated counter
 function AnimatedCounter({ target, suffix = '', duration = 2000 }) {
   const [count, setCount] = useState(0);
@@ -172,10 +195,13 @@ const MalumHomePage = () => {
   return (
     <div className="min-h-screen overflow-x-hidden transition-colors duration-500" style={{ background: 'var(--bg-primary)' }}>
 
-      {/* === PARTICLE FIELD === */}
+      {/* === PARTICLE FIELD & GRID === */}
+      <div className="particle-container fixed inset-0 z-0 hud-grid opacity-20" />
       <div className="particle-container fixed inset-0 z-0">
+        <Circuitry />
         {particles.map((p, i) => <Particle key={i} style={p} />)}
       </div>
+      <div className="fixed inset-0 z-0 hud-scanline pointer-events-none" />
 
       {/* === AMBIENT GLOWS === */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
@@ -198,14 +224,14 @@ const MalumHomePage = () => {
           <div className="max-w-5xl mx-auto text-center">
 
             {/* Greeting pill */}
-            <div className="inline-flex items-center gap-3 mb-10 hero-pill malum-fadeInUp stagger-1"
-              style={{ background: 'var(--bg-faint)', border: '1px solid var(--border-faint)' }}>
+            <div className="inline-flex items-center gap-3 mb-10 hero-pill malum-fadeInUp stagger-1 hud-corner"
+              style={{ background: 'var(--bg-faint)', border: '1px solid var(--border-faint)', padding: '10px 24px' }}>
               <span className="text-2xl" style={{ animation: 'wiggle 2s ease-in-out infinite 1s' }}>👋</span>
               <span className="theme-text font-bold text-sm">
-                Welcome back, <span className="malum-text-gradient">{userName}</span>!
+                SYSTEM READY: <span className="malum-text-gradient uppercase">{userName}</span>
               </span>
-              <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 8px #10B981', animation: 'pulse 2s ease-in-out infinite' }} />
-              <span className="text-xs font-semibold" style={{ color: '#10B981' }}>Online</span>
+              <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 12px #10B981', animation: 'pulse 1.5s ease-in-out infinite' }} />
+              <span className="text-[10px] font-black uppercase tracking-tighter" style={{ color: '#10B981' }}>Core Stable</span>
             </div>
 
             {/* Main headline */}
@@ -332,7 +358,7 @@ const MalumHomePage = () => {
                   style={{ animationDelay: `${0.55 + index * 0.1}s` }}
                 >
                   <div
-                    className="relative rounded-2xl p-8 md:p-10 overflow-hidden transition-all duration-500"
+                    className="relative rounded-2xl p-8 md:p-10 overflow-hidden transition-all duration-500 hud-corner hud-scanline"
                     style={{
                       background: hoveredFeature === index
                         ? `linear-gradient(135deg, ${feature.glowColor.replace('0.4', '0.06')} 0%, var(--bg-elevated) 100%)`

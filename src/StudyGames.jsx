@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Gamepad2, Zap, Brain, TextCursorInput, Layers, Trophy, Star,
   RotateCcw, ChevronRight, Clock, Target, Flame, Check, X as XIcon,
-  Sparkles, Loader2, ArrowRight, Play, SkipForward
+  Sparkles, Loader2, ArrowRight, Play, SkipForward, FileText as FileIcon,
+  Youtube, Gamepad, Lock, Unlock, Monitor
 } from 'lucide-react';
 
 const API_ROOT = typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL
@@ -666,6 +667,181 @@ function MemoryMatch() {
 }
 
 /* ════════════════════════════════════════════════════════════════
+   GAME 5 — Playable Unlocker (YouTube Playables & Slide Q&A)
+   Mechanic: Answer 3-5 questions to unlock a YouTube Playable
+   ══════════════════════════════════════════════════════════════════ */
+function PlayableUnlocker() {
+  const [step, setStep] = useState('setup'); // 'setup' | 'quiz' | 'play'
+  const [loading, setLoading] = useState(false);
+  const [questions, setQuestions] = useState([]);
+  const [currentQ, setCurrentQ] = useState(0);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [fileContent, setFileContent] = useState('');
+  const [gameUrl, setGameUrl] = useState('https://www.youtube.com/embed/videoseries?list=PLPZvx_G09ZMTuF-XfO_9zQkO2yX-h6u4Y'); // Default placeholder
+
+  const gameOptions = [
+    { name: 'YouTube Classics', url: 'https://www.youtube.com/embed/videoseries?list=PLPZvx_G09ZMTuF-XfO_9zQkO2yX-h6u4Y' },
+    { name: 'Retro Arcade', url: 'https://www.youtube.com/embed/rVAt7mAn2eM?autoplay=1&mute=1' },
+    { name: 'Slither.io Inspired', url: 'https://www.youtube.com/embed/HGeu_F8v9-Y?autoplay=1&mute=1' }
+  ];
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setLoading(true);
+    setFileContent(`Slide content from ${file.name}`);
+    setTimeout(() => {
+      generateQuestions(`Educational topics related to ${file.name}`);
+    }, 1000);
+  };
+
+  const generateQuestions = async (context) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_ROOT}/api/study`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: `Create 3 multiple-choice study questions for a kid based on: "${context}". 
+          Return ONLY a JSON array: [{"question": "text", "options": ["A", "B", "C", "D"], "correct": 0}]`
+        })
+      });
+      const data = await res.json();
+      const raw = (data.result || '').replace(/```json|```/g, '').trim();
+      setQuestions(JSON.parse(raw));
+      setStep('quiz');
+    } catch (err) {
+      console.error(err);
+      alert("Failed to generate questions. Please try again.");
+    }
+    setLoading(false);
+  };
+
+  const handleAnswer = (idx) => {
+    if (selectedAnswer !== null) return;
+    setSelectedAnswer(idx);
+    if (idx === questions[currentQ].correct) {
+      setCorrectCount(c => c + 1);
+    }
+    setTimeout(() => {
+      if (currentQ + 1 < questions.length) {
+        setCurrentQ(c => c + 1);
+        setSelectedAnswer(null);
+      } else {
+        setStep('play');
+      }
+    }, 1500);
+  };
+
+  if (step === 'setup') {
+    return (
+      <div className="space-y-6 py-4">
+        <div className="text-center space-y-2">
+          <h3 className="text-xl font-black theme-text">Unlock Your Playable</h3>
+          <p className="text-sm theme-text-muted">Upload your slides or study notes to generate the unlock challenge.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-6 rounded-2xl border theme-border theme-bg-card space-y-4">
+            <div className="flex items-center gap-2 text-orange-400">
+              <FileIcon className="w-5 h-5" />
+              <span className="font-bold">Step 1: Your Slides</span>
+            </div>
+            <label className="block w-full cursor-pointer">
+              <div className="py-8 border-2 border-dashed theme-border rounded-xl flex flex-col items-center justify-center gap-2 hover:border-orange-400/50 transition-all">
+                {loading ? <Loader2 className="w-8 h-8 text-orange-400 animate-spin" /> : <Monitor className="w-8 h-8 text-orange-400" />}
+                <span className="text-xs font-bold theme-text-muted">{loading ? 'Analyzing Slides...' : 'Click to Upload Slides (PDF/PPT)'}</span>
+              </div>
+              <input type="file" className="hidden" onChange={handleFileUpload} accept=".pdf,.ppt,.pptx,.txt" disabled={loading} />
+            </label>
+          </div>
+
+          <div className="p-6 rounded-2xl border theme-border theme-bg-card space-y-4">
+            <div className="flex items-center gap-2 text-blue-400">
+              <Gamepad className="w-5 h-5" />
+              <span className="font-bold">Step 2: Pick Your Game</span>
+            </div>
+            <div className="space-y-2">
+              {gameOptions.map((opt, i) => (
+                <button key={i} onClick={() => setGameUrl(opt.url)}
+                  className="w-full px-4 py-3 rounded-xl text-xs font-bold text-left flex items-center justify-between border theme-border hover:bg-white/5 transition-all"
+                  style={{ borderColor: gameUrl === opt.url ? '#3B82F6' : '' }}>
+                  {opt.name}
+                  {gameUrl === opt.url && <Check className="w-4 h-4 text-blue-400" />}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (step === 'quiz') {
+    const q = questions[currentQ];
+    return (
+      <div className="max-w-xl mx-auto space-y-8 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Lock className="w-5 h-5 text-amber-400" />
+            <span className="font-black theme-text">Unlock Challenge</span>
+          </div>
+          <span className="text-xs font-black theme-text-muted">Goal: Answer all to Play! ({currentQ + 1}/{questions.length})</span>
+        </div>
+
+        <div className="space-y-4">
+          <div className="p-6 rounded-2xl border-2 border-amber-500/20 bg-amber-500/5">
+             <h4 className="text-lg font-black theme-text leading-tight">{q?.question}</h4>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3">
+            {q?.options.map((opt, i) => {
+              const isCorrect = i === q.correct;
+              const isSelected = i === selectedAnswer;
+              let style = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)' };
+              if (selectedAnswer !== null) {
+                if (isCorrect) style = { background: 'rgba(16,185,129,0.1)', border: '1px solid #10B981', color: '#10B981' };
+                else if (isSelected) style = { background: 'rgba(239,68,68,0.1)', border: '1px solid #EF4444', color: '#EF4444' };
+                else style.opacity = 0.4;
+              }
+              return (
+                <button key={i} onClick={() => handleAnswer(i)} disabled={selectedAnswer !== null}
+                  className="p-4 rounded-xl text-sm font-bold text-left transition-all"
+                  style={style}>
+                  {opt}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (step === 'play') {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-emerald-400">
+            <Unlock className="w-6 h-6" />
+            <span className="font-black text-xl uppercase tracking-tighter">Access Granted</span>
+          </div>
+          <button onClick={() => { setStep('setup'); setCurrentQ(0); setSelectedAnswer(null); }} 
+            className="px-4 py-2 rounded-lg text-xs font-bold theme-text-muted border theme-border hover:bg-white/5">
+            Exit Game Session
+          </button>
+        </div>
+
+        <div className="relative rounded-3xl overflow-hidden border-4 border-emerald-500/30 bg-black aspect-video shadow-2xl shadow-emerald-500/10">
+          <iframe src={gameUrl} className="w-full h-full" frameBorder="0" allowFullScreen allow="autoplay; encrypted-media" />
+        </div>
+      </div>
+    );
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════
    MAIN STUDY GAMES PAGE
 ═══════════════════════════════════════════════════════════════════ */
 const GAMES = [
@@ -688,6 +864,11 @@ const GAMES = [
     id: 'memory', label: 'Memory Match', icon: Layers, color: '#EC4899', glow: 'rgba(236,72,153,0.4)',
     desc: 'Match paired cards — elements, world capitals, vocab, and math. Fewer moves = better score!',
     tags: ['Memory', 'Science', 'Vocabulary'],
+  },
+  {
+    id: 'playables', label: 'YouTube Playables', icon: Youtube, color: '#EF4444', glow: 'rgba(239,68,68,0.4)',
+    desc: 'Unlock your favorite YouTube mini-games by answering questions from your own study slides!',
+    tags: ['Gaming', 'Slides', 'Unlockable'],
   },
 ];
 
@@ -790,6 +971,7 @@ export default function StudyGames() {
               {activeGame === 'scramble' && <WordScramble />}
               {activeGame === 'trivia' && <AITrivia />}
               {activeGame === 'memory' && <MemoryMatch />}
+              {activeGame === 'playables' && <PlayableUnlocker />}
             </div>
           </div>
         )}

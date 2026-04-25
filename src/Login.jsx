@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from './ThemeContext';
 import { Mail, Lock, User, Eye, EyeOff, Sparkles, BookOpen, GraduationCap, ArrowRight, ArrowLeft, Landmark, Check, Zap, Brain, Award } from 'lucide-react';
 
 /* ─── Role Picker Step ───────────────────────────────────────── */
 function RolePicker({ onSelect }) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const [hovered, setHovered] = useState(null);
 
   const roles = [
@@ -47,7 +50,7 @@ function RolePicker({ onSelect }) {
         {/* Logo */}
         <div className="text-center mb-12 fadeInUp">
           <div className="inline-flex items-center gap-3 mb-4">
-            <img src="/malum-logo-round.png" alt="Malum" className="object-contain rounded-full" style={{ width: '56px', height: '56px', filter: isDark ? 'drop-shadow(0 0 16px rgba(255,107,0,0.5))' : 'none' }} />
+            <img src="/malum-logo-round.png" alt="Malum" className="object-cover rounded-full overflow-hidden" style={{ width: '56px', height: '56px', clipPath: 'circle(50%)', filter: isDark ? 'drop-shadow(0 0 16px rgba(255,107,0,0.5))' : 'none' }} />
             <span className="text-4xl font-black malum-text-gradient">Malum</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-black text-white mb-3">
@@ -170,6 +173,8 @@ function RolePicker({ onSelect }) {
 
 /* ─── Main Login Component ───────────────────────────────────── */
 const MalumLogin = () => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const navigate = useNavigate();
 
   // Step: 'role' → 'form'
@@ -295,7 +300,7 @@ const MalumLogin = () => {
             Back
           </button>
           <div className="flex items-center gap-2 ml-auto">
-            <img src="/malum-logo-round.png" alt="Malum" className="object-contain rounded-full" style={{ width: '32px', height: '32px', filter: isDark ? `drop-shadow(0 0 8px ${accentGlow})` : 'none' }} />
+            <img src="/malum-logo-round.png" alt="Malum" className="object-cover rounded-full overflow-hidden" style={{ width: '32px', height: '32px', clipPath: 'circle(50%)', filter: isDark ? `drop-shadow(0 0 8px ${accentGlow})` : 'none' }} />
             <span className="font-black text-lg malum-text-gradient">Malum</span>
           </div>
         </div>
