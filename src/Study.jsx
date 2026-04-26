@@ -44,13 +44,20 @@ function AudioOverviewComponent({ podcast, quiz }) {
       const v = window.speechSynthesis.getVoices();
       if (v.length > 0) {
         setAllVoices(v);
-        // Auto-select best voices
-        const preferredMale = v.find(x =>
-          /google uk english male|microsoft david|alex|daniel/i.test(x.name)
-        ) || v.find(x => /male/i.test(x.name)) || v[0];
-        const preferredFemale = v.find(x =>
-          /google uk english female|microsoft zira|samantha|emma|siri/i.test(x.name)
-        ) || v.find(x => /female/i.test(x.name)) || v[1] || v[0];
+        // Auto-select best voices (Neural/Natural first)
+        const findBestVoice = (isMale) => {
+          const regex = isMale 
+            ? /natural|neural|google uk english male|microsoft david|alex|daniel|guy/i 
+            : /natural|neural|google uk english female|microsoft zira|samantha|emma|siri|jenny/i;
+          
+          return v.find(x => regex.test(x.name) && x.lang.startsWith('en')) 
+            || v.find(x => regex.test(x.name))
+            || v.find(x => (isMale ? /male/i.test(x.name) : /female/i.test(x.name)))
+            || v[isMale ? 0 : 1] || v[0];
+        };
+
+        const preferredMale = findBestVoice(true);
+        const preferredFemale = findBestVoice(false);
         setHost1Voice(preferredMale?.name || '');
         setHost2Voice(preferredFemale?.name || '');
       }
@@ -71,10 +78,16 @@ function AudioOverviewComponent({ podcast, quiz }) {
 
       const utterance = new SpeechSynthesisUtterance(line.text);
       utterance.voice = line.host === '1' ? getVoiceByName(host1Voice) : getVoiceByName(host2Voice);
-      utterance.rate = rate;
-      utterance.pitch = line.host === '1' ? pitch1 : pitch2;
+      
+      // Add slight variability to avoid robotic rhythm
+      const jitter = (Math.random() - 0.5) * 0.05; 
+      utterance.rate = rate + jitter;
+      utterance.pitch = (line.host === '1' ? pitch1 : pitch2) + jitter;
       utterance.volume = volume;
-      utterance.onend = resolve;
+      utterance.onend = () => {
+        // Natural pause before resolving
+        setTimeout(resolve, 300 + Math.random() * 500);
+      };
       utterance.onerror = resolve;
       window.speechSynthesis.speak(utterance);
     });

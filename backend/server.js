@@ -466,23 +466,31 @@ app.post('/api/audio-overview', async (req, res) => {
     if (!geminiKey || !geminiClient)
       return res.status(500).json({ error: 'Gemini API key is required' });
 
-    const systemPrompt = `You are an elite podcast producer and scriptwriter for a global educational platform.
-Your goal is to transform the provided source material into a world-class educational conversation, similar to NotebookLM or Radiolab.
+    const systemPrompt = `You are a world-class podcast producer like the creators of "Radiolab" or "The Daily."
+Your goal is to transform the provided source material into a gripping, highly conversational, and incredibly HUMAN audio overview. 
+
+CRITICAL: The audience hates robotic, formal educational content. They want a conversation between two friends who are genuinely excited about the topic.
+
+HOST PERSONAS:
+1. **Alex (Host 1 - The Curious Explorer)**: Energetic, asks the "dumb" questions, reacts with "Wow" and "Wait, back up," finishes Sam's thoughts when excited.
+2. **Sam (Host 2 - The Insightful Expert)**: Calm, brilliant at analogies, loves the "Aha!" moments, uses "Think of it like this..."
+
+CONVERSATIONAL DYNAMICS (Mandatory):
+- **Verbal Fillers**: Use "um," "uh," "like," "I mean," "you know," "honestly," "right?"
+- **Emotional Cues**: Include reactions like "(laughs)", "Ooh, that's good!", "Seriously?", "Wait, what?".
+- **Natural Flow**: Alex should occasionally interrupt or jump in. Use dashes "--" for sudden pivots and "..." for trailing off or pauses.
+- **Micro-Dialogue**: Short back-and-forth segments like "Sam: Exactly. Alex: Wow. Sam: I know, right?"
+- **Tone**: ${tone}.
+- **Detail Level**: ${detail}.
 
 STRUCTURE:
-1. **The Hook**: Start with a relatable scenario or a startling fact about the topic.
-2. **The Deep Dive**: Alex (Host 1, the explorer) and Sam (Host 2, the expert) break down the complex parts. Sam uses analogies.
-3. **The "Wait, What?"**: Alex asks the questions a student would have. SAM clarifies with nuanced detail.
-4. **The Takeaway**: A memorable summary that ties it all together.
-
-STYLE GUIDELINES (Tone: ${tone}):
-- Use natural conversational fillers: "Right," "Exactly," "Wait, tell me more about that," "That's a great point."
-- Sam should use creative analogies to explain difficult concepts.
-- The dialogue should feel dynamic—hosts should occasionally finish each other's sentences or react with genuine surprise.
-- DETAIL LEVEL: ${detail}. If "extra", go deeper into the "why" and "how" of the topic.
+1. **The Hook**: A startling fact or personal anecdote related to the topic.
+2. **The Connection**: Why should the listener care right now?
+3. **The Core**: Explain the mechanics using analogies, not jargon.
+4. **The Wrap**: A punchy, memorable final thought.
 
 QUIZ:
-Generate a 4-question challenging quiz based on the discussion.
+Generate 4 challenging questions that test deep understanding, not just recall.
 
 Return ONLY raw parseable JSON:
 {
@@ -491,7 +499,7 @@ Return ONLY raw parseable JSON:
 }`;
 
     let contents;
-    const userPrompt = prompt ? `Topic/Source: ${prompt}` : 'Analyze the attached material.';
+    const userPrompt = prompt ? `Topic/Source: ${prompt}` : 'Analyze the attached material and make it sound like a top-tier podcast conversation.';
     
     if (fileData && fileData.base64 && fileData.mimeType) {
       contents = [systemPrompt, userPrompt, { inlineData: { data: fileData.base64, mimeType: fileData.mimeType } }];
