@@ -37,6 +37,7 @@ function AudioOverviewComponent({ podcast, quiz }) {
   const [pitch1, setPitch1] = useState(1.0);
   const [pitch2, setPitch2] = useState(1.08);
   const [volume, setVolume] = useState(1.0);
+  const audioObjRef = useRef(null);
 
   // Load available voices
   useEffect(() => {
@@ -70,22 +71,48 @@ function AudioOverviewComponent({ podcast, quiz }) {
   const getVoiceByName = (name) => allVoices.find(v => v.name === name) || allVoices[0];
 
   const speakLine = useCallback((line, index) => {
-    return new Promise(resolve => {
+    return new Promise(async (resolve) => {
       if (!playingRef.current) { resolve(); return; }
       currentLineRef.current = index;
       setCurrentLine(index);
       setProgress(Math.round((index / podcast.length) * 100));
 
+      // Check if we should use OpenAI TTS or Web Speech API
+      if (line.voice) {
+        try {
+          const resp = await fetch(`${API_ROOT}/api/tts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: line.text, voice: line.voice })
+          });
+          if (!resp.ok) throw new Error('TTS failed');
+          const blob = await resp.blob();
+          const url = URL.createObjectURL(blob);
+          const audio = new Audio(url);
+          audioObjRef.current = audio;
+          audio.volume = volume;
+          audio.playbackRate = rate;
+          audio.onended = () => {
+            URL.revokeObjectURL(url);
+            setTimeout(resolve, 400 + Math.random() * 400);
+          };
+          audio.onerror = resolve;
+          audio.play();
+          return;
+        } catch (err) {
+          console.error('OpenAI TTS Error, falling back:', err);
+        }
+      }
+
+      // Fallback to Web Speech API
       const utterance = new SpeechSynthesisUtterance(line.text);
       utterance.voice = line.host === '1' ? getVoiceByName(host1Voice) : getVoiceByName(host2Voice);
       
-      // Add slight variability to avoid robotic rhythm
       const jitter = (Math.random() - 0.5) * 0.05; 
       utterance.rate = rate + jitter;
       utterance.pitch = (line.host === '1' ? pitch1 : pitch2) + jitter;
       utterance.volume = volume;
       utterance.onend = () => {
-        // Natural pause before resolving
         setTimeout(resolve, 300 + Math.random() * 500);
       };
       utterance.onerror = resolve;
@@ -119,6 +146,10 @@ function AudioOverviewComponent({ podcast, quiz }) {
 
   const handleStop = () => {
     window.speechSynthesis.cancel();
+    if (audioObjRef.current) {
+      audioObjRef.current.pause();
+      audioObjRef.current = null;
+    }
     playingRef.current = false;
     setIsPlaying(false);
     setCurrentLine(-1);
@@ -1227,12 +1258,12 @@ export default function Study() {
                             </div>
                           </div>
                           <div>
-                            <label className="text-[10px] font-bold theme-text-secondary block mb-1.5">Detail Depth</label>
+                            <label className="text-[10px] font-bold theme-text-secondary block mb-1.5">Podcast Length</label>
                             <div className="grid grid-cols-2 gap-1.5">
                               {['standard', 'extra'].map(d => (
                                 <button key={d} onClick={() => setPodcastDepth(d)}
                                   className={`px-2 py-1 rounded-lg text-[10px] font-bold capitalize border transition-all ${podcastDepth === d ? 'bg-indigo-500 text-white border-indigo-400' : 'theme-bg-faint theme-text-muted border-transparent'}`}>
-                                  {d.replace('extra', 'Deep Dive')}
+                                  {d === 'extra' ? 'Deep Dive (30m)' : 'Standard (5m)'}
                                 </button>
                               ))}
                             </div>

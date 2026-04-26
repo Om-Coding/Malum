@@ -499,7 +499,10 @@ Return ONLY raw parseable JSON:
 }`;
 
     let contents;
-    const userPrompt = prompt ? `Topic/Source: ${prompt}` : 'Analyze the attached material and make it sound like a top-tier podcast conversation.';
+    const durationLabel = detail === 'extra' ? 'a deep-dive 20-30 minute' : 'a punchy 5-minute';
+    const userPrompt = prompt 
+      ? `Generate ${durationLabel} podcast script about: ${prompt}` 
+      : `Analyze the attached material and create ${durationLabel} podcast conversation. EXHAUST EVERY DETAIL if this is a deep-dive.`;
     
     if (fileData && fileData.base64 && fileData.mimeType) {
       contents = [systemPrompt, userPrompt, { inlineData: { data: fileData.base64, mimeType: fileData.mimeType } }];
@@ -512,10 +515,47 @@ Return ONLY raw parseable JSON:
     const response = await result.response;
     const text = response.text();
     let rawText = text.replace(/^```json\n?/m, '').replace(/^```\n?/m, '').replace(/```$/m, '');
-    return res.json({ result: JSON.parse(rawText.trim()) });
+    
+    const resultJson = JSON.parse(rawText.trim());
+    
+    // Assign OpenAI voices if key exists
+    if (openaiKey && resultJson.podcast) {
+      resultJson.podcast = resultJson.podcast.map(line => ({
+        ...line,
+        voice: line.host === '1' ? 'shimmer' : 'onyx' // Professional OpenAI voices
+      }));
+    }
+    
+    return res.json({ result: resultJson });
   } catch (err) {
     console.error('[Audio Overview API] error:', err);
     return res.status(500).json({ error: err.message || 'Error generating overview.' });
+  }
+});
+
+app.post('/api/tts', async (req, res) => {
+  try {
+    const { text, voice = 'shimmer' } = req.body;
+    if (!openaiKey || !openaiClient) {
+      return res.status(500).json({ error: 'OpenAI API key is required for high-quality TTS' });
+    }
+
+    console.log(`[TTS] Generating audio for: "${text.slice(0, 30)}..."`);
+    const mp3 = await openaiClient.audio.speech.create({
+      model: "tts-1",
+      voice: voice, // alloy, echo, fabled, onyx, nova, shimmer
+      input: text,
+    });
+
+    const buffer = Buffer.from(await mp3.arrayBuffer());
+    res.set({
+      'Content-Type': 'audio/mpeg',
+      'Content-Length': buffer.length
+    });
+    res.send(buffer);
+  } catch (err) {
+    console.error('[TTS Error]', err);
+    res.status(500).json({ error: err.message });
   }
 });
 
