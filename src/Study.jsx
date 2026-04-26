@@ -247,7 +247,9 @@ function AudioOverviewComponent({ podcast, quiz }) {
         style={{ background: 'var(--bg-faint)', border: '1px solid var(--border-faint)' }}>
         {podcast.map((line, idx) => (
           <div key={idx} className={`flex flex-col transition-all duration-300 ${line.host === '1' ? 'items-start' : 'items-end'} ${currentLine !== -1 && currentLine !== idx ? 'opacity-25' : 'opacity-100'}`}>
-            <span className="text-[10px] font-black uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-faint)' }}>{line.name}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-faint)' }}>
+              {line.name} • <span className="opacity-60">{line.host === '1' ? 'Interviewer' : 'Expert Deep-Dive'}</span>
+            </span>
             <div className={`px-4 py-3 rounded-2xl max-w-[88%] text-sm font-medium leading-relaxed ${line.host === '1'
               ? 'rounded-tl-sm'
               : 'rounded-tr-sm'
@@ -258,7 +260,8 @@ function AudioOverviewComponent({ podcast, quiz }) {
                   : (currentLine === idx ? 'linear-gradient(135deg, #8B5CF6, #7C3AED)' : 'rgba(139,92,246,0.2)'),
                 color: currentLine === idx ? 'white' : 'var(--text-secondary)',
                 boxShadow: currentLine === idx ? (line.host === '1' ? '0 0 20px rgba(99,102,241,0.4)' : '0 0 20px rgba(139,92,246,0.4)') : 'none',
-                transition: 'all 0.4s ease',
+                transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                transform: currentLine === idx ? 'scale(1.02)' : 'scale(1)',
               }}>
               {line.text}
             </div>
@@ -936,15 +939,18 @@ No extra text, just the JSON array.`,
 ═══════════════════════════════════════════════════════════════════ */
 export default function Study() {
   const [activeTab, setActiveTab] = useState('chat');
-  const [prompt, setPrompt] = useState('');
-  const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
       content: `# 👋 Welcome to Malum Study Corner!\n\nI'm your **AI Study Assistant** powered by Gemini. Here's what you can do:\n\n- 💬 **Ask me anything** — explanations, practice problems, essay feedback\n- 📎 **Upload files** — I'll analyze your notes, textbooks, or images\n- 🎙️ **Record lectures** using the Recorder tab\n- 📖 **Generate study guides & flashcards** in the Study Guide tab\n- 🎧 Ask me to create an **Audio Overview podcast** of any topic\n\nWhat shall we study today?`
     }
   ]);
+  const [prompt, setPrompt] = useState('');
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [podcastTone, setPodcastTone] = useState('educational'); // educational, casual, dramatic
+  const [podcastDepth, setPodcastDepth] = useState('standard'); // standard, deep
+  const [showPodcastConfig, setShowPodcastConfig] = useState(false);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -1005,7 +1011,11 @@ export default function Study() {
     }]);
     setLoading(true);
     try {
-      const payload = { prompt: currentPrompt };
+      const payload = { 
+        prompt: currentPrompt,
+        tone: podcastTone,
+        detail: podcastDepth
+      };
       if (currentFile?.base64) payload.fileData = { base64: currentFile.base64, mimeType: currentFile.mimeType };
       const resp = await fetch(`${API_ROOT}/api/audio-overview`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       const data = await resp.json().catch(() => ({}));
@@ -1176,12 +1186,47 @@ export default function Study() {
                 />
 
                 <div className="flex gap-1.5 flex-shrink-0">
-                  <button onClick={handleAudioOverview} disabled={(!prompt.trim() && !file) || loading}
-                    className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-white font-bold text-xs transition-all hover:scale-105 disabled:opacity-40"
-                    style={{ background: 'linear-gradient(135deg, #8B5CF6, #EC4899)' }}>
-                    <Headphones className="w-4 h-4" />
-                    <span className="hidden sm:inline">Podcast</span>
-                  </button>
+                  <div className="relative">
+                    <button onClick={handleAudioOverview} disabled={(!prompt.trim() && !file) || loading}
+                      className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-white font-bold text-xs transition-all hover:scale-105 disabled:opacity-40"
+                      style={{ background: 'linear-gradient(135deg, #8B5CF6, #EC4899)' }}>
+                      <Headphones className="w-4 h-4" />
+                      <span className="hidden sm:inline">Podcast</span>
+                    </button>
+                    <button onClick={() => setShowPodcastConfig(!showPodcastConfig)}
+                      className="absolute -top-2 -right-2 p-1 rounded-full bg-white text-black border border-indigo-200 shadow-lg hover:scale-110 transition-all pointer-events-auto">
+                      <Settings2 className="w-3 h-3" />
+                    </button>
+                    {showPodcastConfig && (
+                      <div className="absolute bottom-full right-0 mb-3 w-48 p-4 rounded-2xl theme-bg-elevated border theme-border shadow-2xl z-50 animate-slideUp">
+                        <h4 className="text-[10px] font-black theme-text-muted mb-3 tracking-widest uppercase">Podcast Tuning</h4>
+                        <div className="space-y-4">
+                          <div>
+                            <label className="text-[10px] font-bold theme-text-secondary block mb-1.5">Mood & Tone</label>
+                            <div className="grid grid-cols-2 gap-1.5">
+                              {['educational', 'casual', 'dramatic', 'energetic'].map(t => (
+                                <button key={t} onClick={() => setPodcastTone(t)}
+                                  className={`px-2 py-1 rounded-lg text-[10px] font-bold capitalize border transition-all ${podcastTone === t ? 'bg-indigo-500 text-white border-indigo-400' : 'theme-bg-faint theme-text-muted border-transparent'}`}>
+                                  {t}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                          <div>
+                            <label className="text-[10px] font-bold theme-text-secondary block mb-1.5">Detail Depth</label>
+                            <div className="grid grid-cols-2 gap-1.5">
+                              {['standard', 'extra'].map(d => (
+                                <button key={d} onClick={() => setPodcastDepth(d)}
+                                  className={`px-2 py-1 rounded-lg text-[10px] font-bold capitalize border transition-all ${podcastDepth === d ? 'bg-indigo-500 text-white border-indigo-400' : 'theme-bg-faint theme-text-muted border-transparent'}`}>
+                                  {d.replace('extra', 'Deep Dive')}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   <button onClick={handleRun} disabled={(!prompt.trim() && !file) || loading}
                     className="p-2.5 rounded-xl text-white transition-all hover:scale-110 disabled:opacity-40"
                     style={{ background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', boxShadow: '0 4px 16px rgba(99,102,241,0.4)' }}>
@@ -1196,6 +1241,7 @@ export default function Study() {
 
       <style>{`
         @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
       `}</style>
     </div>
   );

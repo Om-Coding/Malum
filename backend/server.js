@@ -462,13 +462,28 @@ app.post('/api/study', async (req, res) => {
 
 app.post('/api/audio-overview', async (req, res) => {
   try {
-    const { prompt, fileData } = req.body || {};
+    const { prompt, fileData, tone = 'engaging', detail = 'standard' } = req.body || {};
     if (!geminiKey || !geminiClient)
       return res.status(500).json({ error: 'Gemini API key is required' });
 
-    const systemPrompt = `You are a scriptwriter for a highly popular educational podcast.
-Your task is to analyze the provided files, image, or text and write an engaging, conversational 2-minute podcast script between two expert hosts: Alex (Host 1, energetic) and Sam (Host 2, analytical).
-After the podcast script, generate a 3-question multiple choice quiz.
+    const systemPrompt = `You are an elite podcast producer and scriptwriter for a global educational platform.
+Your goal is to transform the provided source material into a world-class educational conversation, similar to NotebookLM or Radiolab.
+
+STRUCTURE:
+1. **The Hook**: Start with a relatable scenario or a startling fact about the topic.
+2. **The Deep Dive**: Alex (Host 1, the explorer) and Sam (Host 2, the expert) break down the complex parts. Sam uses analogies.
+3. **The "Wait, What?"**: Alex asks the questions a student would have. SAM clarifies with nuanced detail.
+4. **The Takeaway**: A memorable summary that ties it all together.
+
+STYLE GUIDELINES (Tone: ${tone}):
+- Use natural conversational fillers: "Right," "Exactly," "Wait, tell me more about that," "That's a great point."
+- Sam should use creative analogies to explain difficult concepts.
+- The dialogue should feel dynamic—hosts should occasionally finish each other's sentences or react with genuine surprise.
+- DETAIL LEVEL: ${detail}. If "extra", go deeper into the "why" and "how" of the topic.
+
+QUIZ:
+Generate a 4-question challenging quiz based on the discussion.
+
 Return ONLY raw parseable JSON:
 {
   "podcast": [{ "host": "1", "name": "Alex", "text": "..." }],
@@ -476,10 +491,12 @@ Return ONLY raw parseable JSON:
 }`;
 
     let contents;
+    const userPrompt = prompt ? `Topic/Source: ${prompt}` : 'Analyze the attached material.';
+    
     if (fileData && fileData.base64 && fileData.mimeType) {
-      contents = [systemPrompt, prompt || 'Analyze the attached document.', { inlineData: { data: fileData.base64, mimeType: fileData.mimeType } }];
+      contents = [systemPrompt, userPrompt, { inlineData: { data: fileData.base64, mimeType: fileData.mimeType } }];
     } else {
-      contents = [systemPrompt, prompt || 'Discuss a random interesting scientific fact.'];
+      contents = [systemPrompt, userPrompt];
     }
 
     const model = geminiClient.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
