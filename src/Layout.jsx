@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { Home, BookOpen, Calendar, TrendingUp, Sparkles, Award, Users, Menu, X, LogOut, Settings, Sun, Moon, Globe, MessageSquare, Palette, Check, ChevronRight, GraduationCap, Zap, Atom, Brain, Gamepad2 } from 'lucide-react';
+import { Home, BookOpen, Calendar, TrendingUp, Sparkles, Award, Users, Menu, X, LogOut, Settings, Sun, Moon, Globe, MessageSquare, Palette, Check, ChevronRight, GraduationCap, Zap, Atom, Brain, Gamepad2, Folder, ChevronDown } from 'lucide-react';
 import { useTheme } from './ThemeContext';
 
 const LANGUAGES = [
@@ -265,6 +265,11 @@ export default function Layout() {
     const [scrolled, setScrolled] = useState(false);
     const { theme, toggleTheme } = useTheme();
     const isDark = theme === 'dark';
+    const [openFolders, setOpenFolders] = useState(['Study']); // Study open by default
+
+    const toggleFolder = (name) => {
+        setOpenFolders(prev => prev.includes(name) ? prev.filter(f => f !== name) : [...prev, name]);
+    };
 
     useEffect(() => {
         setSidebarOpen(false);
@@ -290,18 +295,39 @@ export default function Layout() {
         return false;
     })();
 
-    const navItems = [
-        { to: '/home', icon: Home, label: 'Home', color: '#FF6B00', glow: 'rgba(255,107,0,0.4)' },
-        { to: '/study', icon: BookOpen, label: 'Study Corner', color: '#8B5CF6', glow: 'rgba(139,92,246,0.4)' },
-        { to: '/classroom', icon: Users, label: 'Classroom', color: '#3B82F6', glow: 'rgba(59,130,246,0.4)' },
-        { to: '/schedule', icon: Calendar, label: 'Schedule', color: '#F59E0B', glow: 'rgba(245,158,11,0.4)' },
-        { to: '/gradescout', icon: TrendingUp, label: 'GradeScout', color: '#10B981', glow: 'rgba(16,185,129,0.4)' },
-        { to: '/khan', icon: Award, label: 'Learning Corner', color: '#EC4899', glow: 'rgba(236,72,153,0.4)' },
-        ...(isTeacher ? [{ to: '/teacher', icon: GraduationCap, label: 'Teacher Dashboard', color: '#06B6D4', glow: 'rgba(6,182,212,0.4)' }] : []),
-        { to: '/antigravity', icon: Atom, label: 'Antigravity', color: '#6366F1', glow: 'rgba(99,102,241,0.4)' },
-        { to: '/college', icon: Brain, label: 'College AI', color: '#8B5CF6', glow: 'rgba(139,92,246,0.4)' },
-        { to: '/games', icon: Gamepad2, label: 'Study Games', color: '#F97316', glow: 'rgba(249,115,22,0.4)' },
-        { to: '#settings', icon: Settings, label: 'Settings', isAction: true, color: '#6366F1', glow: 'rgba(99,102,241,0.4)' },
+    const navGroups = [
+        {
+            title: 'MAIN',
+            items: [
+                { to: '/home', icon: Home, label: 'Home', color: '#FF6B00', glow: 'rgba(255,107,0,0.4)' },
+                { to: '/classroom', icon: Users, label: 'Classroom', color: '#3B82F6', glow: 'rgba(59,130,246,0.4)' },
+                { to: '/schedule', icon: Calendar, label: 'Schedule', color: '#F59E0B', glow: 'rgba(245,158,11,0.4)' },
+                { to: '/gradescout', icon: TrendingUp, label: 'GradeScout', color: '#10B981', glow: 'rgba(16,185,129,0.4)' },
+            ]
+        },
+        {
+            title: 'STUDY',
+            isFolder: true,
+            icon: Folder,
+            color: '#8B5CF6',
+            items: [
+                { to: '/study', icon: BookOpen, label: 'Study Corner', color: '#8B5CF6', glow: 'rgba(139,92,246,0.4)' },
+                { to: '/college', icon: Brain, label: 'College AI', color: '#8B5CF6', glow: 'rgba(139,92,246,0.4)' },
+                { to: '/antigravity', icon: Atom, label: 'Antigravity', color: '#6366F1', glow: 'rgba(99,102,241,0.4)' },
+                { to: '/khan', icon: Award, label: 'Learning Corner', color: '#EC4899', glow: 'rgba(236,72,153,0.4)' },
+            ]
+        },
+        {
+            title: 'EXTRA',
+            isFolder: true,
+            icon: Folder,
+            color: '#F97316',
+            items: [
+                { to: '/games', icon: Gamepad2, label: 'Study Games', color: '#F97316', glow: 'rgba(249,115,22,0.4)' },
+                ...(isTeacher ? [{ to: '/teacher', icon: GraduationCap, label: 'Teacher Dashboard', color: '#06B6D4', glow: 'rgba(6,182,212,0.4)' }] : []),
+                { to: '#settings', icon: Settings, label: 'Settings', isAction: true, color: '#6366F1', glow: 'rgba(99,102,241,0.4)' },
+            ]
+        },
     ];
 
     const NavContent = ({ onItemClick }) => (
@@ -314,54 +340,83 @@ export default function Layout() {
 
             <div style={{ height: '1px', background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', marginBottom: '8px', marginLeft: '12px', marginRight: '12px' }} />
 
-            {navItems.map((item, i) => (
-                <div key={item.to} className="w-full" style={{ animationDelay: `${i * 0.04}s` }}>
-                    {item.isAction ? (
-                        <button
-                            onClick={() => { onItemClick(); setSettingsOpen(true); }}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all nav-item-animate group"
-                            style={{ color: 'var(--text-secondary)' }}
-                        >
-                            <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-all group-hover:scale-110"
-                                style={{ background: `${item.color}18` }}>
-                                <item.icon className="h-4 w-4" style={{ color: item.color }} />
-                            </div>
-                            <span className="font-semibold text-sm flex-1 text-left">{item.label}</span>
-                        </button>
-                    ) : (
-                        <NavLink
-                            to={item.to}
-                            onClick={onItemClick}
-                            className={({ isActive }) =>
-                                `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all nav-item-animate group ${isActive ? '' : ''}`
-                            }
-                            style={({ isActive }) => ({
-                                background: isActive
-                                    ? `linear-gradient(135deg, ${item.color}20, ${item.color}0a)`
-                                    : 'transparent',
-                                color: isActive ? item.color : 'var(--text-secondary)',
-                                boxShadow: isActive ? `inset 0 0 0 1px ${item.color}30` : 'none',
-                            })}
-                        >
-                            {({ isActive }) => (
-                                <>
-                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-all group-hover:scale-110 flex-shrink-0"
-                                        style={{
-                                            background: isActive ? `${item.color}25` : `${item.color}12`,
-                                            boxShadow: (isDark && isActive) ? `0 0 12px ${item.glow}` : 'none',
-                                        }}>
-                                        <item.icon className="h-4 w-4" style={{ color: item.color, filter: (isDark && isActive) ? `drop-shadow(0 0 6px ${item.color})` : 'none' }} />
-                                    </div>
-                                    <span className="font-semibold text-sm flex-1">{item.label}</span>
-                                    {isActive && (
-                                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.color, boxShadow: isDark ? `0 0 8px ${item.color}` : 'none', animation: isDark ? 'pulse-glow 2s infinite' : 'none', flexShrink: 0 }} />
+            {navGroups.map((group, groupIdx) => {
+                const isOpen = openFolders.includes(group.title);
+                return (
+                    <div key={group.title} className="mb-4 last:mb-0">
+                        {group.isFolder ? (
+                            <button
+                                onClick={() => toggleFolder(group.title)}
+                                className="w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all group hover:bg-white/5 mb-1"
+                                style={{ color: group.color }}
+                            >
+                                <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-all group-hover:scale-110 flex-shrink-0"
+                                    style={{ background: `${group.color}15` }}>
+                                    <group.icon className="h-4 w-4" style={{ color: group.color }} />
+                                </div>
+                                <span className="font-black text-[10px] tracking-[0.2em] flex-1 text-left uppercase">
+                                    {group.title}
+                                </span>
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+                            </button>
+                        ) : (
+                            <p className="px-4 mb-2 text-[10px] font-black theme-text-muted tracking-[0.2em] opacity-40">
+                                {group.title}
+                            </p>
+                        )}
+                        <div className={`space-y-1 transition-all duration-300 overflow-hidden ${isOpen || !group.isFolder ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                            {group.items.map((item, i) => (
+                                <div key={item.to} className={`${group.isFolder ? 'pl-4' : ''} w-full`} style={{ animationDelay: `${(groupIdx * 4 + i) * 0.04}s` }}>
+                                    {item.isAction ? (
+                                        <button
+                                            onClick={() => { onItemClick(); setSettingsOpen(true); }}
+                                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all nav-item-animate group"
+                                            style={{ color: 'var(--text-secondary)' }}
+                                        >
+                                            <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-all group-hover:scale-110"
+                                                style={{ background: `${item.color}18` }}>
+                                                <item.icon className="h-4 w-4" style={{ color: item.color }} />
+                                            </div>
+                                            <span className="font-semibold text-sm flex-1 text-left">{item.label}</span>
+                                        </button>
+                                    ) : (
+                                        <NavLink
+                                            to={item.to}
+                                            onClick={onItemClick}
+                                            className={({ isActive }) =>
+                                                `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all nav-item-animate group ${isActive ? '' : ''}`
+                                            }
+                                            style={({ isActive }) => ({
+                                                background: isActive
+                                                    ? `linear-gradient(135deg, ${item.color}20, ${item.color}0a)`
+                                                    : 'transparent',
+                                                color: isActive ? item.color : 'var(--text-secondary)',
+                                                boxShadow: isActive ? `inset 0 0 0 1px ${item.color}30` : 'none',
+                                            })}
+                                        >
+                                            {({ isActive }) => (
+                                                <>
+                                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-all group-hover:scale-110 flex-shrink-0"
+                                                        style={{
+                                                            background: isActive ? `${item.color}25` : `${item.color}12`,
+                                                            boxShadow: (isDark && isActive) ? `0 0 12px ${item.glow}` : 'none',
+                                                        }}>
+                                                        <item.icon className="h-4 w-4" style={{ color: item.color, filter: (isDark && isActive) ? `drop-shadow(0 0 6px ${item.color})` : 'none' }} />
+                                                    </div>
+                                                    <span className="font-semibold text-sm flex-1">{item.label}</span>
+                                                    {isActive && (
+                                                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.color, boxShadow: isDark ? `0 0 8px ${item.color}` : 'none', animation: isDark ? 'pulse-glow 2s infinite' : 'none', flexShrink: 0 }} />
+                                                    )}
+                                                </>
+                                            )}
+                                        </NavLink>
                                     )}
-                                </>
-                            )}
-                        </NavLink>
-                    )}
-                </div>
-            ))}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            })}
         </div>
     );
 
@@ -501,8 +556,10 @@ export default function Layout() {
                 <SettingsPanel isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} isDark={isDark} />
 
                 {/* Main Content */}
-                <main className="flex-1 h-full overflow-y-auto custom-scrollbar relative px-4 md:px-8 lg:px-12 hud-grid hud-scanline">
-                    <Outlet />
+                <main className="flex-1 h-full overflow-y-auto custom-scrollbar relative hud-grid hud-scanline">
+                    <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20 py-10 lg:py-16">
+                        <Outlet />
+                    </div>
                 </main>
             </div>
         </div>
