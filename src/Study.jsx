@@ -1006,7 +1006,8 @@ export default function Study() {
       if (!resp.ok) throw new Error(data.error || `Error ${resp.status}`);
       setMessages(prev => [...prev, { role: 'assistant', content: data.result || 'No response.' }]);
     } catch (err) {
-      setMessages(prev => [...prev, { role: 'system', content: `Error: ${err.message}` }]);
+      console.error('Study API Error:', err);
+      setMessages(prev => [...prev, { role: 'system', content: `Connection Error: ${err.message}. (Target: ${API_ROOT})` }]);
     }
     setLoading(false);
   };

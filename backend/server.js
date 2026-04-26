@@ -416,7 +416,7 @@ app.post('/api/study', async (req, res) => {
     if (geminiKey && geminiClient) {
       console.log('[Study API] Calling Gemini via official SDK');
       try {
-        const modelId = (options && options.model) || 'gemini-2.0-flash-exp';
+        const modelId = (options && options.model) || 'gemini-1.5-flash';
         const model = geminiClient.getGenerativeModel({ model: modelId });
         let contents;
         if (fileData && fileData.base64 && fileData.mimeType) {
@@ -507,7 +507,7 @@ Return ONLY raw parseable JSON:
       contents = [systemPrompt, userPrompt];
     }
 
-    const model = geminiClient.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+    const model = geminiClient.getGenerativeModel({ model: 'gemini-1.5-flash' });
     const result = await model.generateContent(contents);
     const response = await result.response;
     const text = response.text();
