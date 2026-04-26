@@ -40,9 +40,9 @@ const GAMES = [
     tags: ['Memory', 'Science', 'Vocabulary'],
   },
   {
-    id: 'playables', label: 'YouTube Playables', icon: Youtube, color: '#EF4444', glow: 'rgba(239,68,68,0.4)',
-    desc: 'Unlock your favorite YouTube mini-games by answering questions from your own study slides!',
-    tags: ['Gaming', 'Slides', 'Unlockable'],
+    id: 'blazes', label: 'Blazes.io', icon: Flame, color: '#FCD34D', glow: 'rgba(252,211,77,0.4)',
+    desc: 'The ultimate high-speed arena. Join the battle at Blazes.io and show your skills!',
+    tags: ['Multiplayer', 'Action', 'Fast-Paced'],
   },
 ];
 
@@ -1140,7 +1140,25 @@ export default function StudyGames() {
               {activeGame === 'scramble' && <WordScramble onExit={() => setActiveGame(null)} />}
               {activeGame === 'trivia' && <AITrivia onExit={() => setActiveGame(null)} />}
               {activeGame === 'memory' && <MemoryMatch onExit={() => setActiveGame(null)} />}
-              {activeGame === 'playables' && <PlayableUnlocker onExit={() => setActiveGame(null)} />}
+              {activeGame === 'blazes' && (
+                <div className="flex flex-col items-center justify-center py-12 space-y-8 animate-fadeIn">
+                  <div className="w-24 h-24 rounded-3xl bg-amber-500/20 flex items-center justify-center shadow-[0_0_50px_rgba(245,158,11,0.2)]">
+                    <Flame className="w-12 h-12 text-amber-500 animate-pulse" />
+                  </div>
+                  <div className="text-center space-y-3">
+                    <h2 className="text-4xl font-black theme-text tracking-tighter">LAUNCH BLAZES.IO</h2>
+                    <p className="theme-text-muted max-w-sm mx-auto">Get ready for the arena. Click the button below to start your session in a new window.</p>
+                  </div>
+                  <a href="https://blazes.io" target="_blank" rel="noopener noreferrer" 
+                    className="group relative px-12 py-5 rounded-2xl bg-amber-500 text-black font-black text-xl hover:scale-105 transition-all shadow-2xl">
+                    PLAY NOW
+                    <div className="absolute inset-0 rounded-2xl bg-white opacity-0 group-hover:opacity-20 transition-opacity" />
+                  </a>
+                  <button onClick={() => setActiveGame(null)} className="text-xs font-bold theme-text-muted hover:text-white transition-colors">
+                    BACK TO MENU
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
