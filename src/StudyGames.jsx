@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flame, ExternalLink, Sparkles } from 'lucide-react';
+import { Flame, ExternalLink, Sparkles, Zap, Star } from 'lucide-react';
 
 export default function StudyGames() {
   const launchGame = () => {
@@ -7,82 +7,107 @@ export default function StudyGames() {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Dynamic Animated Background */}
-      <div className="absolute inset-0 z-0 opacity-40">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-orange-500/20 blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-amber-500/20 blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] rounded-full bg-red-500/10 blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
+    <div className="min-h-[85vh] flex items-center justify-center p-4 relative overflow-hidden bg-black/20">
+      {/* Hyper-Colorful Nebula Background */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-purple-600/30 blur-[140px] animate-pulse" style={{ animationDuration: '4s' }} />
+        <div className="absolute top-[10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/30 blur-[140px] animate-pulse" style={{ animationDuration: '5s' }} />
+        <div className="absolute bottom-[-20%] left-[10%] w-[50%] h-[50%] rounded-full bg-pink-600/30 blur-[140px] animate-pulse" style={{ animationDuration: '6s' }} />
+        <div className="absolute bottom-[0%] right-[20%] w-[40%] h-[40%] rounded-full bg-cyan-600/20 blur-[120px] animate-pulse" style={{ animationDuration: '7s' }} />
       </div>
 
-      {/* Main Glassmorphic Portal */}
+      {/* Main Rainbow Portal */}
       <button 
         onClick={launchGame}
-        className="group relative w-full max-w-3xl aspect-[16/9] rounded-[48px] overflow-hidden transition-all duration-700 hover:scale-[1.03] active:scale-[0.97] shadow-[0_32px_80px_rgba(0,0,0,0.4)]"
-        style={{ 
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(24px)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-        }}
+        className="group relative w-full max-w-3xl aspect-[16/9] rounded-[56px] overflow-hidden transition-all duration-700 hover:scale-[1.04] active:scale-[0.96] shadow-[0_40px_100px_rgba(0,0,0,0.6)]"
       >
-        {/* Animated Gradient Border Overlay */}
-        <div className="absolute inset-0 p-[2px] opacity-20 group-hover:opacity-100 transition-opacity duration-1000">
-           <div className="w-full h-full rounded-[46px] bg-gradient-to-br from-orange-500 via-amber-300 to-red-500 animate-gradient-xy" />
+        {/* Animated Spectrum Border */}
+        <div className="absolute inset-0 p-[3px]">
+           <div className="w-full h-full rounded-[53px] bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 via-purple-500 to-red-500 animate-spectrum-flow" />
         </div>
 
-        {/* Content Container */}
-        <div className="relative z-10 w-full h-full flex flex-col items-center justify-center space-y-8 p-12 bg-black/40 rounded-[46px]">
+        {/* content glass layer */}
+        <div className="relative z-10 w-full h-full flex flex-col items-center justify-center space-y-10 p-12 bg-black/60 backdrop-blur-3xl rounded-[53px]">
           
-          {/* Hero Icon with Extreme Glow */}
+          {/* Multi-Color Glow Icon */}
           <div className="relative">
-            <div className="absolute inset-0 bg-orange-500/40 blur-[40px] group-hover:blur-[60px] transition-all duration-700 animate-pulse" />
-            <div className="relative w-36 h-36 rounded-[40px] bg-gradient-to-br from-orange-500 to-amber-300 flex items-center justify-center shadow-2xl transform group-hover:rotate-6 transition-transform duration-500">
-              <Flame className="w-20 h-20 text-black animate-bounce-slow" />
-              <Sparkles className="absolute -top-4 -right-4 w-10 h-10 text-white animate-spin-slow opacity-80" />
+            <div className="absolute -inset-10 bg-gradient-to-tr from-pink-500 via-purple-500 to-cyan-500 blur-[60px] opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
+            <div className="relative w-40 h-40 rounded-[44px] bg-gradient-to-br from-white via-amber-200 to-orange-400 flex items-center justify-center shadow-2xl overflow-hidden">
+               {/* Inner glow animation */}
+               <div className="absolute inset-0 bg-gradient-to-tr from-blue-400/20 to-pink-400/20 animate-pulse" />
+               <Flame className="w-24 h-24 text-black animate-bounce-slow" />
+            </div>
+            {/* Floating side icons */}
+            <Star className="absolute -top-6 -left-6 w-10 h-10 text-yellow-400 animate-spin-slow" />
+            <Zap className="absolute -bottom-6 -right-6 w-10 h-10 text-cyan-400 animate-pulse" />
+          </div>
+
+          {/* Shimmering Rainbow Text */}
+          <div className="text-center space-y-6">
+            <h1 className="text-8xl font-black italic tracking-tighter animate-rainbow-text relative">
+              BLAZES.IO
+              <span className="absolute inset-0 blur-lg opacity-40 animate-rainbow-text">BLAZES.IO</span>
+            </h1>
+            <div className="flex items-center justify-center gap-4">
+               <div className="h-[2px] w-12 bg-gradient-to-r from-transparent to-pink-500" />
+               <p className="text-white font-black text-2xl uppercase tracking-[0.3em] flex gap-2">
+                 <span className="text-pink-400">PURE</span>
+                 <span className="text-cyan-400">ENERGY</span>
+               </p>
+               <div className="h-[2px] w-12 bg-gradient-to-l from-transparent to-cyan-500" />
             </div>
           </div>
 
-          {/* Text Elements */}
-          <div className="text-center space-y-4">
-            <h1 className="text-7xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-amber-100 to-orange-400 drop-shadow-2xl">
-              BLAZES.IO
-            </h1>
-            <p className="text-orange-200/60 font-bold text-xl uppercase tracking-[0.2em] group-hover:text-amber-200 transition-colors">
-              Enter the Arena • Feel the Heat
-            </p>
-          </div>
-
-          {/* Interactive Button */}
-          <div className="relative group/btn mt-4">
-            <div className="absolute -inset-4 bg-gradient-to-r from-orange-600 to-amber-400 rounded-2xl blur-lg opacity-40 group-hover:opacity-100 transition-all duration-300" />
-            <div className="relative flex items-center gap-4 px-12 py-5 rounded-2xl bg-white text-black font-black text-2xl shadow-2xl transition-all group-hover/btn:px-16">
-              LAUNCH GAME
-              <ExternalLink className="w-7 h-7 group-hover:translate-x-2 transition-transform" />
+          {/* Hyper-Colorful Launch Button */}
+          <div className="relative mt-4">
+            <div className="absolute -inset-2 bg-gradient-to-r from-red-500 via-yellow-500 to-blue-500 rounded-2xl blur opacity-70 group-hover:blur-md transition-all animate-spectrum-flow" />
+            <div className="relative flex items-center gap-6 px-16 py-6 rounded-2xl bg-white text-black font-black text-3xl shadow-2xl transition-all group-hover:scale-110">
+              PLAY NOW
+              <ExternalLink className="w-8 h-8" />
             </div>
           </div>
         </div>
 
-        {/* Floating Particles (Simulated with div elements) */}
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white rounded-full animate-float-particle opacity-20" />
-        <div className="absolute bottom-1/3 right-1/4 w-3 h-3 bg-orange-400 rounded-full animate-float-particle opacity-20" style={{ animationDelay: '1.5s' }} />
-        <div className="absolute top-1/2 right-1/3 w-1 h-1 bg-amber-200 rounded-full animate-float-particle opacity-20" style={{ animationDelay: '3s' }} />
+        {/* Interactive Rainbow Particles */}
+        {[...Array(6)].map((_, i) => (
+          <div 
+            key={i}
+            className="absolute w-2 h-2 rounded-full animate-multi-float"
+            style={{
+              background: ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'][i],
+              top: `${Math.random() * 80 + 10}%`,
+              left: `${Math.random() * 80 + 10}%`,
+              animationDelay: `${i * 0.5}s`,
+              boxShadow: `0 0 10px ${['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'][i]}`
+            }}
+          />
+        ))}
       </button>
 
       <style>{`
-        @keyframes gradient-xy {
-          0%, 100% { background-position: 0% 50%; }
+        @keyframes spectrum-flow {
+          0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
         }
-        @keyframes float-particle {
-          0% { transform: translateY(0) translateX(0); opacity: 0; }
-          50% { opacity: 0.5; }
-          100% { transform: translateY(-100px) translateX(20px); opacity: 0; }
+        @keyframes rainbow-text {
+          0% { color: #ff0000; text-shadow: 0 0 20px rgba(255,0,0,0.5); }
+          20% { color: #ffff00; text-shadow: 0 0 20px rgba(255,255,0,0.5); }
+          40% { color: #00ff00; text-shadow: 0 0 20px rgba(0,255,0,0.5); }
+          60% { color: #00ffff; text-shadow: 0 0 20px rgba(0,255,255,0.5); }
+          80% { color: #ff00ff; text-shadow: 0 0 20px rgba(255,0,255,0.5); }
+          100% { color: #ff0000; text-shadow: 0 0 20px rgba(255,0,0,0.5); }
         }
-        .animate-gradient-xy { background-size: 400% 400%; animation: gradient-xy 3s linear infinite; }
-        .animate-bounce-slow { animation: bounce 3s infinite; }
-        .animate-spin-slow { animation: spin 8s linear infinite; }
-        .animate-float-particle { animation: float-particle 4s linear infinite; }
-        .tracking-tightest { letter-spacing: -0.05em; }
+        @keyframes multi-float {
+          0% { transform: translateY(0) scale(1); opacity: 0; }
+          50% { opacity: 0.8; transform: translateY(-50px) scale(1.5); }
+          100% { transform: translateY(-100px) scale(0); opacity: 0; }
+        }
+        .animate-spectrum-flow { background-size: 300% 300%; animation: spectrum-flow 4s var(--tw-border-opacity, 1) infinite linear; }
+        .animate-rainbow-text { animation: rainbow-text 4s linear infinite; }
+        .animate-multi-float { animation: multi-float 3s infinite ease-in-out; }
+        .animate-bounce-slow { animation: bounce 2s infinite ease-in-out; }
+        .animate-spin-slow { animation: spin 10s linear infinite; }
       `}</style>
     </div>
   );
