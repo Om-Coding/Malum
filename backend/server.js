@@ -480,8 +480,9 @@ CONVERSATIONAL DYNAMICS (Mandatory):
 - **Emotional Cues**: Include reactions like "(laughs)", "Ooh, that's good!", "Seriously?", "Wait, what?".
 - **Natural Flow**: Alex should occasionally interrupt or jump in. Use dashes "--" for sudden pivots and "..." for trailing off or pauses.
 - **Micro-Dialogue**: Short back-and-forth segments like "Sam: Exactly. Alex: Wow. Sam: I know, right?"
-- **Tone**: ${tone}.
 - **Detail Level**: ${detail}.
+- **DURATION TARGET**: ${detail === 'extra' ? '30 MINUTES (EXTREME DETAIL)' : '5 MINUTES (PUNCHY)'}.
+- **INSTRUCTION FOR 30-MIN MODE**: If duration is "30 MINUTES", you MUST generate a massive script (at least 150-200 lines of dialogue). Do not gloss over anything. Deep-dive into every sub-topic, historical context, and technical detail. Make the conversation expansive and leisurely.
 
 STRUCTURE:
 1. **The Hook**: A startling fact or personal anecdote related to the topic.

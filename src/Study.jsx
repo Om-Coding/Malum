@@ -1090,7 +1090,7 @@ export default function Study() {
               <Brain className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-black theme-text">Study Corner</h1>
+              <h1 className="text-xl font-black theme-text">Study Corner <span className="text-[10px] opacity-30 font-mono ml-2">v2.1.0-HQ</span></h1>
               <p className="text-xs theme-text-muted">AI-powered learning tools</p>
             </div>
           </div>
