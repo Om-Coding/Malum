@@ -734,10 +734,10 @@ function PlayableUnlocker({ onExit }) {
   };
 
   const gameOptions = [
-    { name: 'Slither.io World', id: 'HGeu_F8v9-Y', type: 'youtube' },
-    { name: 'Crossy Road', url: 'https://scratch.mit.edu/projects/630043516/embed', type: 'web' },
-    { name: 'Geometry Dash', url: 'https://scratch.mit.edu/projects/105500895/embed', type: 'web' },
-    { name: 'Doodle Jump', url: 'https://scratch.mit.edu/projects/23675037/embed', type: 'web' },
+    { name: 'Slither.io World', id: 'vRWSQ4rT-aI', type: 'youtube' },
+    { name: 'Crossy Road', url: 'https://turbowarp.org/630043516/embed', type: 'web' },
+    { name: 'Geometry Dash', url: 'https://turbowarp.org/105500895/embed', type: 'web' },
+    { name: 'Doodle Jump', url: 'https://turbowarp.org/23675037/embed', type: 'web' },
     { name: 'Hextris (Classic)', url: 'https://hextris.io/', type: 'web' }
   ];
 
