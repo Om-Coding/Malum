@@ -10,6 +10,42 @@ const API_ROOT = typeof import.meta !== 'undefined' && import.meta.env?.VITE_API
   ? import.meta.env.VITE_API_URL
   : (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://malum-backen.onrender.com');
 
+const YOUTUBE_GAMES = [
+  { name: 'Slither.io World', id: 'vRWSQ4rT-aI', type: 'youtube' },
+  { name: 'Crossy Road', url: 'https://turbowarp.org/630043516/embed', type: 'web' },
+  { name: 'Geometry Dash', url: 'https://turbowarp.org/105500895/embed', type: 'web' },
+  { name: 'Doodle Jump', url: 'https://turbowarp.org/23675037/embed', type: 'web' },
+  { name: 'Hextris (Classic)', url: 'https://hextris.io/', type: 'web' }
+];
+
+const GAMES = [
+  {
+    id: 'math', label: 'Speed Math', icon: Zap, color: '#F97316', glow: 'rgba(249,115,22,0.4)',
+    desc: 'Solve math problems as fast as possible. Earn combo bonuses for streaks. 60 seconds on the clock!',
+    tags: ['Mental Math', 'Speed', 'Arithmetic'],
+  },
+  {
+    id: 'scramble', label: 'Word Scramble', icon: TextCursorInput, color: '#3B82F6', glow: 'rgba(59,130,246,0.4)',
+    desc: 'Unscramble academic vocabulary before the timer runs out. Hints cost points!',
+    tags: ['Vocabulary', 'Spelling', 'Academic'],
+  },
+  {
+    id: 'trivia', label: 'AI Trivia', icon: Brain, color: '#10B981', glow: 'rgba(16,185,129,0.4)',
+    desc: 'Pick any topic and Gemini generates 8 quiz questions instantly. Beat the 15-second timer!',
+    tags: ['Trivia', 'Any Topic', 'AI-Powered'],
+  },
+  {
+    id: 'memory', label: 'Memory Match', icon: Layers, color: '#EC4899', glow: 'rgba(236,72,153,0.4)',
+    desc: 'Match paired cards — elements, world capitals, vocab, and math. Fewer moves = better score!',
+    tags: ['Memory', 'Science', 'Vocabulary'],
+  },
+  {
+    id: 'playables', label: 'YouTube Playables', icon: Youtube, color: '#EF4444', glow: 'rgba(239,68,68,0.4)',
+    desc: 'Unlock your favorite YouTube mini-games by answering questions from your own study slides!',
+    tags: ['Gaming', 'Slides', 'Unlockable'],
+  },
+];
+
 /* ════════════════════════════════════════════════════════════════
    GAME 1 — Speed Math
 ═══════════════════════════════════════════════════════════════════ */
@@ -666,13 +702,7 @@ function MemoryMatch() {
   );
 }
 
-const GAME_OPTIONS = [
-  { name: 'Slither.io World', id: 'vRWSQ4rT-aI', type: 'youtube' },
-  { name: 'Crossy Road', url: 'https://turbowarp.org/630043516/embed', type: 'web' },
-  { name: 'Geometry Dash', url: 'https://turbowarp.org/105500895/embed', type: 'web' },
-  { name: 'Doodle Jump', url: 'https://turbowarp.org/23675037/embed', type: 'web' },
-  { name: 'Hextris (Classic)', url: 'https://hextris.io/', type: 'web' }
-];
+// Removed old position of GAME_OPTIONS
 
 /* ════════════════════════════════════════════════════════════════
    GAME 5 — Playable Unlocker (YouTube Playables & Slide Q&A)
@@ -684,11 +714,11 @@ function PlayableUnlocker({ onExit }) {
   const [questions, setQuestions] = useState([]);
   const [currentQ, setCurrentQ] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [gameUrl, setGameUrl] = useState(GAME_OPTIONS[2].url); // Geometry Dash default
+  const [gameUrl, setGameUrl] = useState(YOUTUBE_GAMES[2].url); // Geometry Dash default
   const [customGameUrl, setCustomGameUrl] = useState('');
   const [timeLeft, setTimeLeft] = useState(60);
   const [isPaused, setIsPaused] = useState(false);
-  const [activeUrl, setActiveUrl] = useState(GAME_OPTIONS[2].url);
+  const [activeUrl, setActiveUrl] = useState(YOUTUBE_GAMES[2].url);
   
   const timerRef = useRef(null);
   const playerRef = useRef(null);
@@ -744,7 +774,7 @@ function PlayableUnlocker({ onExit }) {
 
   // Handle URL generation
   useEffect(() => {
-    const selected = GAME_OPTIONS.find(o => o.id === gameUrl || o.url === gameUrl);
+    const selected = YOUTUBE_GAMES.find(o => o.id === gameUrl || o.url === gameUrl);
     if (selected) {
       if (selected.type === 'youtube') setActiveUrl(`https://www.youtube.com/embed/${selected.id}?autoplay=1&mute=1&origin=${window.location.origin}`);
       else setActiveUrl(selected.url);
@@ -888,7 +918,7 @@ function PlayableUnlocker({ onExit }) {
           <div className="p-6 rounded-2xl border theme-border theme-bg-card space-y-4">
             <span className="font-bold text-blue-400 flex items-center gap-2"><Gamepad className="w-4 h-4"/> Step 2: Game</span>
             <div className="space-y-2">
-              {GAME_OPTIONS.map((opt) => (
+              {YOUTUBE_GAMES.map((opt) => (
                 <button key={opt.id || opt.url} onClick={() => setGameUrl(opt.id || opt.url)}
                   className="w-full px-4 py-2.5 rounded-xl text-xs font-bold text-left flex items-center justify-between border theme-border hover:bg-white/5 transition-all"
                   style={{ borderColor: (gameUrl === opt.id || gameUrl === opt.url) ? '#3B82F6' : '' }}>
@@ -937,13 +967,22 @@ function PlayableUnlocker({ onExit }) {
           </div>
         </div>
 
-        <div className="relative rounded-3xl overflow-hidden border-4 border-orange-500/20 bg-black aspect-video shadow-2xl">
+        <div className="relative rounded-3xl overflow-hidden border-4 border-orange-500/20 bg-black aspect-video shadow-2xl flex items-center justify-center group">
           {GAME_OPTIONS.find(o => o.id === gameUrl)?.type === 'youtube' ? (
             <div id="yt-player" className="w-full h-full"></div>
           ) : (
-            <iframe key={activeUrl} src={activeUrl} className="w-full h-full" frameBorder="0" 
-              allow="autoplay; encrypted-media; gyroscope; picture-in-picture; accelerometer" 
-              allowFullScreen />
+            <>
+              <iframe key={activeUrl || 'empty'} src={activeUrl} className="w-full h-full" frameBorder="0" 
+                allow="autoplay; encrypted-media; gyroscope; picture-in-picture; accelerometer" 
+                allowFullScreen />
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-4 text-center p-4 pointer-events-none">
+                <span className="text-white text-xs font-bold leading-tight">Game not loading?<br/>School networks sometimes block mini-games.</span>
+                <a href={activeUrl} target="_blank" rel="noopener noreferrer" 
+                  className="pointer-events-auto px-6 py-3 rounded-xl bg-orange-500 text-white font-black text-sm hover:scale-105 transition-all shadow-xl">
+                  OPEN IN NEW TAB
+                </a>
+              </div>
+            </>
           )}
         </div>
       </div>
@@ -1000,33 +1039,7 @@ function PlayableUnlocker({ onExit }) {
 /* ════════════════════════════════════════════════════════════════
    MAIN STUDY GAMES PAGE
 ═══════════════════════════════════════════════════════════════════ */
-const GAMES = [
-  {
-    id: 'math', label: 'Speed Math', icon: Zap, color: '#F97316', glow: 'rgba(249,115,22,0.4)',
-    desc: 'Solve math problems as fast as possible. Earn combo bonuses for streaks. 60 seconds on the clock!',
-    tags: ['Mental Math', 'Speed', 'Arithmetic'],
-  },
-  {
-    id: 'scramble', label: 'Word Scramble', icon: TextCursorInput, color: '#3B82F6', glow: 'rgba(59,130,246,0.4)',
-    desc: 'Unscramble academic vocabulary before the timer runs out. Hints cost points!',
-    tags: ['Vocabulary', 'Spelling', 'Academic'],
-  },
-  {
-    id: 'trivia', label: 'AI Trivia', icon: Brain, color: '#10B981', glow: 'rgba(16,185,129,0.4)',
-    desc: 'Pick any topic and Gemini generates 8 quiz questions instantly. Beat the 15-second timer!',
-    tags: ['Trivia', 'Any Topic', 'AI-Powered'],
-  },
-  {
-    id: 'memory', label: 'Memory Match', icon: Layers, color: '#EC4899', glow: 'rgba(236,72,153,0.4)',
-    desc: 'Match paired cards — elements, world capitals, vocab, and math. Fewer moves = better score!',
-    tags: ['Memory', 'Science', 'Vocabulary'],
-  },
-  {
-    id: 'playables', label: 'YouTube Playables', icon: Youtube, color: '#EF4444', glow: 'rgba(239,68,68,0.4)',
-    desc: 'Unlock your favorite YouTube mini-games by answering questions from your own study slides!',
-    tags: ['Gaming', 'Slides', 'Unlockable'],
-  },
-];
+// Removed old position of GAMES
 
 export default function StudyGames() {
   const [activeGame, setActiveGame] = useState(null);
