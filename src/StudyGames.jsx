@@ -666,6 +666,14 @@ function MemoryMatch() {
   );
 }
 
+const GAME_OPTIONS = [
+  { name: 'Slither.io World', id: 'vRWSQ4rT-aI', type: 'youtube' },
+  { name: 'Crossy Road', url: 'https://turbowarp.org/630043516/embed', type: 'web' },
+  { name: 'Geometry Dash', url: 'https://turbowarp.org/105500895/embed', type: 'web' },
+  { name: 'Doodle Jump', url: 'https://turbowarp.org/23675037/embed', type: 'web' },
+  { name: 'Hextris (Classic)', url: 'https://hextris.io/', type: 'web' }
+];
+
 /* ════════════════════════════════════════════════════════════════
    GAME 5 — Playable Unlocker (YouTube Playables & Slide Q&A)
    Mechanic: Answer 3-5 questions to unlock a YouTube Playable
@@ -676,10 +684,11 @@ function PlayableUnlocker({ onExit }) {
   const [questions, setQuestions] = useState([]);
   const [currentQ, setCurrentQ] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [gameUrl, setGameUrl] = useState('https://scratch.mit.edu/projects/105500895/embed'); // Stable default
+  const [gameUrl, setGameUrl] = useState(GAME_OPTIONS[2].url); // Geometry Dash default
   const [customGameUrl, setCustomGameUrl] = useState('');
   const [timeLeft, setTimeLeft] = useState(60);
   const [isPaused, setIsPaused] = useState(false);
+  const [activeUrl, setActiveUrl] = useState(GAME_OPTIONS[2].url);
   
   const timerRef = useRef(null);
   const playerRef = useRef(null);
@@ -733,24 +742,13 @@ function PlayableUnlocker({ onExit }) {
     else alert("Google API loading... please wait a moment.");
   };
 
-  const gameOptions = [
-    { name: 'Slither.io World', id: 'vRWSQ4rT-aI', type: 'youtube' },
-    { name: 'Crossy Road', url: 'https://turbowarp.org/630043516/embed', type: 'web' },
-    { name: 'Geometry Dash', url: 'https://turbowarp.org/105500895/embed', type: 'web' },
-    { name: 'Doodle Jump', url: 'https://turbowarp.org/23675037/embed', type: 'web' },
-    { name: 'Hextris (Classic)', url: 'https://hextris.io/', type: 'web' }
-  ];
-
-  const [activeUrl, setActiveUrl] = useState('');
-
   // Handle URL generation
   useEffect(() => {
-    const selected = gameOptions.find(o => o.id === gameUrl || o.url === gameUrl);
+    const selected = GAME_OPTIONS.find(o => o.id === gameUrl || o.url === gameUrl);
     if (selected) {
       if (selected.type === 'youtube') setActiveUrl(`https://www.youtube.com/embed/${selected.id}?autoplay=1&mute=1&origin=${window.location.origin}`);
       else setActiveUrl(selected.url);
     } else if (gameUrl.length > 5) {
-      // Custom URL handling
       setActiveUrl(gameUrl);
     }
   }, [gameUrl]);
@@ -890,7 +888,7 @@ function PlayableUnlocker({ onExit }) {
           <div className="p-6 rounded-2xl border theme-border theme-bg-card space-y-4">
             <span className="font-bold text-blue-400 flex items-center gap-2"><Gamepad className="w-4 h-4"/> Step 2: Game</span>
             <div className="space-y-2">
-              {gameOptions.map((opt) => (
+              {GAME_OPTIONS.map((opt) => (
                 <button key={opt.id || opt.url} onClick={() => setGameUrl(opt.id || opt.url)}
                   className="w-full px-4 py-2.5 rounded-xl text-xs font-bold text-left flex items-center justify-between border theme-border hover:bg-white/5 transition-all"
                   style={{ borderColor: (gameUrl === opt.id || gameUrl === opt.url) ? '#3B82F6' : '' }}>
@@ -940,7 +938,7 @@ function PlayableUnlocker({ onExit }) {
         </div>
 
         <div className="relative rounded-3xl overflow-hidden border-4 border-orange-500/20 bg-black aspect-video shadow-2xl">
-          {gameOptions.find(o => o.id === gameUrl)?.type === 'youtube' ? (
+          {GAME_OPTIONS.find(o => o.id === gameUrl)?.type === 'youtube' ? (
             <div id="yt-player" className="w-full h-full"></div>
           ) : (
             <iframe key={activeUrl} src={activeUrl} className="w-full h-full" frameBorder="0" 
