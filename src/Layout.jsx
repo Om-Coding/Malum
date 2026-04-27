@@ -44,15 +44,13 @@ function SettingsPanel({ isOpen, onClose, isDark }) {
 
             {/* Panel */}
             <div
-                className="fixed top-20 right-0 z-[75] w-[380px] max-h-[calc(100vh-80px)] flex flex-col overflow-hidden"
+                className="fixed top-20 right-0 z-[75] w-full sm:w-[420px] max-h-[calc(100vh-80px)] flex flex-col overflow-hidden premium-card !rounded-none !rounded-l-3xl border-white/10"
                 style={{
                     background: isDark
-                        ? 'linear-gradient(160deg, rgba(16,16,30,0.98) 0%, rgba(12,12,24,0.98) 100%)'
+                        ? 'linear-gradient(160deg, rgba(10,10,25,0.98) 0%, rgba(7,7,16,0.98) 100%)'
                         : 'linear-gradient(160deg, rgba(255,255,255,0.98) 0%, rgba(240,244,255,0.98) 100%)',
-                    borderLeft: `1px solid ${isDark ? 'rgba(255,255,255,0.07)' : 'rgba(99,102,241,0.15)'}`,
-                    borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(99,102,241,0.1)'}`,
                     boxShadow: isDark
-                        ? '-20px 0 60px rgba(0,0,0,0.5), -4px 0 20px rgba(139,92,246,0.05)'
+                        ? '-20px 0 60px rgba(0,0,0,0.6), -4px 0 20px rgba(139,92,246,0.05)'
                         : '-20px 0 60px rgba(99,102,241,0.1)',
                     animation: 'slideInRight 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)',
                 }}
@@ -72,8 +70,8 @@ function SettingsPanel({ isOpen, onClose, isDark }) {
                             <Settings className="w-4 h-4 text-white" style={{ animation: 'spin-slow 8s linear infinite' }} />
                         </div>
                         <div>
-                            <span className="font-black text-base theme-text">Settings</span>
-                            <p className="text-[11px] theme-text-muted">Customize your experience</p>
+                            <span className="font-black text-lg theme-text premium-heading">Settings</span>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 opacity-50">Configuration</p>
                         </div>
                     </div>
                     <button

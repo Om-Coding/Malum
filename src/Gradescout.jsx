@@ -40,14 +40,14 @@ export default function Gradescout() {
               <TrendingUp className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-black malum-text-gradient">GradeScout</h1>
-              <p className="text-sm theme-text-secondary font-medium">Access your official school portal</p>
+              <h1 className="text-3xl md:text-4xl font-black malum-text-gradient premium-heading">GradeScout</h1>
+              <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mt-1 opacity-50">Portal Sync</p>
             </div>
           </div>
         </header>
 
         {/* ── Main Portal Connector ── */}
-        <div className="rounded-3xl overflow-hidden theme-bg-elevated border theme-border shadow-2xl">
+        <div className="premium-card overflow-hidden border-white/10 shadow-2xl">
           <div className="flex items-center justify-between px-6 py-5">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(139,92,246,0.1)' }}>
