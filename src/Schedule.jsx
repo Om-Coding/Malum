@@ -415,10 +415,10 @@ function ScheduleCore() {
   // Auth Overlay
   if (!accessToken) {
     return (
-       <div className="flex flex-col items-center justify-center py-32 bg-[#1A1A1D] border border-white/5 rounded-3xl p-8 text-center max-w-2xl mx-auto relative overflow-hidden group mt-10 shadow-2xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
-        <CalendarDays className="w-20 h-20 text-indigo-400 mb-8 drop-shadow-lg" />
-        <h2 className="text-4xl font-black text-white mb-4 tracking-tight">Connect Schedule Hub</h2>
+       <div className="flex flex-col items-center justify-center py-32 premium-card p-12 text-center max-w-2xl mx-auto relative overflow-hidden group mt-10 shadow-2xl">
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+        <CalendarDays className="w-20 h-20 text-indigo-400 mb-8 drop-shadow-[0_0_15px_rgba(129,140,248,0.5)]" />
+        <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight premium-heading">Connect Hub</h2>
         <p className="text-gray-400 mb-10 text-lg max-w-md">Authenticate securely via Google to pull down your exact Calendar Events AND missing Classroom Assignments.</p>
         <button
           onClick={() => login()}
@@ -485,14 +485,14 @@ function ScheduleCore() {
       )}
 
       {/* Header Controls */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#1A1A1D] p-5 rounded-2xl border border-white/5 shadow-lg">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 premium-card p-6 border-white/10 shadow-lg">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center rounded-xl border border-indigo-500/30">
             <CalendarDays className="w-7 h-7 text-indigo-400" />
           </div>
           <div>
-            <h1 className="text-3xl font-black text-white">{MONTHS[month]} {year}</h1>
-            <p className="text-sm font-medium text-gray-400">Classroom Deadlines & Calendar Synced</p>
+            <h1 className="text-3xl md:text-4xl font-black text-white premium-heading">{MONTHS[month]} {year}</h1>
+            <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mt-1">Classroom & Calendar Synced</p>
           </div>
         </div>
 
@@ -525,7 +525,7 @@ function ScheduleCore() {
       {/* Main Grid Layout */}
       <div className="flex flex-col xl:flex-row gap-6 relative">
         {/* Left Side: Calendar Grid */}
-        <div className="flex-1 bg-[#1A1A1D] rounded-3xl border border-white/5 shadow-2xl overflow-hidden p-6 relative">
+        <div className="flex-1 premium-card border-white/10 shadow-2xl overflow-hidden p-6 relative">
           
           {loading && (events.length > 0 || assignments.length > 0) && (
              <div className="absolute top-4 right-6 flex items-center gap-2 text-indigo-400 text-xs font-bold bg-indigo-500/10 px-3 py-1.5 rounded-full border border-indigo-500/20">
@@ -548,14 +548,14 @@ function ScheduleCore() {
         </div>
 
         {/* Right Side: Agenda Details Drawer */}
-        <div className={`xl:w-[450px] bg-[#1A1A1D] rounded-3xl border border-white/5 shadow-2xl flex flex-col transition-all duration-300 min-h-[500px]
+        <div className={`xl:w-[450px] premium-card border-white/10 shadow-2xl flex flex-col transition-all duration-500 min-h-[500px]
           ${selectedDateString ? 'opacity-100' : 'opacity-80 blur-[2px] pointer-events-none grayscale'}
         `}>
            <div className="p-6 border-b border-white/5 flex flex-col gap-5">
               <div>
-                 <h3 className="text-2xl font-black text-white drop-shadow-sm flex items-center justify-between">
-                   {selectedDateString ? new Date(selectedDateString + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long' }) : 'Agenda'}
-                 </h3>
+                  <h3 className="text-3xl font-black text-white drop-shadow-sm flex items-center justify-between premium-heading">
+                    {selectedDateString ? new Date(selectedDateString + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long' }) : 'Agenda'}
+                  </h3>
                  <p className="text-indigo-400 font-bold text-sm mt-1">
                    {selectedDateString ? new Date(selectedDateString + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Select a day on the calendar'}
                  </p>

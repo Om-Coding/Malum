@@ -333,12 +333,18 @@ export default function Layout() {
     const NavContent = ({ onItemClick }) => (
         <div className="space-y-1 px-2">
             {/* Brand in sidebar */}
-            <div className="flex items-center gap-2.5 px-3 py-3 mb-2">
-                <img src="/malum-logo-round.png" alt="Malum" className="object-cover rounded-full overflow-hidden" style={{ width: '36px', height: '36px', clipPath: 'circle(50%)', filter: isDark ? 'drop-shadow(0 0 8px rgba(255,107,0,0.5))' : 'none' }} />
-                <span className="font-black text-lg malum-text-gradient">Malum</span>
+            <div className="flex items-center gap-3.5 px-4 py-6 mb-4">
+                <div className="relative">
+                    <div className="absolute inset-0 rounded-full blur-lg" style={{ background: isDark ? 'rgba(255,107,0,0.4)' : 'transparent', animation: 'glow-breathe 4s infinite' }} />
+                    <img src="/malum-logo-round.png" alt="Malum" className="relative z-10 object-cover rounded-full overflow-hidden" style={{ width: '48px', height: '48px', clipPath: 'circle(50%)', filter: isDark ? 'drop-shadow(0 0 12px rgba(255,107,0,0.6))' : 'none' }} />
+                </div>
+                <div>
+                    <span className="font-black text-2xl malum-text-gradient block leading-none">Malum</span>
+                    <span className="text-[9px] font-black uppercase tracking-[0.3em] theme-text-muted opacity-40">System Active</span>
+                </div>
             </div>
 
-            <div style={{ height: '1px', background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', marginBottom: '8px', marginLeft: '12px', marginRight: '12px' }} />
+            <div style={{ height: '1px', background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)', marginBottom: '16px', marginInline: '16px' }} />
 
             {navGroups.map((group, groupIdx) => {
                 const isOpen = openFolders.includes(group.title);
@@ -384,28 +390,28 @@ export default function Layout() {
                                             to={item.to}
                                             onClick={onItemClick}
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all nav-item-animate group ${isActive ? '' : ''}`
+                                                `flex items-center gap-3.5 px-4 py-3.5 rounded-2xl transition-all duration-300 nav-item-animate group ${isActive ? 'premium-card' : ''}`
                                             }
                                             style={({ isActive }) => ({
                                                 background: isActive
-                                                    ? `linear-gradient(135deg, ${item.color}20, ${item.color}0a)`
+                                                    ? `linear-gradient(135deg, ${item.color}1a, ${item.color}05)`
                                                     : 'transparent',
-                                                color: isActive ? item.color : 'var(--text-secondary)',
-                                                boxShadow: isActive ? `inset 0 0 0 1px ${item.color}30` : 'none',
+                                                color: isActive ? 'white' : 'rgba(255,255,255,0.45)',
+                                                border: isActive ? `1px solid ${item.color}40` : '1px solid transparent',
                                             })}
                                         >
                                             {({ isActive }) => (
                                                 <>
-                                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-all group-hover:scale-110 flex-shrink-0"
+                                                    <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 flex-shrink-0"
                                                         style={{
-                                                            background: isActive ? `${item.color}25` : `${item.color}12`,
-                                                            boxShadow: (isDark && isActive) ? `0 0 12px ${item.glow}` : 'none',
+                                                            background: isActive ? item.color : `${item.color}15`,
+                                                            boxShadow: (isDark && isActive) ? `0 0 20px ${item.glow}` : 'none',
                                                         }}>
-                                                        <item.icon className="h-4 w-4" style={{ color: item.color, filter: (isDark && isActive) ? `drop-shadow(0 0 6px ${item.color})` : 'none' }} />
+                                                        <item.icon className="h-4 w-4" style={{ color: isActive ? 'white' : item.color, filter: (isDark && isActive) ? `drop-shadow(0 0 4px rgba(255,255,255,0.5))` : 'none' }} />
                                                     </div>
-                                                    <span className="font-semibold text-sm flex-1">{item.label}</span>
+                                                    <span className={`font-bold text-sm flex-1 ${isActive ? 'premium-glow-text' : ''}`}>{item.label}</span>
                                                     {isActive && (
-                                                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.color, boxShadow: isDark ? `0 0 8px ${item.color}` : 'none', animation: isDark ? 'pulse-glow 2s infinite' : 'none', flexShrink: 0 }} />
+                                                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.color, boxShadow: `0 0 12px ${item.color}`, animation: 'pulse-glow 2s infinite', flexShrink: 0 }} />
                                                     )}
                                                 </>
                                             )}

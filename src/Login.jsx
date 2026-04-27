@@ -53,77 +53,77 @@ function RolePicker({ onSelect }) {
             <img src="/malum-logo-round.png" alt="Malum" className="object-cover rounded-full overflow-hidden" style={{ width: '56px', height: '56px', clipPath: 'circle(50%)', filter: isDark ? 'drop-shadow(0 0 16px rgba(255,107,0,0.5))' : 'none' }} />
             <span className="text-4xl font-black malum-text-gradient">Malum</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-black text-white mb-3">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-3 premium-heading">
             Welcome! Who are you?
           </h1>
-          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1rem', fontWeight: 500 }}>
+          <p className="font-medium text-white/50 text-base md:text-lg">
             Choose your role to get started. You can always switch later.
           </p>
         </div>
 
-        {/* Role cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 fadeInUp" style={{ animationDelay: '0.1s' }}>
+        {/* Role cards - Stacked vertically for premium feel */}
+        <div className="flex flex-col gap-6 fadeInUp" style={{ animationDelay: '0.1s' }}>
           {roles.map(role => (
             <button
               key={role.id}
               onClick={() => onSelect(role.id)}
               onMouseEnter={() => setHovered(role.id)}
               onMouseLeave={() => setHovered(null)}
-              className="relative text-left rounded-3xl p-7 transition-all duration-400 overflow-hidden ripple"
+              className="relative text-left premium-card p-8 md:p-10 group overflow-hidden"
               style={{
                 background: hovered === role.id
-                  ? `linear-gradient(160deg, ${role.glow.replace('0.5', '0.08')}, rgba(255,255,255,0.02))`
-                  : 'rgba(255,255,255,0.03)',
-                border: `1.5px solid ${hovered === role.id ? role.border : 'rgba(255,255,255,0.07)'}`,
-                boxShadow: (isDark && hovered === role.id) ? `0 20px 60px ${role.glow.replace('0.5', '0.25')}` : (hovered === role.id ? '0 10px 30px rgba(0,0,0,0.1)' : '0 4px 20px rgba(0,0,0,0.1)'),
+                  ? `linear-gradient(165deg, ${role.glow.replace('0.5', '0.12')}, rgba(255,255,255,0.02))`
+                  : 'rgba(255,255,255,0.035)',
+                border: `1px solid ${hovered === role.id ? role.border : 'rgba(255,255,255,0.08)'}`,
                 transform: hovered === role.id ? 'translateY(-8px) scale(1.01)' : 'translateY(0) scale(1)',
               }}
             >
-              {/* Corner glow */}
-              <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full pointer-events-none transition-opacity duration-400"
-                style={{ background: role.glow.replace('0.5', '0.12'), filter: 'blur(20px)', opacity: hovered === role.id ? 1 : 0 }} />
+              {/* Animated background glow */}
+              <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full pointer-events-none transition-all duration-700"
+                style={{ 
+                  background: `radial-gradient(circle, ${role.glow.replace('0.5', '0.08')} 0%, transparent 70%)`,
+                  opacity: hovered === role.id ? 1 : 0.3,
+                  transform: hovered === role.id ? 'translate(20%, -20%)' : 'translate(30%, -30%)'
+                }} />
 
-              <div className="relative z-10">
-                {/* Icon + emoji */}
-                <div className="flex items-start justify-between mb-5">
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300"
+              <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-8">
+                {/* Icon section */}
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 rounded-3xl flex items-center justify-center transition-all duration-500 group-hover:rotate-6 group-hover:scale-110"
                     style={{
                       background: role.gradient,
-                      boxShadow: (isDark && hovered === role.id) ? `0 0 30px ${role.glow}` : 'none',
-                      transform: hovered === role.id ? 'scale(1.1) rotate(3deg)' : 'scale(1) rotate(0deg)',
+                      boxShadow: `0 0 40px ${role.glow}`,
                     }}>
-                    <role.icon className="w-7 h-7 text-white" />
+                    <role.icon className="w-10 h-10 text-white" />
                   </div>
-                  <span className="text-3xl" style={{ animation: hovered === role.id ? 'wiggle 0.6s ease-in-out' : 'none' }}>
-                    {role.emoji}
-                  </span>
                 </div>
 
-                <h2 className="text-2xl font-black text-white mb-2">{role.label}</h2>
-                <p className="text-sm mb-5" style={{ color: 'rgba(255,255,255,0.55)', lineHeight: '1.6' }}>{role.desc}</p>
+                {/* Content section */}
+                <div className="flex-1">
+                  <h2 className="text-3xl md:text-4xl font-black text-white mb-2 premium-heading">{role.label}</h2>
+                  <p className="text-sm md:text-base mb-6 font-medium text-white/50 leading-relaxed max-w-xl">{role.desc}</p>
 
-                {/* Perks */}
-                <ul className="space-y-2 mb-6">
-                  {role.perks.map((perk, i) => (
-                    <li key={i} className="flex items-center gap-2.5 text-sm font-semibold"
-                      style={{ color: 'rgba(255,255,255,0.75)' }}>
-                      <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
-                        style={{ background: role.gradient }}>
-                        <Check className="w-2.5 h-2.5 text-white" />
-                      </div>
-                      {perk}
-                    </li>
-                  ))}
-                </ul>
+                  {/* Perks with premium checkmarks */}
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                    {role.perks.map((perk, i) => (
+                      <li key={i} className="flex items-center gap-3 text-sm font-bold text-white/80">
+                        <div className="premium-check-badge" style={{ background: role.gradient, color: role.glow }}>
+                          <Check className="w-3 h-3 text-white" />
+                        </div>
+                        {perk}
+                      </li>
+                    ))}
+                  </ul>
 
-                {/* CTA */}
-                <div className="flex items-center gap-2 font-bold text-sm transition-all duration-300"
-                  style={{
-                    color: hovered === role.id ? role.border.replace('0.4', '1') : 'rgba(255,255,255,0.4)',
-                    transform: hovered === role.id ? 'translateX(4px)' : 'translateX(0)',
-                  }}>
-                  Continue as {role.label}
-                  <ArrowRight className="w-4 h-4" />
+                  {/* CTA */}
+                  <div className="flex items-center gap-2 font-black text-sm uppercase tracking-widest transition-all duration-300"
+                    style={{
+                      color: hovered === role.id ? 'white' : 'rgba(255,255,255,0.3)',
+                      transform: hovered === role.id ? 'translateX(6px)' : 'translateX(0)',
+                    }}>
+                    Continue as {role.label}
+                    <ArrowRight className="w-5 h-5" />
+                  </div>
                 </div>
               </div>
             </button>
@@ -291,17 +291,17 @@ const MalumLogin = () => {
         <div className="flex items-center gap-4 mb-8 fadeInUp">
           <button
             onClick={() => setStep('role')}
-            className="flex items-center gap-2 text-sm font-semibold transition-all hover:-translate-x-1"
-            style={{ color: 'rgba(255,255,255,0.45)' }}
-            onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.8)'}
-            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.45)'}
+            className="flex items-center gap-2 text-sm font-black uppercase tracking-widest transition-all hover:-translate-x-1"
+            style={{ color: 'rgba(255,255,255,0.3)' }}
+            onMouseEnter={e => e.currentTarget.style.color = 'white'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.3)'}
           >
             <ArrowLeft className="w-4 h-4" />
             Back
           </button>
           <div className="flex items-center gap-2 ml-auto">
             <img src="/malum-logo-round.png" alt="Malum" className="object-cover rounded-full overflow-hidden" style={{ width: '32px', height: '32px', clipPath: 'circle(50%)', filter: isDark ? `drop-shadow(0 0 8px ${accentGlow})` : 'none' }} />
-            <span className="font-black text-lg malum-text-gradient">Malum</span>
+            <span className="font-black text-xl malum-text-gradient">Malum</span>
           </div>
         </div>
 
@@ -320,11 +320,9 @@ const MalumLogin = () => {
         </div>
 
         {/* Card */}
-        <div className="rounded-3xl overflow-hidden fadeInUp" style={{
+        <div className="premium-card overflow-hidden fadeInUp" style={{
           animationDelay: '0.1s',
-          background: 'rgba(255,255,255,0.035)',
-          border: '1px solid rgba(255,255,255,0.07)',
-          boxShadow: `0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)`,
+          boxShadow: `0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03)`,
         }}>
           {/* Tab switcher */}
           <div className="flex" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
@@ -350,10 +348,10 @@ const MalumLogin = () => {
           {/* Form body */}
           <form onSubmit={handleSubmit} className="p-7 space-y-4">
             <div className="mb-6">
-              <h2 className="text-2xl font-black text-white mb-1">
+              <h2 className="text-3xl font-black text-white mb-2 premium-heading">
                 {isLogin ? 'Welcome back 👋' : 'Create your account 🎉'}
               </h2>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem', fontWeight: 500 }}>
+              <p className="text-sm font-medium text-white/40">
                 {isLogin ? `Sign in to continue as a ${role}` : `Join Malum as a ${role}`}
               </p>
             </div>

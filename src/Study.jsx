@@ -178,8 +178,8 @@ function AudioOverviewComponent({ podcast, quiz }) {
             <Headphones className="w-7 h-7 text-white" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-black theme-text">Malum Audio Overview</h3>
-            <p className="text-sm" style={{ color: 'var(--text-faint)' }}>
+            <h3 className="text-xl font-black theme-text premium-heading">Malum Audio Overview</h3>
+            <p className="text-sm font-medium" style={{ color: 'var(--text-faint)' }}>
               {podcast.length} segments · ~{estimatedMins} min at {rate.toFixed(1)}x
             </p>
           </div>
@@ -324,15 +324,15 @@ function AudioOverviewComponent({ podcast, quiz }) {
 
       {showQuiz && quiz && (
         <div className="space-y-5 mt-2">
-          <h3 className="text-xl font-black theme-text flex items-center gap-2">
-            <CheckCircle2 className="w-6 h-6 text-emerald-500" /> Knowledge Check
+          <h3 className="text-2xl font-black theme-text flex items-center gap-2 premium-heading">
+            <CheckCircle2 className="w-7 h-7 text-emerald-500" /> Knowledge Check
           </h3>
           {quiz.map((q, qIndex) => {
             const answered = quizAnswers[qIndex] !== undefined;
             const isCorrect = answered && quizAnswers[qIndex] === q.correctAnswerIndex;
             return (
-              <div key={qIndex} className="rounded-2xl p-5 relative overflow-hidden"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <div key={qIndex} className="premium-card p-6 relative overflow-hidden"
+                style={{ boxShadow: `0 20px 40px rgba(0,0,0,0.4)` }}>
                 <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl" style={{ background: 'linear-gradient(180deg, #6366F1, #8B5CF6)' }} />
                 <p className="text-base font-bold theme-text mb-4 pl-2">{q.question}</p>
                 <div className="space-y-2.5 pl-2">
@@ -1090,7 +1090,7 @@ export default function Study() {
               <Brain className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-black theme-text">Study Corner <span className="text-[10px] opacity-30 font-mono ml-2">v2.1.0-HQ</span></h1>
+              <h1 className="text-2xl md:text-3xl font-black theme-text premium-heading">Study Corner <span className="text-[10px] opacity-30 font-mono ml-2">v2.1.0-HQ</span></h1>
               <p className="text-xs theme-text-muted">AI-powered learning tools</p>
             </div>
           </div>

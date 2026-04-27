@@ -11,13 +11,10 @@ function AssignmentCard({ assignment, user, onMarkComplete, completing }) {
 
   return (
     <div
-      className="relative rounded-2xl p-5 overflow-hidden transition-all duration-400 group"
+      className="relative premium-card p-6 overflow-hidden transition-all duration-400 group border-white/10"
       style={{
-        background: 'var(--bg-elevated)',
-        border: `1px solid ${isOverdue ? 'rgba(239,68,68,0.25)' : 'var(--border-color)'}`,
-        boxShadow: isOverdue ? '0 4px 20px rgba(239,68,68,0.1)' : '0 4px 20px rgba(0,0,0,0.15)',
+        boxShadow: isOverdue ? '0 10px 30px rgba(239,68,68,0.15)' : '0 10px 30px rgba(0,0,0,0.3)',
         transform: 'translateY(0)',
-        animation: 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both',
       }}
       onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = isOverdue ? '0 12px 40px rgba(239,68,68,0.15)' : '0 12px 40px rgba(0,0,0,0.25)'; }}
       onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = isOverdue ? '0 4px 20px rgba(239,68,68,0.1)' : '0 4px 20px rgba(0,0,0,0.15)'; }}
@@ -215,8 +212,8 @@ export default function Classroom() {
                   <BookOpen className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl md:text-4xl font-black malum-text-gradient">Classroom</h1>
-                  <p className="theme-text-secondary text-sm font-medium">Track your assignments and join classes</p>
+                  <h1 className="text-3xl md:text-4xl font-black malum-text-gradient premium-heading">Classroom</h1>
+                  <p className="theme-text-secondary text-sm font-bold uppercase tracking-widest mt-1 opacity-50">Unified Hub</p>
                 </div>
               </div>
             </div>
@@ -353,8 +350,8 @@ export default function Classroom() {
                 <GraduationCap className="w-5 h-5 text-orange-400" />
               </div>
               <div>
-                <h2 className="text-xl font-black theme-text">Assigned to You</h2>
-                <p className="text-sm theme-text-secondary">Tasks from your teachers</p>
+                <h2 className="text-2xl font-black theme-text premium-heading">Assigned to You</h2>
+                <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mt-1">Direct from teachers</p>
               </div>
               {!loading && assignments.length > 0 && (
                 <div className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-full"

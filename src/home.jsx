@@ -224,22 +224,22 @@ const MalumHomePage = () => {
           <div className="max-w-5xl mx-auto text-center">
 
             {/* Greeting pill */}
-            <div className="inline-flex items-center gap-3 mb-10 hero-pill malum-fadeInUp stagger-1 hud-corner"
-              style={{ background: 'var(--bg-faint)', border: '1px solid var(--border-faint)', padding: '10px 24px' }}>
+            <div className="inline-flex items-center gap-3 mb-10 hero-pill malum-fadeInUp stagger-1 premium-card px-6 py-3 border-white/10"
+              style={{ background: 'rgba(255,255,255,0.03)', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}>
               <span className="text-2xl" style={{ animation: 'wiggle 2s ease-in-out infinite 1s' }}>👋</span>
-              <span className="theme-text font-bold text-sm">
-                SYSTEM READY: <span className="malum-text-gradient uppercase">{userName}</span>
+              <span className="theme-text font-black text-sm tracking-widest uppercase">
+                SYSTEM READY: <span className="malum-text-gradient">{userName}</span>
               </span>
-              <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 12px #10B981', animation: 'pulse 1.5s ease-in-out infinite' }} />
-              <span className="text-[10px] font-black uppercase tracking-tighter" style={{ color: '#10B981' }}>Core Stable</span>
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 16px #10B981', animation: 'pulse 1.5s ease-in-out infinite' }} />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: '#10B981' }}>CORE STABLE</span>
             </div>
 
             {/* Main headline */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-none tracking-tight mb-8 malum-fadeInUp stagger-2">
-              <span className="block mb-2 theme-text" style={{ textShadow: '0 4px 40px rgba(0,0,0,0.2)' }}>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.9] tracking-tight mb-8 malum-fadeInUp stagger-2 premium-heading">
+              <span className="block mb-2 theme-text" style={{ textShadow: '0 10px 40px rgba(0,0,0,0.5)' }}>
                 Your Academic
               </span>
-              <span className="block shimmer-text">
+              <span className="block shimmer-text premium-glow-text">
                 Command Center
               </span>
             </h1>
@@ -316,13 +316,13 @@ const MalumHomePage = () => {
               {stats.map((s, i) => (
                 <div
                   key={i}
-                  className="text-center p-6 rounded-2xl malum-fadeInUp frosted-card"
+                  className="text-center p-6 premium-card border-white/5 malum-fadeInUp"
                   style={{ animationDelay: `${0.4 + i * 0.1}s` }}
                 >
-                  <div className="text-3xl font-black malum-text-gradient mb-1">
+                  <div className="text-4xl font-black malum-text-gradient mb-1 premium-heading">
                     <AnimatedCounter target={s.value} suffix={s.suffix} />
                   </div>
-                  <div className="text-xs font-semibold theme-text-muted uppercase tracking-wider">{s.label}</div>
+                  <div className="text-[10px] font-black theme-text-muted uppercase tracking-[0.2em]">{s.label}</div>
                 </div>
               ))}
             </div>
@@ -358,16 +358,15 @@ const MalumHomePage = () => {
                   style={{ animationDelay: `${0.55 + index * 0.1}s` }}
                 >
                   <div
-                    className="relative rounded-2xl p-8 md:p-10 overflow-hidden transition-all duration-500 hud-corner hud-scanline"
+                    className="relative premium-card p-8 md:p-10 overflow-hidden transition-all duration-500 border-white/10"
                     style={{
                       background: hoveredFeature === index
-                        ? `linear-gradient(135deg, ${feature.glowColor.replace('0.4', '0.06')} 0%, var(--bg-elevated) 100%)`
-                        : 'var(--bg-elevated)',
-                      border: `1px solid ${hoveredFeature === index ? feature.borderHover : 'var(--border-color)'}`,
+                        ? `linear-gradient(135deg, ${feature.glowColor.replace('0.4', '0.1')}, rgba(255,255,255,0.02))`
+                        : 'rgba(255,255,255,0.035)',
                       boxShadow: hoveredFeature === index
-                        ? `0 20px 60px ${feature.glowColor}, 0 0 0 1px ${feature.glowColor.replace('0.4', '0.15')}`
-                        : '0 4px 20px rgba(0,0,0,0.2)',
-                      transform: hoveredFeature === index ? 'translateY(-8px) scale(1.01)' : 'translateY(0) scale(1)',
+                        ? `0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px ${feature.glowColor}`
+                        : '0 10px 30px rgba(0,0,0,0.3)',
+                      transform: hoveredFeature === index ? 'translateY(-12px) scale(1.01)' : 'translateY(0) scale(1)',
                     }}
                   >
                     {/* Shimmer overlay */}
@@ -401,7 +400,7 @@ const MalumHomePage = () => {
                       {/* Content */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3 mb-2 flex-wrap">
-                          <h3 className="text-xl md:text-2xl font-black theme-text group-hover:translate-x-1 transition-transform duration-300">
+                          <h3 className="text-2xl md:text-3xl font-black theme-text premium-heading group-hover:translate-x-1 transition-transform duration-300">
                             {feature.title}
                           </h3>
                           {feature.badge && (
