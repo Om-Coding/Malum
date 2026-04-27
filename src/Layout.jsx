@@ -263,7 +263,7 @@ export default function Layout() {
     const [scrolled, setScrolled] = useState(false);
     const { theme, toggleTheme } = useTheme();
     const isDark = theme === 'dark';
-    const [openFolders, setOpenFolders] = useState(['Study']); // Study open by default
+    const [openFolders, setOpenFolders] = useState(['Study', 'EXTRA']); // Folders open by default
 
     const toggleFolder = (name) => {
         setOpenFolders(prev => prev.includes(name) ? prev.filter(f => f !== name) : [...prev, name]);

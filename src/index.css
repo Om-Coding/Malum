@@ -781,11 +781,19 @@ body {
 }
 
 /* ===================== CUSTOM SCROLLBAR ===================== */
-.custom-scrollbar::-webkit-scrollbar { width: 5px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar { 
+  width: 6px; 
+}
+.custom-scrollbar::-webkit-scrollbar-track { 
+  background: rgba(255, 255, 255, 0.02); 
+}
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(255,107,0,0.5), rgba(139,92,246,0.5));
+  background: linear-gradient(180deg, #FF6B00, #8B5CF6);
   border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #FF8E53, #a78bfa);
 }
 
 /* ===================== ICON GLOW ===================== */
