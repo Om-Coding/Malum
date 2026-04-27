@@ -207,15 +207,14 @@ export default function Classroom() {
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div>
               <div className="flex flex-col mb-4">
-                <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em] mb-1 pl-1">Unified Hub</span>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center"
-                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 0 30px rgba(0,0,0,0.5)' }}>
-                    <GraduationCap className="w-6 h-6 text-white" />
+                <span className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-3 pl-1">Unified Hub</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-orange-500/10 border border-orange-500/20">
+                    <FileText className="w-4 h-4 text-orange-500" />
                   </div>
-                  <h1 className="text-4xl md:text-5xl font-black text-white premium-heading tracking-tight">Assigned to You</h1>
+                  <h1 className="text-3xl font-bold text-white tracking-tight">Assigned to You</h1>
                 </div>
-                <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mt-2 pl-1">Direct from Teachers</p>
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-2">Direct from Teachers</p>
               </div>
             </div>
 
@@ -371,13 +370,13 @@ export default function Classroom() {
                 <p className="text-gray-500 text-xs font-black uppercase tracking-widest">Synchronizing Assignments...</p>
               </div>
             ) : assignments.length === 0 ? (
-              <div className="text-center py-12 premium-card border-white/5 relative overflow-hidden">
-                <div className="absolute inset-0 pointer-events-none"
-                  style={{ background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.02) 0%, transparent 70%)' }} />
+              <div className="text-center py-12 bg-orange-500/[0.02] border border-orange-500/20 rounded-xl relative overflow-hidden">
                 <div className="relative z-10">
-                  <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4">✨ ✨</div>
-                  <p className="text-2xl font-black text-white mb-2 premium-heading">All clear! 🎉</p>
-                  <p className="text-xs font-bold text-gray-500 max-w-xs mx-auto leading-relaxed">When your teacher assigns work, it'll appear here.</p>
+                  <div className="w-10 h-10 mx-auto mb-4 rounded-full border border-orange-500/20 flex items-center justify-center">
+                    <CheckSquare className="w-5 h-5 text-orange-500" />
+                  </div>
+                  <p className="text-lg font-bold text-white mb-1">All clear! 🎉</p>
+                  <p className="text-xs font-medium text-gray-500 max-w-xs mx-auto">When your teacher assigns work, it'll appear here.</p>
                 </div>
               </div>
             ) : (

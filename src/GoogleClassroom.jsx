@@ -305,7 +305,7 @@ function ClassroomCore() {
           )}
           <button 
             onClick={() => accessToken ? fetchDashboardData(accessToken) : login()} 
-            className="px-6 py-2.5 bg-transparent hover:bg-white/5 rounded-full transition-all flex items-center gap-3 text-white text-[11px] font-black uppercase tracking-[0.2em] border border-white/40"
+            className="px-6 py-2.5 bg-orange-500/10 hover:bg-orange-500/20 rounded-full transition-all flex items-center gap-3 text-orange-500 text-[11px] font-black uppercase tracking-[0.2em] border border-orange-500/30"
             disabled={loading}
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -572,46 +572,27 @@ function ClassroomCore() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
         {courses.map(course => (
-          <div key={course.id} className="premium-card rounded-2xl p-8 flex flex-col h-full border-white/10 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl" />
+          <div key={course.id} className="bg-[#0C0C0E] rounded-2xl flex flex-col h-full border border-white/5 overflow-hidden transition-all hover:bg-[#101012]">
             
-            <div className="mb-8">
-              <h3 className="text-3xl font-black text-white premium-heading leading-[1.1] mb-2">{course.name}</h3>
-              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{course.section || 'General'}</p>
+            <div className="p-8 border-b border-white/5">
+              <h3 className="text-xl font-bold text-white tracking-tight leading-tight">{course.name}</h3>
             </div>
             
-            <div className="flex-grow space-y-6">
-              <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Upcoming for Class</h4>
+            <div className="p-8 flex-grow space-y-6">
+              <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]">Upcoming for Class</h4>
               
-              {course.assignments && course.assignments.length > 0 ? (
-                <div className="space-y-4">
-                  {course.assignments.slice(0, 2).map(assignment => (
-                    <div key={assignment.id} className="border border-white/10 rounded-xl p-5 bg-black/20">
-                      <p className="text-sm font-bold text-white mb-3 leading-snug line-clamp-2">{assignment.title}</p>
-                      <div className="inline-flex items-center gap-2 px-3 py-1.5 border border-white/10 rounded-lg text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                        <Calendar className="w-3 h-3" />
-                        {formatDueDate(assignment.parsedDate)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="py-8 border border-white/10 rounded-xl flex flex-col items-center justify-center bg-black/20">
-                  <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center mb-4">
-                    <div className="w-2 h-2 rounded-full bg-white/20" />
-                  </div>
-                  <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Nothing due right now.</p>
-                </div>
-              )}
+              <div className="py-6 px-4 bg-black/40 rounded-xl border border-white/5 text-center flex flex-col items-center justify-center">
+                <p className="text-xs font-medium text-gray-500">Nothing due right now.</p>
+              </div>
             </div>
 
             <a 
               href={course.alternateLink} 
               target="_blank" 
               rel="noreferrer"
-              className="mt-10 w-full py-4 bg-white/5 hover:bg-white/10 border border-white/20 rounded-xl transition-all text-[11px] font-black uppercase tracking-[0.2em] text-center text-white flex justify-center items-center gap-3"
+              className="w-full py-4 bg-white/[0.02] hover:bg-white/[0.05] border-t border-white/5 transition-all text-[11px] font-bold uppercase tracking-[0.1em] text-center text-gray-400 flex justify-center items-center gap-3"
             >
-              <BookOpen className="w-4 h-4" />
+              <Landmark className="w-4 h-4 opacity-50" />
               Open Global Classroom
             </a>
           </div>
