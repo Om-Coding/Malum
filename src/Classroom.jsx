@@ -206,15 +206,16 @@ export default function Classroom() {
         <header className="malum-fadeInUp">
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center"
-                  style={{ background: 'linear-gradient(135deg, #3B82F6, #06B6D4)', boxShadow: '0 0 30px rgba(59,130,246,0.5)' }}>
-                  <BookOpen className="w-6 h-6 text-white" />
+              <div className="flex flex-col mb-4">
+                <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em] mb-1 pl-1">Unified Hub</span>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 0 30px rgba(0,0,0,0.5)' }}>
+                    <GraduationCap className="w-6 h-6 text-white" />
+                  </div>
+                  <h1 className="text-4xl md:text-5xl font-black text-white premium-heading tracking-tight">Assigned to You</h1>
                 </div>
-                <div>
-                  <h1 className="text-3xl md:text-4xl font-black malum-text-gradient premium-heading">Classroom</h1>
-                  <p className="theme-text-secondary text-sm font-bold uppercase tracking-widest mt-1 opacity-50">Unified Hub</p>
-                </div>
+                <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mt-2 pl-1">Direct from Teachers</p>
               </div>
             </div>
 
@@ -362,27 +363,21 @@ export default function Classroom() {
               )}
             </div>
 
-            {/* Loading */}
             {loading ? (
               <div className="flex flex-col items-center justify-center py-16 gap-4">
                 <div className="relative w-16 h-16">
-                  <div className="absolute inset-0 rounded-full" style={{ border: '3px solid rgba(59,130,246,0.2)', borderTopColor: '#3B82F6', animation: 'spin-slow 1s linear infinite' }} />
-                  <div className="absolute inset-2 rounded-full" style={{ border: '3px solid rgba(139,92,246,0.2)', borderTopColor: '#8B5CF6', animation: 'spin-slow 1.5s linear infinite reverse' }} />
+                  <div className="absolute inset-0 rounded-full" style={{ border: '2px solid rgba(255,255,255,0.05)', borderTopColor: '#fff', animation: 'spin-slow 1s linear infinite' }} />
                 </div>
-                <p className="theme-text-muted text-sm font-semibold">Loading your assignments...</p>
+                <p className="text-gray-500 text-xs font-black uppercase tracking-widest">Synchronizing Assignments...</p>
               </div>
             ) : assignments.length === 0 ? (
-              <div className="text-center py-16 rounded-2xl relative overflow-hidden"
-                style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-color)' }}>
+              <div className="text-center py-12 premium-card border-white/5 relative overflow-hidden">
                 <div className="absolute inset-0 pointer-events-none"
-                  style={{ background: 'radial-gradient(circle at 50% 50%, rgba(255,107,0,0.05) 0%, transparent 70%)' }} />
+                  style={{ background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.02) 0%, transparent 70%)' }} />
                 <div className="relative z-10">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center"
-                    style={{ background: 'rgba(255,107,0,0.1)', animation: 'float 4s ease-in-out infinite' }}>
-                    <Sparkles className="w-8 h-8 text-orange-400" />
-                  </div>
-                  <p className="text-xl font-black theme-text mb-2">All clear! 🎉</p>
-                  <p className="text-sm theme-text-muted max-w-xs mx-auto">When your teacher assigns work, it'll appear here.</p>
+                  <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4">✨ ✨</div>
+                  <p className="text-2xl font-black text-white mb-2 premium-heading">All clear! 🎉</p>
+                  <p className="text-xs font-bold text-gray-500 max-w-xs mx-auto leading-relaxed">When your teacher assigns work, it'll appear here.</p>
                 </div>
               </div>
             ) : (
