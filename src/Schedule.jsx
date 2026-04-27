@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, Video, AlignLeft, AlertCircle, Loader2, CalendarDays, MapPin, GraduationCap, FileText, Sparkles, X, BrainCircuit, CheckSquare } from 'lucide-react';
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, Video, AlignLeft, AlertCircle, Loader2, CalendarDays, MapPin, GraduationCap, FileText, Sparkles, X, BrainCircuit, CheckSquare, RefreshCw } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -27,7 +27,14 @@ const parseClassroomDate = (dueDate, dueTime) => {
 };
 
 // --- CORE COMPONENT ---
+function ScheduleCore() {
   const [weekOffset, setWeekOffset] = useState(0);
+  const [events, setEvents] = useState([]);
+  const [assignments, setAssignments] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [accessToken, setAccessToken] = useState(() => sessionStorage.getItem('schedule_token') || null);
+
   const [selectedDayItems, setSelectedDayItems] = useState({ events: [], assignments: [] });
   const [selectedDateString, setSelectedDateString] = useState(() => {
     const d = new Date();
@@ -65,27 +72,16 @@ const parseClassroomDate = (dueDate, dueTime) => {
      localStorage.setItem('schedule_custom_todos', JSON.stringify(updated));
   };
 
-  // Gemini State
-  const [geminiLoading, setGeminiLoading] = useState(false);
-  const [geminiPlan, setGeminiPlan] = useState(null);
-  const [showGeminiModal, setShowGeminiModal] = useState(false);
-
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
-
   const login = useGoogleLogin({
-    onSuccess: (codeResponse) => {
-      setAccessToken(codeResponse.access_token);
-      sessionStorage.setItem('schedule_token', codeResponse.access_token);
-      fetchScheduleData(codeResponse.access_token, currentDate);
+    onSuccess: (tokenResponse) => {
+      setAccessToken(tokenResponse.access_token);
+      sessionStorage.setItem('schedule_token', tokenResponse.access_token);
+      fetchScheduleData(tokenResponse.access_token);
     },
-    onError: (err) => setError('Google Login Failed: Check if you are authorized in the test user list.'),
-    scope: 'https://www.googleapis.com/auth/calendar.readonly ' +
-           'https://www.googleapis.com/auth/classroom.courses.readonly ' +
-           'https://www.googleapis.com/auth/classroom.coursework.me.readonly ' +
-           'https://www.googleapis.com/auth/classroom.student-submissions.me.readonly'
-  });
-    onError: (err) => setError('Google Login Failed.'),
+    onError: (err) => {
+      console.error('Login Failed:', err);
+      setError('Google Login Failed. If you are on Vercel, ensure this URL is in your Google Console Authorized Redirect URIs.');
+    },
     scope: 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.coursework.me.readonly https://www.googleapis.com/auth/classroom.student-submissions.me.readonly'
   });
 
@@ -120,7 +116,7 @@ const parseClassroomDate = (dueDate, dueTime) => {
           try {
             const [workRes, subRes] = await Promise.all([
               fetch(`https://classroom.googleapis.com/v1/courses/${course.id}/courseWork?courseWorkStates=PUBLISHED`, { headers: { Authorization: `Bearer ${token}` } }),
-              fetch(`https://classroom.googleapis.com/v1/courses/${course.id}/courseWork/-/studentSubmissions`, { headers: { Authorization: `Bearer ${token}` } })
+              fetch(`https://classroom.googleapis.com/v1/courses/${course.id}/studentSubmissions`, { headers: { Authorization: `Bearer ${token}` } })
             ]);
 
             const workData = workRes.ok ? await workRes.json() : { courseWork: [] };
@@ -195,8 +191,37 @@ const parseClassroomDate = (dueDate, dueTime) => {
 
   if (!accessToken) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <button onClick={() => login()} className="px-10 py-5 bg-white text-black rounded-full font-black uppercase">Sync Calendar & Classes</button>
+      <div className="min-h-screen hud-grid flex items-center justify-center p-6">
+        <div className="w-full max-w-2xl premium-card p-16 border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)] relative overflow-hidden text-center">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-[100px] -mr-32 -mt-32" />
+          
+          <div className="relative z-10">
+            <div className="w-24 h-24 mx-auto mb-10 flex items-center justify-center rounded-3xl bg-black/40 border border-white/10 shadow-[0_0_40px_rgba(99,102,241,0.2)]">
+              <CalendarDays className="w-12 h-12 text-indigo-400 drop-shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
+            </div>
+            
+            <h1 className="text-5xl font-black text-white premium-heading mb-6 tracking-tight">Connect Hub</h1>
+            <p className="text-gray-400 text-lg font-bold leading-relaxed mb-12 max-w-md mx-auto opacity-70">
+              Authenticate securely via Google to pull down your exact <br/>
+              Calendar Events AND missing Classroom Assignments.
+            </p>
+            
+            <button
+              onClick={() => login()}
+              className="flex items-center gap-4 px-10 py-5 bg-white text-black rounded-full font-black uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+            >
+              <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6" />
+              Sync Calendar & Classes
+            </button>
+
+            {error && (
+              <div className="mt-8 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 flex items-center gap-3 relative z-10 w-full text-left">
+                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                <span className="text-sm font-medium">{error}</span>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     );
   }
@@ -204,6 +229,8 @@ const parseClassroomDate = (dueDate, dueTime) => {
   return (
     <div className="min-h-screen hud-grid pb-20">
       <div className="max-w-[1700px] mx-auto p-6 md:p-10 space-y-12">
+        
+        {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
             <h1 className="text-5xl font-black text-white premium-heading tracking-tight mb-2">Weekly Schedule</h1>
@@ -233,6 +260,7 @@ const parseClassroomDate = (dueDate, dueTime) => {
           </div>
         </div>
 
+        {/* Weekly Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {weekDays.map((dayDate, idx) => {
             const dateStr = `${dayDate.getFullYear()}-${String(dayDate.getMonth() + 1).padStart(2, '0')}-${String(dayDate.getDate()).padStart(2, '0')}`;
@@ -301,7 +329,7 @@ const parseClassroomDate = (dueDate, dueTime) => {
       </div>
     </div>
   );
-};
+}
 
 export default function Schedule() {
   return (
