@@ -41,7 +41,7 @@ export default function Gradescout() {
             </div>
             <div>
               <h1 className="text-3xl md:text-4xl font-black malum-text-gradient premium-heading">GradeScout</h1>
-              <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mt-1 opacity-50">Portal Sync</p>
+              <p className="text-sm font-bold theme-text-muted uppercase tracking-widest mt-1 opacity-50">Portal Sync</p>
             </div>
           </div>
         </header>

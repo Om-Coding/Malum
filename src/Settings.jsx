@@ -31,14 +31,14 @@ export default function Settings() {
 
   // Theme-aware classes
   const isDark = theme === 'dark';
-  const card = isDark ? 'bg-[#141418] border-white/5' : 'bg-white border-gray-200';
-  const cardHover = isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50';
-  const textPrimary = isDark ? 'text-white' : 'text-gray-900';
-  const textSecondary = isDark ? 'text-gray-400' : 'text-gray-500';
-  const textMuted = isDark ? 'text-gray-500' : 'text-gray-400';
-  const inputBg = isDark ? 'bg-[#0e0e12] border-white/10 text-white placeholder-gray-600' : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400';
-  const tabActive = isDark ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-900';
-  const tabInactive = isDark ? 'text-gray-400 hover:text-white hover:bg-white/5' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50';
+  const card = 'theme-bg-secondary theme-border';
+  const cardHover = 'hover:theme-bg-secondary';
+  const textPrimary = 'theme-text';
+  const textSecondary = 'theme-text-secondary';
+  const textMuted = 'theme-text-muted';
+  const inputBg = 'theme-bg theme-border theme-text placeholder-gray-500';
+  const tabActive = 'bg-gradient-to-r from-indigo-600/15 to-purple-600/15 theme-text shadow-sm';
+  const tabInactive = 'theme-text-muted hover:theme-text hover:theme-bg-secondary';
 
   const languages = [
     { code: 'en', name: 'English', native: 'English' },
@@ -54,7 +54,7 @@ export default function Settings() {
   ];
 
   return (
-    <div className={`min-h-screen p-6 md:p-10 font-sans ${isDark ? 'bg-[#0A0A0B]' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen p-6 md:p-10 font-sans theme-bg`}>
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Header */}
         <div>

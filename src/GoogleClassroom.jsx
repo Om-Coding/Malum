@@ -143,7 +143,10 @@ function ClassroomCore() {
       setAccessToken(codeResponse.access_token);
       fetchDashboardData(codeResponse.access_token);
     },
-    onError: (err) => setError('Login Failed: ' + err.message),
+    onError: (err) => {
+      console.error('Login Failed:', err);
+      setError(`Google Login Failed: ${err.error || 'Check Console'}. Ensure ${window.location.origin} is authorized in your Google Cloud Console.`);
+    },
     scope: 'https://www.googleapis.com/auth/classroom.courses.readonly ' +
            'https://www.googleapis.com/auth/classroom.coursework.me.readonly ' +
            'https://www.googleapis.com/auth/classroom.student-submissions.me.readonly ' +
@@ -242,15 +245,15 @@ function ClassroomCore() {
 
   if (!CLIENT_ID) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 bg-amber-500/10 border border-amber-500/20 rounded-3xl p-8 text-center max-w-2xl mx-auto mt-10">
+      <div className="flex flex-col items-center justify-center py-20 theme-bg-elevated border theme-border rounded-3xl p-8 text-center max-w-2xl mx-auto mt-10">
         <AlertCircle className="w-16 h-16 text-amber-500 mb-6" />
-        <h2 className="text-2xl font-black text-white mb-4">Google Client ID Missing</h2>
-        <p className="text-amber-200 mb-6 leading-relaxed">
+        <h2 className="text-2xl font-black theme-text mb-4">Google Client ID Missing</h2>
+        <p className="theme-text-secondary mb-6 leading-relaxed">
           To connect with Google Classroom, you need to create an OAuth 2.0 Web Client ID in the Google Cloud Console. 
           <br /><br />
           Once created, add it to a <code>.env</code> file in your project root as:
           <br />
-          <code className="bg-black/50 px-4 py-2 rounded-lg mt-2 inline-block">VITE_GOOGLE_CLIENT_ID="your-client-id"</code>
+          <code className="theme-bg p-4 py-2 rounded-lg mt-2 inline-block border theme-border">VITE_GOOGLE_CLIENT_ID="your-client-id"</code>
         </p>
       </div>
     );
@@ -285,13 +288,13 @@ function ClassroomCore() {
     <div className="space-y-12 mt-12 pb-24">
       
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-white/5">
+      <div className="flex items-center justify-between pb-4 border-b theme-border">
         <div>
-          <h2 className="text-3xl font-black text-white premium-heading flex items-center gap-3">
-            <MonitorCheck className="w-8 h-8 text-white" />
+          <h2 className="text-3xl font-black theme-text premium-heading flex items-center gap-3">
+            <MonitorCheck className="w-8 h-8 theme-text" />
             Classroom Dashboard
           </h2>
-          <p className="text-xs font-black text-gray-500 uppercase tracking-widest mt-1">Synced from your Google Workspace</p>
+          <p className="text-xs font-black theme-text-muted uppercase tracking-widest mt-1">Synced from your Google Workspace</p>
         </div>
         <div className="flex gap-3">
           {accessToken && (
@@ -322,11 +325,11 @@ function ClassroomCore() {
       )}
 
       {/* Loading State Overlay / Global To-Do Dashboard */}
-      <div className="premium-card border-white/10 p-10 relative overflow-hidden">
+      <div className="premium-card theme-border p-10 relative overflow-hidden">
         <div className="absolute -top-32 -right-32 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="flex items-center gap-4 mb-8">
-          <Clock className="w-6 h-6 text-white" />
-          <h3 className="text-2xl font-black text-white premium-heading uppercase tracking-tight">Global To-Do List</h3>
+          <Clock className="w-6 h-6 theme-text" />
+          <h3 className="text-2xl font-black theme-text premium-heading uppercase tracking-tight">Global To-Do List</h3>
         </div>
 
         {loading && globalTodos.length === 0 ? (
@@ -338,34 +341,34 @@ function ClassroomCore() {
           <div className="space-y-4 relative z-10">
             
             {/* MISSING FOLDER */}
-            <div className="border border-white/10 rounded-xl overflow-hidden bg-black/20">
+            <div className="border theme-border rounded-xl overflow-hidden theme-bg-elevated">
               <button 
                 onClick={() => setIsMissingOpen(!isMissingOpen)}
                 className="w-full flex items-center justify-between p-6 hover:bg-white/5 transition-all focus:outline-none"
               >
                 <div className="flex items-center gap-4">
-                  <FolderOpen className="w-5 h-5 text-white" />
-                  <h4 className="text-lg font-black text-white premium-heading uppercase tracking-wide flex items-center gap-4">
+                  <FolderOpen className="w-5 h-5 theme-text" />
+                  <h4 className="text-lg font-black theme-text premium-heading uppercase tracking-wide flex items-center gap-4">
                     Missing Work
-                    <span className="text-2xl font-black text-white ml-2">{globalTodos.filter(todo => todo.parsedDate && todo.parsedDate < new Date()).length}</span>
+                    <span className="text-2xl font-black theme-text ml-2">{globalTodos.filter(todo => todo.parsedDate && todo.parsedDate < new Date()).length}</span>
                   </h4>
                 </div>
-                <ChevronDown className={`w-6 h-6 text-white transition-transform duration-300 ${isMissingOpen ? 'rotate-0' : '-rotate-90'}`} />
+                <ChevronDown className={`w-6 h-6 theme-text transition-transform duration-300 ${isMissingOpen ? 'rotate-0' : '-rotate-90'}`} />
               </button>
               
               {isMissingOpen && (
                 <div className="p-6 pt-0 space-y-4">
                   {globalTodos.filter(todo => todo.parsedDate && todo.parsedDate < new Date()).map(todo => (
-                    <div key={todo.id} className="border border-white/10 rounded-xl p-6 bg-black/40">
+                    <div key={todo.id} className="border theme-border rounded-xl p-6 theme-bg">
                       <div className="flex flex-col mb-4">
-                        <span className="text-sm font-black text-white mb-1">{todo.title}</span>
-                        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">for {todo.courseName}</span>
+                        <span className="text-sm font-black theme-text mb-1">{todo.title}</span>
+                        <span className="text-[10px] font-bold theme-text-muted uppercase tracking-widest">for {todo.courseName}</span>
                       </div>
                       <a 
                         href={todo.alternateLink}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-3 px-4 py-2 border border-white/20 rounded-lg text-white text-[10px] font-black uppercase tracking-widest hover:bg-white/5 transition-all"
+                        className="inline-flex items-center gap-3 px-4 py-2 border theme-border rounded-lg theme-text text-[10px] font-black uppercase tracking-widest hover:theme-bg-elevated transition-all"
                       >
                         <Calendar className="w-3.5 h-3.5" />
                         {formatDueDate(todo.parsedDate)}
@@ -377,19 +380,19 @@ function ClassroomCore() {
             </div>
 
             {/* UPCOMING TO-DO FOLDER */}
-            <div className="border border-white/10 rounded-xl overflow-hidden bg-black/20">
+            <div className="border theme-border rounded-xl overflow-hidden theme-bg-elevated">
               <button 
                 onClick={() => setIsUpcomingOpen(!isUpcomingOpen)}
                 className="w-full flex items-center justify-between p-6 hover:bg-white/5 transition-all focus:outline-none"
               >
                 <div className="flex items-center gap-4">
-                  <FolderOpen className="w-5 h-5 text-white" />
-                  <h4 className="text-lg font-black text-white premium-heading uppercase tracking-wide flex items-center gap-4">
+                  <FolderOpen className="w-5 h-5 theme-text" />
+                  <h4 className="text-lg font-black theme-text premium-heading uppercase tracking-wide flex items-center gap-4">
                     Upcoming To-Do
-                    <span className="text-2xl font-black text-white ml-2">{globalTodos.filter(todo => todo.parsedDate && todo.parsedDate >= new Date()).length}</span>
+                    <span className="text-2xl font-black theme-text ml-2">{globalTodos.filter(todo => todo.parsedDate && todo.parsedDate >= new Date()).length}</span>
                   </h4>
                 </div>
-                <ChevronDown className={`w-6 h-6 text-white transition-transform duration-300 ${isUpcomingOpen ? 'rotate-0' : '-rotate-90'}`} />
+                <ChevronDown className={`w-6 h-6 theme-text transition-transform duration-300 ${isUpcomingOpen ? 'rotate-0' : '-rotate-90'}`} />
               </button>
               
               {isUpcomingOpen && (
@@ -400,16 +403,16 @@ function ClassroomCore() {
                     </div>
                   ) : (
                     globalTodos.filter(todo => todo.parsedDate && todo.parsedDate >= new Date()).map(todo => (
-                      <div key={todo.id} className="border border-white/10 rounded-xl p-6 bg-black/40">
+                      <div key={todo.id} className="border theme-border rounded-xl p-6 theme-bg-secondary">
                         <div className="flex flex-col mb-4">
-                          <span className="text-sm font-black text-white mb-1 leading-snug">{todo.title}</span>
-                          <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">for {todo.courseName}</span>
+                          <span className="text-sm font-black theme-text mb-1 leading-snug">{todo.title}</span>
+                          <span className="text-[10px] font-bold theme-text-muted uppercase tracking-widest">for {todo.courseName}</span>
                         </div>
                         <a 
                           href={todo.alternateLink}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-3 px-4 py-2 border border-white/20 rounded-lg text-white text-[10px] font-black uppercase tracking-widest hover:bg-white/5 transition-all"
+                          className="inline-flex items-center gap-3 px-4 py-2 border theme-border rounded-lg theme-text text-[10px] font-black uppercase tracking-widest hover:theme-bg-elevated transition-all"
                         >
                           <Calendar className="w-3.5 h-3.5" />
                           {formatDueDate(todo.parsedDate)}
@@ -421,46 +424,35 @@ function ClassroomCore() {
               )}
             </div>
 
-                  {globalTodos.filter(todo => todo.parsedDate && todo.parsedDate >= new Date()).length > 10 && (
-                    <div className="pt-2 text-center">
-                      <span className="text-xs font-bold text-gray-500">
-                        +{globalTodos.filter(todo => todo.parsedDate && todo.parsedDate >= new Date()).length - 10} more future assignments hidden
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-            
             {/* NO DUE DATE FOLDER */}
-            <div className="border border-white/10 rounded-xl overflow-hidden bg-black/20">
+            <div className="border theme-border rounded-xl overflow-hidden theme-bg-elevated">
               <button 
                 onClick={() => setIsNoDueDateOpen(!isNoDueDateOpen)}
                 className="w-full flex items-center justify-between p-6 hover:bg-white/5 transition-all focus:outline-none"
               >
                 <div className="flex items-center gap-4">
-                  <FolderOpen className="w-5 h-5 text-white" />
-                  <h4 className="text-lg font-black text-white premium-heading uppercase tracking-wide flex items-center gap-4">
+                  <FolderOpen className="w-5 h-5 theme-text" />
+                  <h4 className="text-lg font-black theme-text premium-heading uppercase tracking-wide flex items-center gap-4">
                     No Due Date
-                    <span className="text-2xl font-black text-white ml-2">{globalTodos.filter(todo => !todo.parsedDate).length}</span>
+                    <span className="text-2xl font-black theme-text ml-2">{globalTodos.filter(todo => !todo.parsedDate).length}</span>
                   </h4>
                 </div>
-                <ChevronDown className={`w-6 h-6 text-white transition-transform duration-300 ${isNoDueDateOpen ? 'rotate-0' : '-rotate-90'}`} />
+                <ChevronDown className={`w-6 h-6 theme-text transition-transform duration-300 ${isNoDueDateOpen ? 'rotate-0' : '-rotate-90'}`} />
               </button>
               
               {isNoDueDateOpen && (
                 <div className="p-6 pt-0 space-y-4">
                   {globalTodos.filter(todo => !todo.parsedDate).map(todo => (
-                    <div key={todo.id} className="border border-white/10 rounded-xl p-6 bg-black/40">
+                    <div key={todo.id} className="border theme-border rounded-xl p-6 theme-bg-secondary">
                       <div className="flex flex-col mb-4">
-                        <span className="text-sm font-black text-white mb-1">{todo.title}</span>
-                        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">for {todo.courseName}</span>
+                        <span className="text-sm font-black theme-text mb-1">{todo.title}</span>
+                        <span className="text-[10px] font-bold theme-text-muted uppercase tracking-widest">for {todo.courseName}</span>
                       </div>
                       <a 
                         href={todo.alternateLink}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-3 px-4 py-2 border border-white/20 rounded-lg text-white text-[10px] font-black uppercase tracking-widest hover:bg-white/5 transition-all"
+                        className="inline-flex items-center gap-3 px-4 py-2 border theme-border rounded-lg theme-text text-[10px] font-black uppercase tracking-widest hover:theme-bg-elevated transition-all"
                       >
                         <ListTodo className="w-3.5 h-3.5" />
                         No due date
@@ -472,19 +464,19 @@ function ClassroomCore() {
             </div>
 
             {/* FINISHED ASSIGNMENTS FOLDER */}
-            <div className="border border-white/10 rounded-xl overflow-hidden bg-black/20">
+            <div className="border theme-border rounded-xl overflow-hidden theme-bg-elevated">
               <button 
                 onClick={() => setIsFinishedOpen(!isFinishedOpen)}
                 className="w-full flex items-center justify-between p-6 hover:bg-white/5 transition-all focus:outline-none"
               >
                 <div className="flex items-center gap-4">
-                  <FolderOpen className="w-5 h-5 text-white" />
-                  <h4 className="text-lg font-black text-white premium-heading uppercase tracking-wide flex items-center gap-4">
+                  <FolderOpen className="w-5 h-5 theme-text" />
+                  <h4 className="text-lg font-black theme-text premium-heading uppercase tracking-wide flex items-center gap-4">
                     Finished Assignments
-                    <span className="text-2xl font-black text-white ml-2">{globalCompleted.length}</span>
+                    <span className="text-2xl font-black theme-text ml-2">{globalCompleted.length}</span>
                   </h4>
                 </div>
-                <ChevronDown className={`w-6 h-6 text-white transition-transform duration-300 ${isFinishedOpen ? 'rotate-0' : '-rotate-90'}`} />
+                <ChevronDown className={`w-6 h-6 theme-text transition-transform duration-300 ${isFinishedOpen ? 'rotate-0' : '-rotate-90'}`} />
               </button>
                 
                 {isFinishedOpen && (
@@ -526,14 +518,18 @@ function ClassroomCore() {
                                   className="flex flex-col lg:flex-row lg:items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-transparent hover:border-green-500/30 rounded-xl transition-all group"
                                 >
                                   <div className="flex flex-col mb-3 lg:mb-0 lg:pr-4 overflow-hidden">
-                                    <span className="text-base font-bold text-gray-300 group-hover:text-green-400 transition-colors leading-snug line-clamp-2 line-through opacity-80 group-hover:opacity-100">{todo.title}</span>
-                                    <span className="text-xs text-gray-500 font-medium mt-0.5">for <span className="text-gray-400">{todo.courseName}</span></span>
+                                    <span className="text-base font-bold theme-text group-hover:text-green-500 transition-colors leading-snug line-clamp-2 line-through opacity-80 group-hover:opacity-100">{todo.title}</span>
+                                    <span className="text-xs theme-text-muted font-medium mt-0.5">for <span className="theme-text-secondary">{todo.courseName}</span></span>
                                   </div>
                                   
                                   <div className="flex flex-row flex-wrap items-center lg:justify-end gap-2 shrink-0">
-                                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold text-xs bg-black/40 text-gray-400 border border-white/5 shadow-inner">
-                                      <CheckSquare className="w-3.5 h-3.5 text-green-500" />
-                                      Turned In
+                                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold text-xs theme-bg-elevated theme-text-muted border theme-border shadow-inner">
+                                      <Check className="w-3.5 h-3.5 text-green-500" />
+                                      Done
+                                    </div>
+                                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold text-xs theme-bg-elevated theme-text-muted border theme-border">
+                                      <Calendar className="w-3.5 h-3.5 text-purple-400" />
+                                      {new Date(todo.updateTime).toLocaleDateString()}
                                     </div>
                                     
                                     {(todo.assignedGrade !== undefined || todo.maxPoints) && (
@@ -560,8 +556,8 @@ function ClassroomCore() {
       </div>
 
       {/* Specific Class Cards with Mini To-Do Lists */}
-      <div className="pt-8 border-t border-white/5">
-        <h3 className="text-3xl font-black text-white premium-heading mb-10 tracking-tight">Your Courses</h3>
+      <div className="pt-8 border-t theme-border">
+        <h3 className="text-3xl font-black theme-text premium-heading mb-10 tracking-tight">Your Courses</h3>
       </div>
       
       {!loading && courses.length === 0 && !error && (
@@ -572,17 +568,17 @@ function ClassroomCore() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
         {courses.map(course => (
-          <div key={course.id} className="bg-[#0C0C0E] rounded-2xl flex flex-col h-full border border-white/5 overflow-hidden transition-all hover:bg-[#101012]">
+          <div key={course.id} className="theme-bg-secondary rounded-2xl flex flex-col h-full border theme-border overflow-hidden transition-all hover:theme-bg-elevated">
             
-            <div className="p-8 border-b border-white/5">
-              <h3 className="text-xl font-bold text-white tracking-tight leading-tight">{course.name}</h3>
+            <div className="p-8 border-b theme-border">
+              <h3 className="text-xl font-bold theme-text tracking-tight leading-tight">{course.name}</h3>
             </div>
             
             <div className="p-8 flex-grow space-y-6">
-              <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]">Upcoming for Class</h4>
+              <h4 className="text-[10px] font-bold theme-text-muted uppercase tracking-[0.1em]">Upcoming for Class</h4>
               
-              <div className="py-6 px-4 bg-black/40 rounded-xl border border-white/5 text-center flex flex-col items-center justify-center">
-                <p className="text-xs font-medium text-gray-500">Nothing due right now.</p>
+              <div className="py-6 px-4 theme-bg-elevated rounded-xl border theme-border text-center flex flex-col items-center justify-center">
+                <p className="text-xs font-medium theme-text-muted">Nothing due right now.</p>
               </div>
             </div>
 
@@ -590,7 +586,7 @@ function ClassroomCore() {
               href={course.alternateLink} 
               target="_blank" 
               rel="noreferrer"
-              className="w-full py-4 bg-white/[0.02] hover:bg-white/[0.05] border-t border-white/5 transition-all text-[11px] font-bold uppercase tracking-[0.1em] text-center text-gray-400 flex justify-center items-center gap-3"
+              className="w-full py-4 theme-bg border-t theme-border hover:theme-bg-elevated transition-all text-[11px] font-bold uppercase tracking-[0.1em] text-center theme-text-secondary flex justify-center items-center gap-3"
             >
               <Landmark className="w-4 h-4 opacity-50" />
               Open Global Classroom

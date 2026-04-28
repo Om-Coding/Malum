@@ -224,8 +224,8 @@ const MalumHomePage = () => {
           <div className="max-w-5xl mx-auto text-center">
 
             {/* Greeting pill */}
-            <div className="inline-flex items-center gap-3 mb-10 hero-pill malum-fadeInUp stagger-1 premium-card px-6 py-3 border-white/10"
-              style={{ background: 'rgba(255,255,255,0.03)', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}>
+            <div className="inline-flex items-center gap-3 mb-10 hero-pill malum-fadeInUp stagger-1 premium-card px-6 py-3"
+              style={{ background: 'var(--bg-faint)', border: '1px solid var(--border-faint)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
               <span className="text-2xl" style={{ animation: 'wiggle 2s ease-in-out infinite 1s' }}>👋</span>
               <span className="theme-text font-black text-sm tracking-widest uppercase">
                 SYSTEM READY: <span className="malum-text-gradient">{userName}</span>
@@ -265,11 +265,11 @@ const MalumHomePage = () => {
                 onClick={() => navigate('/classroom')}
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-sm transition-all hover:scale-105 hover:-translate-y-1"
                 style={{
-                  background: 'var(--glass-bg)',
-                  border: '1px solid var(--glass-border)',
+                  background: 'var(--bg-elevated)',
+                  border: '1px solid var(--border-faint)',
                   backdropFilter: 'blur(12px)',
                   color: 'var(--text-primary)',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
                 }}
               >
                 <Users className="h-5 w-5 text-blue-400" />
@@ -316,8 +316,8 @@ const MalumHomePage = () => {
               {stats.map((s, i) => (
                 <div
                   key={i}
-                  className="text-center p-6 premium-card border-white/5 malum-fadeInUp"
-                  style={{ animationDelay: `${0.4 + i * 0.1}s` }}
+                  className="text-center p-6 premium-card malum-fadeInUp"
+                  style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-faint)', animationDelay: `${0.4 + i * 0.1}s` }}
                 >
                   <div className="text-4xl font-black malum-text-gradient mb-1 premium-heading">
                     <AnimatedCounter target={s.value} suffix={s.suffix} />
@@ -358,14 +358,15 @@ const MalumHomePage = () => {
                   style={{ animationDelay: `${0.55 + index * 0.1}s` }}
                 >
                   <div
-                    className="relative premium-card p-8 md:p-10 overflow-hidden transition-all duration-500 border-white/10"
+                    className="relative premium-card p-8 md:p-10 overflow-hidden transition-all duration-500"
                     style={{
                       background: hoveredFeature === index
-                        ? `linear-gradient(135deg, ${feature.glowColor.replace('0.4', '0.1')}, rgba(255,255,255,0.02))`
-                        : 'rgba(255,255,255,0.035)',
+                        ? `linear-gradient(135deg, ${feature.glowColor.replace('0.4', '0.08')}, var(--bg-faint))`
+                        : 'var(--bg-elevated)',
+                      border: `1px solid ${hoveredFeature === index ? feature.glowColor : 'var(--border-faint)'}`,
                       boxShadow: hoveredFeature === index
-                        ? `0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px ${feature.glowColor}`
-                        : '0 10px 30px rgba(0,0,0,0.3)',
+                        ? `0 30px 80px rgba(0,0,0,0.2), 0 0 0 1px ${feature.glowColor}`
+                        : '0 10px 30px rgba(0,0,0,0.05)',
                       transform: hoveredFeature === index ? 'translateY(-12px) scale(1.01)' : 'translateY(0) scale(1)',
                     }}
                   >
@@ -453,10 +454,10 @@ const MalumHomePage = () => {
             <div
               className="relative rounded-3xl p-12 overflow-hidden"
               style={{
-                background: 'var(--glass-bg)',
+                background: 'var(--bg-elevated)',
                 backdropFilter: 'blur(24px)',
                 border: '1px solid rgba(255,107,0,0.2)',
-                boxShadow: '0 0 80px rgba(255,107,0,0.1), inset 0 0 60px rgba(139,92,246,0.05)',
+                boxShadow: '0 0 80px rgba(255,107,0,0.05), inset 0 0 60px rgba(139,92,246,0.02)',
               }}
             >
               {/* Animated BG shapes */}

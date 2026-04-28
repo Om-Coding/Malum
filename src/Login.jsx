@@ -35,8 +35,8 @@ function RolePicker({ onSelect }) {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden"
-      style={{ background: '#070710' }}>
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden transition-colors duration-500"
+      style={{ background: 'var(--bg-primary)' }}>
 
       {/* Ambient glows */}
       <div className="absolute inset-0 pointer-events-none">
@@ -53,10 +53,10 @@ function RolePicker({ onSelect }) {
             <img src="/malum-logo-round.png" alt="Malum" className="object-cover rounded-full overflow-hidden" style={{ width: '56px', height: '56px', clipPath: 'circle(50%)', filter: isDark ? 'drop-shadow(0 0 16px rgba(255,107,0,0.5))' : 'none' }} />
             <span className="text-4xl font-black malum-text-gradient">Malum</span>
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-3 premium-heading">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black theme-text mb-3 premium-heading">
             Welcome! Who are you?
           </h1>
-          <p className="font-medium text-white/50 text-base md:text-lg">
+          <p className="font-medium theme-text-secondary text-base md:text-lg">
             Choose your role to get started. You can always switch later.
           </p>
         </div>
@@ -72,9 +72,9 @@ function RolePicker({ onSelect }) {
               className="relative text-left premium-card p-8 md:p-10 group overflow-hidden"
               style={{
                 background: hovered === role.id
-                  ? `linear-gradient(165deg, ${role.glow.replace('0.5', '0.12')}, rgba(255,255,255,0.02))`
-                  : 'rgba(255,255,255,0.035)',
-                border: `1px solid ${hovered === role.id ? role.border : 'rgba(255,255,255,0.08)'}`,
+                  ? `linear-gradient(165deg, ${role.glow.replace('0.5', '0.12')}, var(--bg-faint))`
+                  : 'var(--bg-faint)',
+                border: `1px solid ${hovered === role.id ? role.border : 'var(--border-faint)'}`,
                 transform: hovered === role.id ? 'translateY(-8px) scale(1.01)' : 'translateY(0) scale(1)',
               }}
             >
@@ -100,14 +100,14 @@ function RolePicker({ onSelect }) {
 
                 {/* Content section */}
                 <div className="flex-1">
-                  <h2 className="text-3xl md:text-4xl font-black text-white mb-2 premium-heading">{role.label}</h2>
-                  <p className="text-sm md:text-base mb-6 font-medium text-white/50 leading-relaxed max-w-xl">{role.desc}</p>
+                  <h2 className="text-3xl md:text-4xl font-black theme-text mb-2 premium-heading">{role.label}</h2>
+                  <p className="text-sm md:text-base mb-6 font-medium theme-text-secondary leading-relaxed max-w-xl">{role.desc}</p>
 
                   {/* Perks with premium checkmarks */}
                   <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                     {role.perks.map((perk, i) => (
-                      <li key={i} className="flex items-center gap-3 text-sm font-bold text-white/80">
-                        <div className="premium-check-badge" style={{ background: role.gradient, color: role.glow }}>
+                      <li key={i} className="flex items-center gap-3 text-sm font-bold theme-text">
+                        <div className="premium-check-badge" style={{ background: role.gradient, color: 'white' }}>
                           <Check className="w-3 h-3 text-white" />
                         </div>
                         {perk}
@@ -118,7 +118,7 @@ function RolePicker({ onSelect }) {
                   {/* CTA */}
                   <div className="flex items-center gap-2 font-black text-sm uppercase tracking-widest transition-all duration-300"
                     style={{
-                      color: hovered === role.id ? 'white' : 'rgba(255,255,255,0.3)',
+                      color: hovered === role.id ? 'var(--text-primary)' : 'var(--text-faint-muted)',
                       transform: hovered === role.id ? 'translateX(6px)' : 'translateX(0)',
                     }}>
                     Continue as {role.label}
@@ -130,7 +130,7 @@ function RolePicker({ onSelect }) {
           ))}
         </div>
 
-        <p className="text-center mt-6 text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+        <p className="text-center mt-6 text-xs theme-text-muted opacity-40">
           Malum · Your Academic Command Center
         </p>
       </div>
@@ -272,8 +272,8 @@ const MalumLogin = () => {
     : 'linear-gradient(135deg, #8B5CF6, #6366F1)';
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden"
-      style={{ background: '#070710' }}>
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden transition-colors duration-500"
+      style={{ background: 'var(--bg-primary)' }}>
 
       {/* Ambient glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -291,10 +291,7 @@ const MalumLogin = () => {
         <div className="flex items-center gap-4 mb-8 fadeInUp">
           <button
             onClick={() => setStep('role')}
-            className="flex items-center gap-2 text-sm font-black uppercase tracking-widest transition-all hover:-translate-x-1"
-            style={{ color: 'rgba(255,255,255,0.3)' }}
-            onMouseEnter={e => e.currentTarget.style.color = 'white'}
-            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.3)'}
+            className="flex items-center gap-2 text-sm font-black uppercase tracking-widest transition-all hover:-translate-x-1 theme-text-muted hover:theme-text"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
@@ -316,7 +313,7 @@ const MalumLogin = () => {
               {isTeacher ? 'Teacher' : 'Student'}
             </span>
           </div>
-          <div className="h-px flex-1" style={{ background: 'rgba(255,255,255,0.06)' }} />
+          <div className="h-px flex-1 theme-border opacity-30" />
         </div>
 
         {/* Card */}
@@ -325,7 +322,7 @@ const MalumLogin = () => {
           boxShadow: `0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03)`,
         }}>
           {/* Tab switcher */}
-          <div className="flex" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div className="flex border-b theme-border">
             {['Login', 'Sign Up'].map((tab, i) => {
               const active = (i === 0) === isLogin;
               return (
@@ -334,7 +331,7 @@ const MalumLogin = () => {
                   onClick={() => { setIsLogin(i === 0); setError(''); }}
                   className="flex-1 py-4 text-sm font-black transition-all"
                   style={{
-                    color: active ? accentColor : 'rgba(255,255,255,0.35)',
+                    color: active ? accentColor : 'var(--text-muted)',
                     borderBottom: active ? `2px solid ${accentColor}` : '2px solid transparent',
                     background: active ? `${accentGlow.replace('0.4', '0.06')}` : 'transparent',
                   }}
@@ -348,10 +345,10 @@ const MalumLogin = () => {
           {/* Form body */}
           <form onSubmit={handleSubmit} className="p-7 space-y-4">
             <div className="mb-6">
-              <h2 className="text-3xl font-black text-white mb-2 premium-heading">
+              <h2 className="text-3xl font-black theme-text mb-2 premium-heading">
                 {isLogin ? 'Welcome back 👋' : 'Create your account 🎉'}
               </h2>
-              <p className="text-sm font-medium text-white/40">
+              <p className="text-sm font-medium theme-text-secondary">
                 {isLogin ? `Sign in to continue as a ${role}` : `Join Malum as a ${role}`}
               </p>
             </div>
@@ -371,8 +368,8 @@ const MalumLogin = () => {
                   type="text" name="name" value={formData.name}
                   onChange={handleChange} placeholder="Your full name"
                   required={!isLogin}
-                  className="w-full pl-11 pr-4 py-3 rounded-xl text-sm font-medium focus:outline-none transition-all text-white"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+                  className="w-full pl-11 pr-4 py-3 rounded-xl text-sm font-medium focus:outline-none transition-all theme-text"
+                  style={{ background: 'var(--bg-faint)', border: '1px solid var(--border-faint)' }}
                 />
               </Field>
             )}
@@ -383,29 +380,28 @@ const MalumLogin = () => {
                 type="email" name="email" value={formData.email}
                 onChange={handleChange} placeholder={isTeacher ? 'teacher@school.edu' : 'student@example.com'}
                 required
-                className="w-full pl-11 pr-4 py-3 rounded-xl text-sm font-medium focus:outline-none transition-all text-white"
-                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+                className="w-full pl-11 pr-4 py-3 rounded-xl text-sm font-medium focus:outline-none transition-all theme-text"
+                style={{ background: 'var(--bg-faint)', border: '1px solid var(--border-faint)' }}
               />
             </Field>
 
             {/* Password */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-black uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.45)' }}>
+              <label className="block text-xs font-black uppercase tracking-wider theme-text-muted">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'rgba(255,255,255,0.3)' }} />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 theme-text-muted" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password" value={formData.password}
                   onChange={handleChange} placeholder="Enter your password"
                   required
-                  className="w-full pl-11 pr-11 py-3 rounded-xl text-sm font-medium focus:outline-none transition-all text-white"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+                  className="w-full pl-11 pr-11 py-3 rounded-xl text-sm font-medium focus:outline-none transition-all theme-text"
+                  style={{ background: 'var(--bg-faint)', border: '1px solid var(--border-faint)' }}
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors"
-                  style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors theme-text-muted hover:theme-text">
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
@@ -419,8 +415,8 @@ const MalumLogin = () => {
                   name="confirmPassword" value={formData.confirmPassword}
                   onChange={handleChange} placeholder="Re-enter password"
                   required={!isLogin}
-                  className="w-full pl-11 pr-4 py-3 rounded-xl text-sm font-medium focus:outline-none transition-all text-white"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+                  className="w-full pl-11 pr-4 py-3 rounded-xl text-sm font-medium focus:outline-none transition-all theme-text"
+                  style={{ background: 'var(--bg-faint)', border: '1px solid var(--border-faint)' }}
                 />
               </Field>
             )}
@@ -431,8 +427,8 @@ const MalumLogin = () => {
                 <input
                   type="text" name="gradingUrl" value={formData.gradingUrl}
                   onChange={handleChange} placeholder="powerschool.yourschool.edu"
-                  className="w-full pl-11 pr-4 py-3 rounded-xl text-sm font-medium focus:outline-none transition-all text-white"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+                  className="w-full pl-11 pr-4 py-3 rounded-xl text-sm font-medium focus:outline-none transition-all theme-text"
+                  style={{ background: 'var(--bg-faint)', border: '1px solid var(--border-faint)' }}
                 />
               </Field>
             )}
@@ -468,8 +464,7 @@ const MalumLogin = () => {
                 ? [{ icon: Zap, text: 'Create Classes' }, { icon: Award, text: 'Track Progress' }]
                 : [{ icon: Brain, text: 'AI Tools' }, { icon: Zap, text: 'Smart Study' }]
               ).map((p, i) => (
-                <div key={i} className="flex items-center gap-1.5 text-xs font-semibold"
-                  style={{ color: 'rgba(255,255,255,0.3)' }}>
+                <div key={i} className="flex items-center gap-1.5 text-xs font-semibold theme-text-muted">
                   <p.icon className="w-3.5 h-3.5" style={{ color: accentColor, opacity: 0.7 }} />
                   {p.text}
                 </div>
@@ -486,7 +481,7 @@ const MalumLogin = () => {
           from { opacity: 0; transform: translateY(24px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        input::placeholder { color: rgba(255,255,255,0.2); }
+        input::placeholder { color: var(--text-faint-muted); }
         input:focus { border-color: ${accentColor} !important; box-shadow: 0 0 0 3px ${accentGlow.replace('0.4', '0.15')}; }
       `}</style>
     </div>
@@ -497,11 +492,11 @@ const MalumLogin = () => {
 function Field({ label, icon: Icon, accentColor, accentGlow, children }) {
   return (
     <div className="space-y-1.5">
-      <label className="block text-xs font-black uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.45)' }}>
+      <label className="block text-xs font-black uppercase tracking-wider theme-text-muted">
         {label}
       </label>
       <div className="relative">
-        <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ color: 'rgba(255,255,255,0.3)' }} />
+        <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none theme-text-muted" />
         {children}
       </div>
     </div>

@@ -46,12 +46,12 @@ button {
   --glow-purple: rgba(139, 92, 246, 0.25);
   --glow-blue: rgba(59, 130, 246, 0.25);
   
-  /* Translucent layers for dark mode */
   --bg-faint: rgba(255, 255, 255, 0.05);
   --bg-faint-active: rgba(255, 255, 255, 0.1);
   --border-faint: rgba(255, 255, 255, 0.08);
   --text-faint: rgba(255, 255, 255, 0.4);
   --text-faint-muted: rgba(255, 255, 255, 0.25);
+  --bg-card-glass: rgba(16, 16, 30, 0.8);
 }
 
 [data-theme="light"] {
@@ -76,12 +76,12 @@ button {
   --glow-purple: transparent;
   --glow-blue: transparent;
 
-  /* Translucent layers for light mode (flipping to black-based translucency) */
-  --bg-faint: rgba(0, 5, 20, 0.06);
-  --bg-faint-active: rgba(0, 5, 20, 0.12);
-  --border-faint: rgba(0, 5, 20, 0.1);
-  --text-faint: rgba(0, 5, 20, 0.65);
-  --text-faint-muted: rgba(0, 5, 20, 0.45);
+  --bg-faint: rgba(15, 23, 42, 0.05);
+  --bg-faint-active: rgba(15, 23, 42, 0.1);
+  --border-faint: rgba(15, 23, 42, 0.08);
+  --text-faint: rgba(15, 23, 42, 0.65);
+  --text-faint-muted: rgba(15, 23, 42, 0.45);
+  --bg-card-glass: rgba(255, 255, 255, 0.85);
 }
 
 /* Clear glows in light mode for specific classes */
@@ -148,6 +148,9 @@ body {
   background: linear-gradient(180deg, var(--accent-secondary), #a78bfa);
 }
 
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
 /* ===================== THEME UTILITIES ===================== */
 .theme-bg { background-color: var(--bg-primary); }
 .theme-bg-secondary { background-color: var(--bg-secondary); }
@@ -157,7 +160,13 @@ body {
 .theme-text-secondary { color: var(--text-secondary); }
 .theme-text-muted { color: var(--text-muted); }
 .theme-border { border-color: var(--border-color); }
+.theme-border-faint { border-color: var(--border-faint); }
 .theme-border-glow { border-color: var(--accent-primary); box-shadow: 0 0 15px var(--glow-orange); }
+
+/* Force white in dark mode, black in light mode */
+.adaptive-white { color: var(--text-primary); }
+.adaptive-bg-white { background-color: var(--bg-card); }
+.adaptive-glass { background-color: var(--bg-card-glass); backdrop-filter: blur(20px); }
 
 /* ===================== FUTURISTIC / HUD UTILITIES ===================== */
 .hud-grid {
@@ -485,7 +494,7 @@ body {
 
 /* Shimmer text effect */
 .shimmer-text {
-  background: linear-gradient(90deg, #FF6B00 0%, #FF8E53 30%, #fff 50%, #FF8E53 70%, #FF6B00 100%);
+  background: linear-gradient(90deg, #FF6B00 0%, #FF8E53 30%, var(--text-primary) 50%, #FF8E53 70%, #FF6B00 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;

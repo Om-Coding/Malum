@@ -44,11 +44,8 @@ function SettingsPanel({ isOpen, onClose, isDark }) {
 
             {/* Panel */}
             <div
-                className="fixed top-20 right-0 z-[75] w-full sm:w-[420px] max-h-[calc(100vh-80px)] flex flex-col overflow-hidden premium-card !rounded-none !rounded-l-3xl border-white/10"
+                className="fixed top-20 right-0 z-[75] w-full sm:w-[420px] max-h-[calc(100vh-80px)] flex flex-col overflow-hidden adaptive-glass !rounded-none !rounded-l-3xl theme-border-faint"
                 style={{
-                    background: isDark
-                        ? 'linear-gradient(160deg, rgba(10,10,25,0.98) 0%, rgba(7,7,16,0.98) 100%)'
-                        : 'linear-gradient(160deg, rgba(255,255,255,0.98) 0%, rgba(240,244,255,0.98) 100%)',
                     boxShadow: isDark
                         ? '-20px 0 60px rgba(0,0,0,0.6), -4px 0 20px rgba(139,92,246,0.05)'
                         : '-20px 0 60px rgba(99,102,241,0.1)',
@@ -71,7 +68,7 @@ function SettingsPanel({ isOpen, onClose, isDark }) {
                         </div>
                         <div>
                             <span className="font-black text-lg theme-text premium-heading">Settings</span>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 opacity-50">Configuration</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest theme-text-muted opacity-50">Configuration</p>
                         </div>
                     </div>
                     <button
@@ -228,8 +225,8 @@ function SettingsPanel({ isOpen, onClose, isDark }) {
                                     placeholder="Bug reports, feature ideas, anything..."
                                     className="w-full h-28 rounded-xl p-3 text-sm resize-none focus:outline-none transition-all theme-text"
                                     style={{
-                                        background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)',
-                                        border: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
+                                        background: 'var(--bg-faint)',
+                                        border: '1px solid var(--border-faint)',
                                     }}
                                 />
                                 <div className="flex items-center justify-between">
@@ -252,6 +249,63 @@ function SettingsPanel({ isOpen, onClose, isDark }) {
                 </div>
             </div>
         </>
+    );
+}
+
+function SectionNav({ navGroups, isDark }) {
+    const location = useLocation();
+    const currentPath = location.pathname;
+
+    // Find the group that contains the current path
+    const currentGroup = navGroups.find(group => 
+        group.items.some(item => item.to === currentPath)
+    ) || navGroups[0]; // Default to first group if not found
+
+    return (
+        <div className="mb-8 malum-fadeInUp" style={{ animationDelay: '0.1s' }}>
+            <div className="flex items-center gap-2 mb-3 px-1">
+                <div className="w-1.5 h-4 rounded-full" style={{ background: currentGroup.color || 'var(--accent-primary)' }} />
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] theme-text-muted opacity-60">
+                    {currentGroup.title} Section
+                </span>
+            </div>
+            
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar no-scrollbar" style={{ scrollSnapType: 'x mandatory' }}>
+                {currentGroup.items.map((item, i) => {
+                    const isActive = currentPath === item.to;
+                    if (item.isAction) return null; // Don't show actions in mini nav for now
+                    
+                    return (
+                        <NavLink
+                            key={item.to}
+                            to={item.to}
+                            className={`flex items-center gap-2.5 px-5 py-3 rounded-2xl transition-all duration-300 whitespace-nowrap border ${
+                                isActive 
+                                    ? 'theme-bg-elevated theme-border shadow-lg scale-105' 
+                                    : 'theme-bg-faint border-transparent hover:theme-bg-elevated hover:theme-border'
+                            }`}
+                            style={{
+                                borderLeft: isActive ? `3px solid ${item.color}` : undefined,
+                                scrollSnapAlign: 'start',
+                                animation: 'fadeInScale 0.4s ease backwards',
+                                animationDelay: `${i * 0.05}s`
+                            }}
+                        >
+                            <div className="w-5 h-5 rounded-lg flex items-center justify-center" 
+                                 style={{ background: isActive ? item.color : `${item.color}15` }}>
+                                <item.icon className="w-3 h-3" style={{ color: isActive ? 'white' : item.color }} />
+                            </div>
+                            <span className={`text-xs font-bold ${isActive ? 'theme-text' : 'theme-text-secondary'}`}>
+                                {item.label}
+                            </span>
+                        </NavLink>
+                    );
+                })}
+            </div>
+            
+            {/* Divider */}
+            <div className="h-px w-full mt-4 opacity-10" style={{ background: `linear-gradient(90deg, ${currentGroup.color || 'var(--accent-primary)'}, transparent)` }} />
+        </div>
     );
 }
 
@@ -338,7 +392,7 @@ export default function Layout() {
                 </div>
                 <div>
                     <span className="font-black text-2xl malum-text-gradient block leading-none">Malum</span>
-                    <span className="text-[9px] font-black uppercase tracking-[0.3em] theme-text-muted opacity-40">System Active</span>
+                    <span className="text-[9px] font-black uppercase tracking-[0.3em] theme-text-muted">System Active</span>
                 </div>
             </div>
 
@@ -394,7 +448,9 @@ export default function Layout() {
                                                 background: isActive
                                                     ? `linear-gradient(135deg, ${item.color}1a, ${item.color}05)`
                                                     : 'transparent',
-                                                color: isActive ? 'white' : 'rgba(255,255,255,0.45)',
+                                                color: isActive 
+                                                    ? 'white' 
+                                                    : 'var(--text-secondary)',
                                                 border: isActive ? `1px solid ${item.color}40` : '1px solid transparent',
                                             })}
                                         >
@@ -431,8 +487,8 @@ export default function Layout() {
                 className="fixed w-full z-[60] h-20 flex items-center px-6 justify-between transition-all duration-500"
                 style={{
                     background: scrolled
-                        ? (isDark ? 'rgba(7,7,16,0.95)' : 'rgba(240,244,255,0.95)')
-                        : (isDark ? 'rgba(7,7,16,0.7)' : 'rgba(255,255,255,0.7)'),
+                        ? 'var(--bg-card-glass)'
+                        : 'var(--bg-faint)',
                     backdropFilter: 'blur(24px) saturate(200%)',
                     WebkitBackdropFilter: 'blur(24px) saturate(200%)',
                     borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(99,102,241,0.1)'}`,
@@ -520,10 +576,8 @@ export default function Layout() {
                             className="relative w-68 h-full flex flex-col pt-[80px] z-50 overflow-y-auto custom-scrollbar"
                             style={{
                                 width: '272px',
-                                background: isDark
-                                    ? 'linear-gradient(160deg, rgba(12,12,24,0.99) 0%, rgba(8,8,18,0.99) 100%)'
-                                    : 'linear-gradient(160deg, rgba(255,255,255,0.99) 0%, rgba(240,244,255,0.99) 100%)',
-                                borderRight: `1px solid ${isDark ? 'rgba(255,255,255,0.07)' : 'rgba(99,102,241,0.12)'}`,
+                                background: 'var(--bg-card-glass)',
+                                borderRight: '1px solid var(--border-faint)',
                                 boxShadow: isDark ? '8px 0 40px rgba(0,0,0,0.5)' : '8px 0 40px rgba(99,102,241,0.1)',
                                 animation: 'slideInLeft 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)',
                             }}
@@ -562,6 +616,7 @@ export default function Layout() {
                 {/* Main Content */}
                 <main className="flex-1 h-full overflow-y-auto custom-scrollbar relative hud-grid hud-scanline">
                     <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20 py-10 lg:py-16">
+                        <SectionNav navGroups={navGroups} isDark={isDark} />
                         <Outlet />
                     </div>
                 </main>

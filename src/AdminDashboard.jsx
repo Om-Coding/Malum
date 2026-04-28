@@ -99,7 +99,7 @@ export default function AdminDashboard() {
               <Shield className="w-12 h-12 text-white" />
             </div>
             <h1 className="text-4xl md:text-5xl font-black malum-text-gradient mb-4">Admin Security</h1>
-            <p className="theme-text-secondary text-lg font-medium">Authentication required to proceed.</p>
+            <p className="theme-text-secondary text-lg font-medium opacity-80">Authentication required to proceed.</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-5">
@@ -109,7 +109,7 @@ export default function AdminDashboard() {
                 placeholder="Enter password..."
                 value={adminPass}
                 onChange={(e) => setAdminPass(e.target.value)}
-                className="w-full h-16 bg-white/[0.03] border-2 border-white/[0.08] rounded-2xl px-12 text-white font-bold outline-none transition-all group-hover:border-purple-500/30 focus:border-purple-500/60 focus:bg-white/[0.05]"
+                className="w-full h-16 theme-bg-elevated border-2 theme-border rounded-2xl px-12 theme-text font-bold outline-none transition-all group-hover:border-purple-500/30 focus:border-purple-500/60 focus:bg-white/[0.05]"
               />
               <Shield className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400/50" />
             </div>
@@ -257,7 +257,7 @@ export default function AdminDashboard() {
                   <div className="col-span-2">Created</div>
                 </div>
                 {users.map((user, i) => (
-                  <div key={user.id || i} className="grid grid-cols-12 gap-4 px-6 py-4 items-center text-sm transition-colors hover:bg-white/[0.02]">
+                  <div key={user.id || i} className="grid grid-cols-12 gap-4 px-6 py-4 items-center text-sm transition-colors hover:theme-bg-faint">
                     <div className="col-span-1 font-black theme-text-muted">{i + 1}</div>
                     <div className="col-span-3 font-bold theme-text truncate">{user.name}</div>
                     <div className="col-span-4 font-medium theme-text-secondary truncate flex items-center gap-2">
@@ -308,7 +308,7 @@ export default function AdminDashboard() {
                   <div key={cls.id || i}>
                     <button
                       onClick={() => setExpandedRow(expandedRow === cls.id ? null : cls.id)}
-                      className="w-full grid grid-cols-12 gap-4 px-6 py-4 items-center text-sm text-left transition-colors hover:bg-white/[0.02]"
+                      className="w-full grid grid-cols-12 gap-4 px-6 py-4 items-center text-sm text-left transition-colors hover:theme-bg-faint"
                     >
                       <div className="col-span-3 font-bold theme-text truncate">{cls.name}</div>
                       <div className="col-span-2 font-medium theme-text-secondary">{cls.subject}</div>
@@ -366,11 +366,11 @@ export default function AdminDashboard() {
                   const completedCount = Object.values(a.completions || {}).filter(c => c.completed).length;
                   const totalStudents = a.studentEmails?.length || 0;
                   return (
-                    <div key={a.id || i} className="px-6 py-5 transition-colors hover:bg-white/[0.02]">
+                    <div key={a.id || i} className="px-6 py-5 transition-colors hover:theme-bg-faint">
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 min-w-0">
                           <h3 className="font-bold theme-text text-base">{a.title}</h3>
-                          {a.description && <p className="text-sm theme-text-muted mt-1 line-clamp-2">{a.description}</p>}
+                          {a.description && <p className="text-sm theme-text-muted mt-1 line-clamp-2 opacity-80">{a.description}</p>}
                           <div className="flex items-center gap-3 mt-2 flex-wrap">
                             <span className="text-xs font-bold px-2 py-0.5 rounded-full"
                               style={{ background: 'rgba(59,130,246,0.1)', color: '#60a5fa', border: '1px solid rgba(59,130,246,0.2)' }}>
@@ -389,7 +389,7 @@ export default function AdminDashboard() {
                             </p>
                             <p className="text-[10px] font-bold uppercase tracking-wider theme-text-muted">completed</p>
                           </div>
-                          <div className="w-16 h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                          <div className="w-16 h-2 rounded-full overflow-hidden theme-bg">
                             <div className="h-full rounded-full transition-all"
                               style={{
                                 width: `${totalStudents > 0 ? (completedCount / totalStudents) * 100 : 0}%`,

@@ -179,7 +179,7 @@ function AudioOverviewComponent({ podcast, quiz }) {
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="text-xl font-black theme-text premium-heading">Malum Audio Overview</h3>
-            <p className="text-sm font-medium" style={{ color: 'var(--text-faint)' }}>
+            <p className="text-sm font-medium theme-text-muted">
               {podcast.length} segments · ~{estimatedMins} min at {rate.toFixed(1)}x
             </p>
           </div>
@@ -237,13 +237,13 @@ function AudioOverviewComponent({ podcast, quiz }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Host 1 voice */}
             <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.4)' }}>Alex (Host 1)</label>
+              <label className="text-xs font-black uppercase tracking-wider theme-text-muted">Alex (Host 1)</label>
               <select value={host1Voice} onChange={e => setHost1Voice(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl text-sm font-semibold focus:outline-none"
-                style={{ background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: 'white' }}>
-                {allVoices.map(v => <option key={v.name} value={v.name} style={{ background: '#1a1a2e' }}>{v.name} ({v.lang})</option>)}
+                className="w-full px-3 py-2 rounded-xl text-sm font-semibold focus:outline-none theme-bg theme-text"
+                style={{ border: '1px solid rgba(99,102,241,0.3)' }}>
+                {allVoices.map(v => <option key={v.name} value={v.name} className="theme-bg">{v.name} ({v.lang})</option>)}
               </select>
-              <label className="text-xs font-semibold flex justify-between" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <label className="text-xs font-semibold flex justify-between theme-text-muted">
                 <span>Pitch</span><span>{pitch1.toFixed(1)}</span>
               </label>
               <input type="range" min="0.5" max="2" step="0.05" value={pitch1} onChange={e => setPitch1(parseFloat(e.target.value))}
@@ -252,13 +252,13 @@ function AudioOverviewComponent({ podcast, quiz }) {
 
             {/* Host 2 voice */}
             <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.4)' }}>Sam (Host 2)</label>
+              <label className="text-xs font-black uppercase tracking-wider theme-text-muted">Sam (Host 2)</label>
               <select value={host2Voice} onChange={e => setHost2Voice(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl text-sm font-semibold focus:outline-none"
-                style={{ background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.3)', color: 'white' }}>
-                {allVoices.map(v => <option key={v.name} value={v.name} style={{ background: '#1a1a2e' }}>{v.name} ({v.lang})</option>)}
+                className="w-full px-3 py-2 rounded-xl text-sm font-semibold focus:outline-none theme-bg theme-text"
+                style={{ border: '1px solid rgba(139,92,246,0.3)' }}>
+                {allVoices.map(v => <option key={v.name} value={v.name} className="theme-bg">{v.name} ({v.lang})</option>)}
               </select>
-              <label className="text-xs font-semibold flex justify-between" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <label className="text-xs font-semibold flex justify-between theme-text-muted">
                 <span>Pitch</span><span>{pitch2.toFixed(1)}</span>
               </label>
               <input type="range" min="0.5" max="2" step="0.05" value={pitch2} onChange={e => setPitch2(parseFloat(e.target.value))}
@@ -269,14 +269,14 @@ function AudioOverviewComponent({ podcast, quiz }) {
           {/* Global controls */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-xs font-semibold flex justify-between" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <label className="text-xs font-semibold flex justify-between theme-text-muted">
                 <span>Speed</span><span>{rate.toFixed(2)}x</span>
               </label>
               <input type="range" min="0.5" max="2" step="0.05" value={rate} onChange={e => setRate(parseFloat(e.target.value))}
                 className="w-full accent-orange-400" />
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-semibold flex justify-between" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <label className="text-xs font-semibold flex justify-between theme-text-muted">
                 <span>Volume</span><span>{Math.round(volume * 100)}%</span>
               </label>
               <input type="range" min="0" max="1" step="0.05" value={volume} onChange={e => setVolume(parseFloat(e.target.value))}
@@ -1148,7 +1148,7 @@ export default function Study() {
                       <div className="mb-3 p-2 rounded-xl border theme-border w-fit" style={{ background: 'var(--bg-faint)' }}>
                         {msg.imageUrl
                           ? <img src={msg.imageUrl} alt="Uploaded" className="max-h-48 rounded object-contain" />
-                          : <div className="flex items-center gap-2 px-2 py-1 text-sm theme-text-secondary"><Paperclip className="w-4 h-4" /><span className="truncate max-w-[200px]">{msg.fileName}</span></div>}
+                          : <div className="flex items-center gap-2 px-2 py-1 text-sm theme-text-secondary"><Paperclip className="w-4 h-4" /><span className="truncate max-w-[200px] theme-text-secondary">{msg.fileName}</span></div>}
                       </div>
                     )}
                     <div className={`${msg.isAudioOverview ? 'w-full' : ''} ${msg.role === 'user' ? '' : 'prose theme-text prose-sm max-w-none leading-relaxed'}`}>

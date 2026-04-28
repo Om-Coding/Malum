@@ -34,7 +34,7 @@ function ScoreRing({ score, label, color }) {
     <div className="flex flex-col items-center gap-1">
       <div className="relative w-16 h-16">
         <svg width="64" height="64" style={{ transform: 'rotate(-90deg)' }}>
-          <circle cx="32" cy="32" r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="5" />
+          <circle cx="32" cy="32" r={r} fill="none" stroke="var(--border-faint)" strokeWidth="5" />
           <circle cx="32" cy="32" r={r} fill="none" stroke={color} strokeWidth="5"
             strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={offset}
             style={{ transition: 'stroke-dashoffset 1s cubic-bezier(0.34,1.56,0.64,1)', filter: `drop-shadow(0 0 5px ${color}80)` }} />
@@ -183,7 +183,7 @@ ${essay}`;
           {/* Editor box */}
           <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--bg-elevated)', border: '1px solid rgba(139,92,246,0.25)' }}>
             {/* Toolbar */}
-            <div className="flex items-center justify-between px-4 py-2.5 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)', background: 'rgba(139,92,246,0.05)' }}>
+            <div className="flex items-center justify-between px-4 py-2.5 border-b theme-border" style={{ background: 'var(--bg-faint)' }}>
               <div className="flex items-center gap-1.5">
                 <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#EF4444', opacity: 0.7 }} />
                 <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#F59E0B', opacity: 0.7 }} />
@@ -191,11 +191,11 @@ ${essay}`;
                 <span className="text-xs font-black theme-text-muted ml-2">My Essay</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-20 h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                <div className="w-20 h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--bg-faint)' }}>
                   <div className="h-full rounded-full transition-all duration-300"
                     style={{ width: `${wordPct}%`, background: wordCount > wordLimit ? '#EF4444' : wordCount > wordLimit * 0.85 ? '#F59E0B' : 'linear-gradient(90deg,#8B5CF6,#EC4899)' }} />
                 </div>
-                <span className="text-xs font-bold tabular-nums" style={{ color: wordCount > wordLimit ? '#EF4444' : wordCount > wordLimit * 0.85 ? '#F59E0B' : 'rgba(255,255,255,0.4)' }}>
+                <span className="text-xs font-bold tabular-nums" style={{ color: wordCount > wordLimit ? '#EF4444' : wordCount > wordLimit * 0.85 ? '#F59E0B' : 'var(--text-faint-muted)' }}>
                   {wordCount}/{wordLimit} words
                 </span>
                 {accepted && <span className="text-xs font-bold text-emerald-400 flex items-center gap-1"><Check className="w-3 h-3" />Applied!</span>}
@@ -237,7 +237,7 @@ ${essay}`;
           {suggestion && !suggestLoading && (
             <div className="rounded-2xl p-4 space-y-3" style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.3)', animation: 'slideDown 0.25s ease' }}>
               <p className="text-xs font-black text-indigo-400 flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5" />AI Suggestion</p>
-              <p className="text-sm leading-relaxed italic" style={{ color: 'rgba(255,255,255,0.82)', fontFamily: 'Georgia, serif' }}>
+              <p className="text-sm leading-relaxed italic theme-text-secondary" style={{ fontFamily: 'Georgia, serif' }}>
                 {suggestion.length > 600 ? suggestion.slice(0, 600) + '…' : suggestion}
               </p>
               <div className="flex gap-2 flex-wrap">
@@ -316,8 +316,8 @@ ${essay}`;
                     <p className="font-black theme-text text-base leading-tight mb-1">{grade.verdict}</p>
                     <p className="text-xs theme-text-muted">{grade.wordCountFeedback}</p>
                   </div>
-                  <button onClick={copyGrade} className="p-2 rounded-xl flex-shrink-0 transition-all hover:scale-110"
-                    style={{ background: copied ? 'rgba(16,185,129,0.12)' : 'rgba(255,255,255,0.07)', border: `1px solid ${copied ? 'rgba(16,185,129,0.3)' : 'rgba(255,255,255,0.1)'}`, color: copied ? '#10b981' : 'rgba(255,255,255,0.5)' }}>
+                  <button onClick={copyGrade} className="p-2 rounded-xl flex-shrink-0 transition-all hover:scale-110 theme-bg border theme-border"
+                    style={{ color: copied ? '#10b981' : 'var(--text-faint-muted)' }}>
                     {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   </button>
                 </div>
@@ -360,7 +360,7 @@ ${essay}`;
               {/* Hook rewrite */}
               <div className="rounded-2xl p-4 space-y-2" style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.25)' }}>
                 <p className="font-black text-xs text-indigo-400 flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5" /> Stronger Opening</p>
-                <p className="text-xs leading-relaxed italic" style={{ color: 'rgba(255,255,255,0.82)', fontFamily: 'Georgia, serif' }}>"{grade.rewriteSuggestion}"</p>
+                <p className="text-xs leading-relaxed italic theme-text-secondary" style={{ fontFamily: 'Georgia, serif' }}>"{grade.rewriteSuggestion}"</p>
                 <button onClick={() => { setEssay(e => grade.rewriteSuggestion + '\n\n' + e); }}
                   className="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:scale-105"
                   style={{ background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#818CF8' }}>
@@ -391,7 +391,7 @@ ${essay}`;
 
           {/* ── AI Writing Coach Chat ── */}
           <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--bg-elevated)', border: '1px solid rgba(139,92,246,0.2)' }}>
-            <div className="px-4 py-3 border-b flex items-center gap-2" style={{ borderColor: 'rgba(255,255,255,0.06)', background: 'rgba(139,92,246,0.06)' }}>
+            <div className="px-4 py-3 border-b theme-border flex items-center gap-2" style={{ background: 'var(--bg-faint)' }}>
               <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#8B5CF6,#EC4899)' }}>
                 <Brain className="w-3.5 h-3.5 text-white" />
               </div>
@@ -421,9 +421,9 @@ ${essay}`;
                     {msg.role === 'user' ? 'You' : '✦'}
                   </div>
                   <div className={`rounded-xl p-2.5 text-xs font-medium leading-relaxed max-w-[85%] ${msg.role === 'user' ? 'rounded-tr-sm' : 'rounded-tl-sm'}`}
-                    style={{ background: msg.role === 'user' ? '#7C3AED' : 'rgba(255,255,255,0.04)', border: msg.role !== 'user' ? '1px solid rgba(255,255,255,0.06)' : undefined, color: msg.role === 'user' ? 'white' : 'rgba(255,255,255,0.78)' }}>
+                    style={{ background: msg.role === 'user' ? '#7C3AED' : 'var(--bg-faint)', border: msg.role !== 'user' ? '1px solid var(--border-faint)' : undefined, color: msg.role === 'user' ? 'white' : 'var(--text-secondary)' }}>
                     {msg.role === 'ai'
-                      ? <div className="prose prose-invert prose-xs max-w-none"><ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.text}</ReactMarkdown></div>
+                      ? <div className="prose theme-text prose-xs max-w-none"><ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.text}</ReactMarkdown></div>
                       : msg.text}
                   </div>
                 </div>
@@ -442,13 +442,13 @@ ${essay}`;
               <div ref={chatEndRef} />
             </div>
 
-            <div className="p-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+            <div className="p-3 border-t theme-border">
               <div className="flex gap-2">
                 <input value={chatInput} onChange={e => setChatInput(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendChat()}
                   placeholder="Ask your AI coach..."
-                  className="flex-1 px-3 py-2 rounded-xl text-xs font-medium focus:outline-none theme-text"
-                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(139,92,246,0.25)', caretColor: '#A78BFA' }}
+                  className="flex-1 px-3 py-2 rounded-xl text-xs font-medium focus:outline-none theme-bg theme-text"
+                  style={{ border: '1px solid rgba(139,92,246,0.25)', caretColor: '#A78BFA' }}
                   disabled={aiLoading} />
                 <button onClick={sendChat} disabled={!chatInput.trim() || aiLoading}
                   className="p-2 rounded-xl text-white transition-all hover:scale-110 disabled:opacity-40"

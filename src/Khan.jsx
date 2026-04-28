@@ -1045,8 +1045,8 @@ Make the search queries specific enough to find high-quality educational videos.
               <subject.icon className={`w-4 h-4 ${subject.textColor}`} />
             </div>
             <span className={`text-xs font-semibold ${subject.textColor}`}>{subject.name}</span>
-            <ChevronRight className="w-3 h-3 text-gray-600" />
-            <span className="text-xs font-semibold text-gray-400">{unitTitle}</span>
+            <ChevronRight className="w-3 h-3 theme-text-muted" />
+            <span className="text-xs font-semibold theme-text-muted">{unitTitle}</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-black tracking-tight theme-text">{lesson.title}</h1>
         </div>
@@ -1058,8 +1058,8 @@ Make the search queries specific enough to find high-quality educational videos.
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-4">
               <Loader2 className={`w-12 h-12 ${subject.textColor} animate-spin`} />
-              <p className="text-gray-400 font-medium text-lg">Generating 30 questions with AI...</p>
-              <p className="text-gray-500 text-sm">This may take a moment ✨</p>
+              <p className="theme-text-secondary font-medium text-lg">Generating 30 questions with AI...</p>
+              <p className="theme-text-muted text-sm">This may take a moment ✨</p>
             </div>
           ) : currentQuiz ? (
             <div className="relative z-10 space-y-6">
@@ -1067,10 +1067,10 @@ Make the search queries specific enough to find high-quality educational videos.
               <div className="space-y-2">
                 <div className="flex items-center gap-2 mb-3">
                   <Sparkles className={`w-4 h-4 ${subject.textColor}`} />
-                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Question {currentIndex + 1}</span>
-                  {loadingMore && <Loader2 className="w-3 h-3 text-gray-500 animate-spin" />}
+                  <span className="text-xs font-bold theme-text-muted uppercase tracking-wider">Question {currentIndex + 1}</span>
+                  {loadingMore && <Loader2 className="w-3 h-3 theme-text-muted animate-spin" />}
                 </div>
-                <h2 className="text-lg md:text-xl font-bold leading-relaxed text-gray-100">
+                <h2 className="text-lg md:text-xl font-bold leading-relaxed theme-text">
                   {currentQuiz.question}
                 </h2>
               </div>
@@ -1145,7 +1145,7 @@ Make the search queries specific enough to find high-quality educational videos.
                       const renderText = (text) => {
                         return text.split(/(\*\*.*?\*\*)/).map((part, j) =>
                           part.startsWith('**') && part.endsWith('**')
-                            ? <strong key={j} className="text-white font-bold">{part.slice(2, -2)}</strong>
+                            ? <strong key={j} className="theme-text font-bold">{part.slice(2, -2)}</strong>
                             : part
                         );
                       };
@@ -1154,11 +1154,11 @@ Make the search queries specific enough to find high-quality educational videos.
                         return (
                           <div key={i} className="flex items-start gap-3 pl-1">
                             <span className="text-orange-400 mt-0.5 text-xs">●</span>
-                            <span className="text-gray-300 text-sm leading-relaxed">{renderText(bulletText)}</span>
+                            <span className="theme-text-secondary text-sm leading-relaxed">{renderText(bulletText)}</span>
                           </div>
                         );
                       }
-                      return <p key={i} className="text-gray-300 leading-relaxed text-sm">{renderText(trimmed)}</p>;
+                      return <p key={i} className="theme-text-secondary leading-relaxed text-sm">{renderText(trimmed)}</p>;
                     })}
                   </div>
                 </div>
@@ -1189,7 +1189,7 @@ Make the search queries specific enough to find high-quality educational videos.
                           <div className="w-9 h-9 rounded-lg bg-red-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-red-500/30 transition-colors">
                             <PlayCircle className="w-5 h-5 text-red-400" />
                           </div>
-                          <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors flex-1">{video.title}</span>
+                          <span className="text-sm font-medium theme-text-secondary group-hover:theme-text transition-colors flex-1">{video.title}</span>
                           <ExternalLink className="w-4 h-4 text-gray-500 flex-shrink-0" />
                         </a>
                       ))}
@@ -1351,8 +1351,8 @@ IMPORTANT: Format your response as JSON like this (no extra text before or after
               <MessageCircle className="w-5 h-5 text-amber-400" />
             </div>
             <div>
-              <h3 className="font-bold text-white text-base">Doubt Solver</h3>
-              <p className="text-xs text-gray-400 truncate max-w-[250px]">{lessonTitle}</p>
+              <h3 className="font-bold theme-text text-base">Doubt Solver</h3>
+              <p className="text-xs theme-text-muted truncate max-w-[250px]">{lessonTitle}</p>
             </div>
           </div>
           <button
@@ -1379,7 +1379,7 @@ IMPORTANT: Format your response as JSON like this (no extra text before or after
                         <p key={i} className={line === '' ? 'h-2' : ''}>
                           {line.split(/(\*\*.*?\*\*)/).map((part, j) => 
                             part.startsWith('**') && part.endsWith('**') 
-                              ? <strong key={j} className="text-white font-bold">{part.slice(2, -2)}</strong>
+                              ? <strong key={j} className="theme-text font-bold">{part.slice(2, -2)}</strong>
                               : part
                           )}
                         </p>
@@ -1406,7 +1406,7 @@ IMPORTANT: Format your response as JSON like this (no extra text before or after
                         <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-red-500/30 transition-colors">
                           <PlayCircle className="w-4 h-4 text-red-400" />
                         </div>
-                        <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors flex-1">{video.title}</span>
+                        <span className="text-sm font-medium theme-text-secondary group-hover:theme-text transition-colors flex-1">{video.title}</span>
                         <ExternalLink className="w-4 h-4 text-gray-500 flex-shrink-0" />
                       </a>
                     ))}

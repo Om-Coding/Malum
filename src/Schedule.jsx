@@ -4,7 +4,7 @@ import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, Video, Alig
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const CLIENT_ID = import.meta.env.VITE_GOOGLE_CALENDAR_CLIENT_ID || '';
+const CLIENT_ID = import.meta.env.VITE_GOOGLE_CALENDAR_CLIENT_ID || import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 const API_ROOT = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // --- MATH UTILS ---
@@ -80,7 +80,7 @@ function ScheduleCore() {
     },
     onError: (err) => {
       console.error('Login Failed:', err);
-      setError('Google Login Failed. If you are on Vercel, ensure this URL is in your Google Console Authorized Redirect URIs.');
+      setError(`Google Login Failed: ${err.error || 'Check Console'}. Ensure ${window.location.origin} is authorized in your Google Cloud Console.`);
     },
     scope: 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.coursework.me.readonly https://www.googleapis.com/auth/classroom.student-submissions.me.readonly'
   });
@@ -189,6 +189,27 @@ function ScheduleCore() {
     return days;
   }, [weekOffset]);
 
+  if (!CLIENT_ID) {
+    return (
+      <div className="min-h-screen hud-grid flex items-center justify-center p-6">
+        <div className="w-full max-w-2xl premium-card p-16 border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)] relative overflow-hidden text-center">
+          <AlertCircle className="w-16 h-16 text-amber-500 mx-auto mb-6" />
+          <h2 className="text-3xl font-black theme-text mb-4">Google Client ID Missing</h2>
+          <p className="theme-text-secondary mb-8 leading-relaxed max-w-md mx-auto">
+            You need to set up a Google OAuth Client ID in your <code>.env</code> or Vercel Environment Variables.
+          </p>
+          <div className="theme-bg p-6 rounded-2xl border theme-border text-left font-mono text-xs space-y-2 mb-8">
+            <p className="theme-text-muted"># Add this to your environment variables:</p>
+            <p className="theme-text">VITE_GOOGLE_CLIENT_ID="your_google_client_id_here"</p>
+          </div>
+          <p className="text-xs theme-text-muted italic">
+            Once set, restart your dev server or redeploy to Vercel.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (!accessToken) {
     return (
       <div className="min-h-screen hud-grid flex items-center justify-center p-6">
@@ -200,15 +221,15 @@ function ScheduleCore() {
               <CalendarDays className="w-12 h-12 text-indigo-400 drop-shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
             </div>
             
-            <h1 className="text-5xl font-black text-white premium-heading mb-6 tracking-tight">Connect Hub</h1>
-            <p className="text-gray-400 text-lg font-bold leading-relaxed mb-12 max-w-md mx-auto opacity-70">
+            <h1 className="text-5xl font-black theme-text premium-heading mb-6 tracking-tight">Connect Hub</h1>
+            <p className="theme-text-secondary text-lg font-bold leading-relaxed mb-12 max-w-md mx-auto opacity-70">
               Authenticate securely via Google to pull down your exact <br/>
               Calendar Events AND missing Classroom Assignments.
             </p>
             
             <button
               onClick={() => login()}
-              className="flex items-center gap-4 px-10 py-5 bg-white text-black rounded-full font-black uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+              className="flex items-center gap-4 px-10 py-5 bg-white text-black rounded-full font-black uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)] mx-auto"
             >
               <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6" />
               Sync Calendar & Classes
@@ -233,27 +254,27 @@ function ScheduleCore() {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
-            <h1 className="text-5xl font-black text-white premium-heading tracking-tight mb-2">Weekly Schedule</h1>
-            <p className="text-gray-500 font-black uppercase tracking-[0.2em] text-xs">
+            <h1 className="text-5xl font-black theme-text premium-heading tracking-tight mb-2">Weekly Schedule</h1>
+            <p className="theme-text-muted font-black uppercase tracking-[0.2em] text-xs">
               {MONTHS[weekDays[0].getMonth()]} {weekDays[0].getFullYear()} - Week {weekOffset === 0 ? 'Current' : weekOffset > 0 ? `+${weekOffset}` : weekOffset}
             </p>
           </div>
           <div className="flex items-center gap-4">
             <button
               onClick={() => accessToken ? fetchScheduleData(accessToken) : login()}
-              className="flex items-center gap-3 px-6 py-2.5 bg-black/40 border border-white/20 rounded-full text-white text-[11px] font-black uppercase tracking-widest hover:bg-white/10 transition-all"
+              className="flex items-center gap-3 px-6 py-2.5 theme-bg-elevated border theme-border rounded-full theme-text text-[11px] font-black uppercase tracking-widest hover:bg-white/10 transition-all"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
               Sync Google
             </button>
-            <div className="flex gap-2 bg-black/40 p-1 rounded-full border border-white/5">
-              <button onClick={handlePrevWeek} className="p-2.5 hover:bg-white/10 rounded-full text-white transition-all">
+            <div className="flex gap-2 theme-bg-elevated p-1 rounded-full border theme-border">
+              <button onClick={handlePrevWeek} className="p-2.5 hover:bg-white/10 rounded-full theme-text transition-all">
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              <button onClick={jumpToToday} className="px-4 py-1 hover:bg-white/10 rounded-full text-white text-[11px] font-black uppercase tracking-widest transition-all">
+              <button onClick={jumpToToday} className="px-4 py-1 hover:bg-white/10 rounded-full theme-text text-[11px] font-black uppercase tracking-widest transition-all">
                 Today
               </button>
-              <button onClick={handleNextWeek} className="p-2.5 hover:bg-white/10 rounded-full text-white transition-all">
+              <button onClick={handleNextWeek} className="p-2.5 hover:bg-white/10 rounded-full theme-text transition-all">
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
@@ -269,11 +290,11 @@ function ScheduleCore() {
             const dayName = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][dayDate.getDay()];
 
             return (
-              <div key={dateStr} className={`flex flex-col gap-4 p-6 rounded-3xl border border-white/5 bg-black/20 min-h-[600px] transition-all hover:bg-black/30 ${isToday ? 'ring-1 ring-orange-500/30 bg-orange-500/[0.02]' : ''}`}>
+              <div key={dateStr} className={`flex flex-col gap-4 p-6 rounded-3xl border theme-border theme-bg-secondary min-h-[600px] transition-all hover:theme-bg-elevated ${isToday ? 'ring-1 ring-orange-500/30 bg-orange-500/[0.02]' : ''}`}>
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex flex-col">
-                    <span className={`text-xs font-black tracking-widest mb-1 ${isToday ? 'text-orange-500' : 'text-gray-500'}`}>{dayName}</span>
-                    <span className="text-3xl font-black text-white premium-heading leading-none">{dayDate.getDate()}</span>
+                    <span className={`text-xs font-black tracking-widest mb-1 ${isToday ? 'text-orange-500' : 'theme-text-muted'}`}>{dayName}</span>
+                    <span className="text-3xl font-black theme-text premium-heading leading-none">{dayDate.getDate()}</span>
                   </div>
                   {isToday && (
                     <span className="text-[10px] font-black bg-orange-500 text-black px-2 py-0.5 rounded-full uppercase tracking-widest">Today</span>
@@ -285,17 +306,17 @@ function ScheduleCore() {
                     const colors = ['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#F43F5E'];
                     const color = colors[eIdx % colors.length];
                     return (
-                      <div key={evt.id} className="p-4 rounded-2xl border bg-black/40 transition-all hover:bg-black/60 group" style={{ borderLeftColor: color, borderLeftWidth: '4px', borderTopColor: 'rgba(255,255,255,0.05)', borderRightColor: 'rgba(255,255,255,0.05)', borderBottomColor: 'rgba(255,255,255,0.05)' }}>
-                        <h4 className="text-sm font-black text-white mb-2 leading-tight group-hover:text-indigo-300 transition-colors">{evt.summary}</h4>
-                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">{evt.location || 'Classroom'}</p>
+                      <div key={evt.id} className="p-4 rounded-2xl border theme-bg-elevated transition-all hover:bg-white/[0.05] group" style={{ borderLeftColor: color, borderLeftWidth: '4px', borderTopColor: 'rgba(0,0,0,0.05)', borderRightColor: 'rgba(0,0,0,0.05)', borderBottomColor: 'rgba(0,0,0,0.05)' }}>
+                        <h4 className="text-sm font-black theme-text mb-2 leading-tight group-hover:text-indigo-500 transition-colors">{evt.summary}</h4>
+                        <p className="text-[10px] font-bold theme-text-muted uppercase tracking-widest mb-3">{evt.location || 'Classroom'}</p>
                         <div className="flex items-center gap-3">
-                          <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                          <div className="flex items-center gap-1.5 text-[10px] font-black theme-text-secondary uppercase tracking-widest">
                             <Clock className="w-3 h-3" style={{ color }} />
                             {evt.start.dateTime ? new Date(evt.start.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'All Day'}
                           </div>
                           {evt.location && (
-                            <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                              <MapPin className="w-3 h-3 text-gray-500" />
+                            <div className="flex items-center gap-1.5 text-[10px] font-black theme-text-secondary uppercase tracking-widest">
+                              <MapPin className="w-3 h-3 theme-text-muted" />
                               {evt.location.split(',')[0]}
                             </div>
                           )}
@@ -305,10 +326,10 @@ function ScheduleCore() {
                   })}
 
                   {dayData.assignments.map((asg, aIdx) => (
-                    <div key={asg.id} className="p-4 rounded-2xl border border-white/5 bg-black/40 transition-all hover:bg-black/60 group" style={{ borderLeftColor: '#F59E0B', borderLeftWidth: '4px' }}>
-                      <h4 className="text-sm font-black text-white mb-2 leading-tight group-hover:text-orange-300 transition-colors">{asg.title}</h4>
-                      <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">{asg.courseName}</p>
-                      <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                    <div key={asg.id} className="p-4 rounded-2xl border theme-border theme-bg-elevated transition-all hover:bg-white/[0.05] group" style={{ borderLeftColor: '#F59E0B', borderLeftWidth: '4px' }}>
+                      <h4 className="text-sm font-black theme-text mb-2 leading-tight group-hover:text-orange-500 transition-colors">{asg.title}</h4>
+                      <p className="text-[10px] font-bold theme-text-muted uppercase tracking-widest mb-3">{asg.courseName}</p>
+                      <div className="flex items-center gap-1.5 text-[10px] font-black theme-text-secondary uppercase tracking-widest">
                         <GraduationCap className="w-3 h-3 text-orange-500" />
                         Due 11:59 PM
                       </div>
@@ -317,8 +338,8 @@ function ScheduleCore() {
 
                   {dayData.events.length === 0 && dayData.assignments.length === 0 && (
                     <div className="h-full flex flex-col items-center justify-center py-20 opacity-20 grayscale">
-                      <CalendarDays className="w-12 h-12 text-gray-500 mb-4" />
-                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Free Day</p>
+                      <CalendarDays className="w-12 h-12 theme-text-muted mb-4" />
+                      <p className="text-[10px] font-black uppercase tracking-[0.2em] theme-text-muted">Free Day</p>
                     </div>
                   )}
                 </div>

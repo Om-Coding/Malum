@@ -11,9 +11,9 @@ function AssignmentCard({ assignment, user, onMarkComplete, completing }) {
 
   return (
     <div
-      className="relative premium-card p-6 overflow-hidden transition-all duration-400 group border-white/10"
+      className="relative premium-card p-6 overflow-hidden transition-all duration-400 group theme-border"
       style={{
-        boxShadow: isOverdue ? '0 10px 30px rgba(239,68,68,0.15)' : '0 10px 30px rgba(0,0,0,0.3)',
+        boxShadow: isOverdue ? '0 10px 30px rgba(239,68,68,0.15)' : '0 10px 30px rgba(0,0,0,0.1)',
         transform: 'translateY(0)',
       }}
       onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = isOverdue ? '0 12px 40px rgba(239,68,68,0.15)' : '0 12px 40px rgba(0,0,0,0.25)'; }}
@@ -207,14 +207,14 @@ export default function Classroom() {
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div>
               <div className="flex flex-col mb-4">
-                <span className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-3 pl-1">Unified Hub</span>
+                <span className="text-[10px] font-black theme-text-muted uppercase tracking-[0.2em] mb-3 pl-1">Unified Hub</span>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-orange-500/10 border border-orange-500/20">
                     <FileText className="w-4 h-4 text-orange-500" />
                   </div>
-                  <h1 className="text-3xl font-bold text-white tracking-tight">Assigned to You</h1>
+                  <h1 className="text-3xl font-bold theme-text tracking-tight">Assigned to You</h1>
                 </div>
-                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-2">Direct from Teachers</p>
+                <p className="text-[10px] font-bold theme-text-muted uppercase tracking-widest mt-2">Direct from Teachers</p>
               </div>
             </div>
 
@@ -370,13 +370,13 @@ export default function Classroom() {
                 <p className="text-gray-500 text-xs font-black uppercase tracking-widest">Synchronizing Assignments...</p>
               </div>
             ) : assignments.length === 0 ? (
-              <div className="text-center py-12 bg-orange-500/[0.02] border border-orange-500/20 rounded-xl relative overflow-hidden">
+              <div className="text-center py-12 theme-bg-elevated border theme-border rounded-xl relative overflow-hidden">
                 <div className="relative z-10">
                   <div className="w-10 h-10 mx-auto mb-4 rounded-full border border-orange-500/20 flex items-center justify-center">
                     <CheckSquare className="w-5 h-5 text-orange-500" />
                   </div>
-                  <p className="text-lg font-bold text-white mb-1">All clear! 🎉</p>
-                  <p className="text-xs font-medium text-gray-500 max-w-xs mx-auto">When your teacher assigns work, it'll appear here.</p>
+                  <p className="text-lg font-bold theme-text mb-1">All clear! 🎉</p>
+                  <p className="text-xs font-medium theme-text-muted max-w-xs mx-auto">When your teacher assigns work, it'll appear here.</p>
                 </div>
               </div>
             ) : (
