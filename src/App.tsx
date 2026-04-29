@@ -13,6 +13,7 @@ import CollegeAI from './CollegeAI'
 import Antigravity from './Antigravity'
 import StudyGames from './StudyGames'
 import AdminDashboard from './AdminDashboard'
+import Contact from './Contact'
 import Layout from './Layout'
 import './App.css'
 
@@ -35,6 +36,7 @@ function App() {
             <Route path="/antigravity" element={<Antigravity />} />
             <Route path="/games" element={<StudyGames />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/contact" element={<Contact />} />
           </Route>
 
           <Route path="/" element={<Navigate to="/login" replace />} />

@@ -524,7 +524,7 @@ export default function TeacherDashboard() {
         )}
 
         {/* ── Tabs ── */}
-        <div className="flex gap-1 p-1 rounded-2xl" style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-color)' }}>
+        <div className="mini-nav">
           {[
             { id: 'classes', label: 'My Classes', icon: School },
             { id: 'assignments', label: 'Assignments', icon: FileText },
@@ -532,17 +532,11 @@ export default function TeacherDashboard() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-black transition-all"
-              style={{
-                background: activeTab === tab.id ? 'linear-gradient(135deg, rgba(255,107,0,0.15), rgba(255,142,83,0.08))' : 'transparent',
-                color: activeTab === tab.id ? '#FF6B00' : 'var(--text-secondary)',
-                boxShadow: activeTab === tab.id ? 'inset 0 0 0 1px rgba(255,107,0,0.3)' : 'none',
-              }}
+              className={`mini-nav-item ${activeTab === tab.id ? 'active' : ''}`}
             >
-              <tab.icon className="w-4 h-4" />
+              <tab.icon className="nav-icon" />
               {tab.label}
-              <span className="text-xs px-1.5 py-0.5 rounded-md font-black"
-                style={{ background: activeTab === tab.id ? 'rgba(255,107,0,0.15)' : 'var(--bg-primary)', color: activeTab === tab.id ? '#FF6B00' : 'var(--text-muted)' }}>
+              <span className="nav-count">
                 {tab.id === 'classes' ? classes.length : assignments.length}
               </span>
             </button>

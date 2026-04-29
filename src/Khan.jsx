@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { BookOpen, Atom, Calculator, FlaskConical, PlayCircle, ChevronRight, Search, CheckCircle2, HelpCircle, Send, X, MessageCircle, Sparkles, RefreshCw, ArrowLeft, Youtube, ExternalLink, Loader2, Trophy, XCircle, ChevronDown, ChevronUp, Dna, Zap, Globe, PenTool, Coins, Brain, Leaf, Languages, Music } from 'lucide-react';
+import { BookOpen, Atom, Calculator, FlaskConical, PlayCircle, ChevronRight, Search, CheckCircle2, HelpCircle, Send, X, MessageCircle, Sparkles, RefreshCw, ArrowLeft, Youtube, ExternalLink, Loader2, Trophy, XCircle, ChevronDown, ChevronUp, Dna, Zap, Globe, PenTool, Coins, Brain, Leaf, Languages, Music, Award } from 'lucide-react';
 
 const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api/study';
 
@@ -1566,13 +1566,14 @@ export default function Khan() {
     <div className="min-h-screen theme-bg theme-text p-6 md:p-12 font-sans overflow-x-hidden">
       <div className="max-w-7xl mx-auto space-y-8">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight malum-text-gradient">
-              Learning Corner
-            </h1>
-            <p className="mt-2 theme-text-secondary text-lg max-w-2xl">
-              Master any topic with AI-powered quizzes. Click a lesson to start! 🧠
-            </p>
+          <div className="page-header">
+            <div className="page-header-icon" style={{ background: 'linear-gradient(135deg, #EC4899, #F43F5E)' }}>
+              <Award className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="page-header-title malum-text-gradient">Learning Corner</h1>
+              <p className="page-header-subtitle">Master any topic with AI-powered quizzes</p>
+            </div>
           </div>
           <div className="relative w-full md:w-72">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 theme-text-muted" />
@@ -1581,13 +1582,13 @@ export default function Khan() {
               placeholder="Search lessons..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full theme-bg-secondary border theme-border rounded-2xl py-3 pl-11 pr-4 theme-text placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all font-medium shadow-sm"
+              className="w-full theme-bg-elevated border theme-border rounded-xl py-2.5 pl-11 pr-4 theme-text placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all font-medium text-sm"
             />
           </div>
         </header>
 
         {/* Subject Tabs */}
-        <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0">
+        <div className="mini-nav" style={{ flexWrap: 'wrap' }}>
           {SUBJECTS.map((subject) => {
             const Icon = subject.icon;
             const isActive = activeTab === subject.id;
@@ -1595,13 +1596,9 @@ export default function Khan() {
               <button
                 key={subject.id}
                 onClick={() => setActiveTab(subject.id)}
-                className={`flex items-center gap-2.5 px-6 py-3 rounded-full font-semibold text-sm transition-all duration-300 whitespace-nowrap ${
-                  isActive
-                    ? `bg-gradient-to-r ${subject.color} text-white shadow-lg shadow-black/20 scale-105`
-                    : 'theme-bg-secondary theme-text-muted hover:theme-bg-elevated hover:theme-text'
-                }`}
+                className={`mini-nav-item ${isActive ? 'active' : ''}`}
               >
-                <Icon className={`w-5 h-5 ${isActive ? 'text-white' : ''}`} />
+                <Icon className="nav-icon" />
                 {subject.name}
               </button>
             );

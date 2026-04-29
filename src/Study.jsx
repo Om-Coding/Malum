@@ -851,8 +851,8 @@ No extra text, just the JSON array.`,
           value={topic}
           onChange={e => setTopic(e.target.value)}
           placeholder="Topic or concept (e.g. 'Photosynthesis', 'French Revolution', 'Quadratic equations')"
-          className="w-full px-4 py-3 rounded-xl text-sm font-medium focus:outline-none transition-all theme-text"
-          style={{ background: 'var(--bg-faint)', border: '1px solid var(--border-faint)', focusBorderColor: '#EC4899' }}
+          className="w-full px-4 py-3 rounded-xl text-sm font-medium focus:outline-none transition-all theme-text theme-bg-elevated"
+          style={{ border: '1px solid var(--border-faint)' }}
           onKeyDown={e => e.key === 'Enter' && generate()}
         />
 
@@ -1082,31 +1082,25 @@ export default function Study() {
   return (
     <div className="flex flex-col h-full theme-bg relative">
       {/* Header */}
-      <div className="flex-none px-4 pt-4 pb-0 z-10">
+      <div className="flex-none px-4 pt-4 pb-3 z-10">
         <div className="max-w-4xl mx-auto">
           {/* Title */}
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', boxShadow: '0 0 20px rgba(99,102,241,0.5)' }}>
+          <div className="page-header mb-4">
+            <div className="page-header-icon" style={{ background: 'linear-gradient(135deg, #6366F1, #8B5CF6)' }}>
               <Brain className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-black theme-text premium-heading">Study Corner <span className="text-[10px] opacity-30 font-mono ml-2">v2.1.0-HQ</span></h1>
-              <p className="text-xs theme-text-muted">AI-powered learning tools</p>
+              <h1 className="page-header-title theme-text">Study Corner</h1>
+              <p className="page-header-subtitle">AI-powered learning tools</p>
             </div>
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-1 p-1 rounded-xl mb-0" style={{ background: 'var(--bg-faint)', border: '1px solid var(--border-faint)' }}>
+          <div className="mini-nav">
             {tabs.map(tab => (
               <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-black transition-all"
-                style={{
-                  background: activeTab === tab.id ? `linear-gradient(135deg, ${tab.color}25, ${tab.color}12)` : 'transparent',
-                  color: activeTab === tab.id ? tab.color : 'var(--text-faint)',
-                  boxShadow: activeTab === tab.id ? `inset 0 0 0 1px ${tab.color}40` : 'none',
-                  opacity: activeTab === tab.id ? 1 : 0.8
-                }}>
-                <tab.icon className="w-3.5 h-3.5" />
+                className={`mini-nav-item ${activeTab === tab.id ? 'active' : ''}`}>
+                <tab.icon className="nav-icon" />
                 <span className="hidden sm:inline">{tab.label}</span>
               </button>
             ))}

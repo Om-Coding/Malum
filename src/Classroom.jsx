@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Clock, Calendar, GraduationCap, Sparkles, Trophy, AlertCircle, BookOpen, Zap, Hash, X, UserPlus, School } from 'lucide-react';
+import { CheckCircle2, Clock, Calendar, GraduationCap, Sparkles, Trophy, AlertCircle, BookOpen, Zap, Hash, X, UserPlus, School, FileText, CheckSquare, Globe } from 'lucide-react';
 import GoogleClassroom from './GoogleClassroom';
 
 const API_ROOT = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -106,6 +106,7 @@ export default function Classroom() {
   const [joinError, setJoinError] = useState('');
   const [joinSuccess, setJoinSuccess] = useState('');
   const [showJoinModal, setShowJoinModal] = useState(false);
+  const [classroomTab, setClassroomTab] = useState('assignments');
 
   useEffect(() => {
     try {
@@ -204,51 +205,62 @@ export default function Classroom() {
 
         {/* HEADER */}
         <header className="malum-fadeInUp">
-          <div className="flex items-start justify-between flex-wrap gap-4">
-            <div>
-              <div className="flex flex-col mb-4">
-                <span className="text-[10px] font-black theme-text-muted uppercase tracking-[0.2em] mb-3 pl-1">Unified Hub</span>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-orange-500/10 border border-orange-500/20">
-                    <FileText className="w-4 h-4 text-orange-500" />
-                  </div>
-                  <h1 className="text-3xl font-bold theme-text tracking-tight">Assigned to You</h1>
-                </div>
-                <p className="text-[10px] font-bold theme-text-muted uppercase tracking-widest mt-2">Direct from Teachers</p>
+          <div className="flex items-start justify-between flex-wrap gap-4 mb-6">
+            <div className="page-header">
+              <div className="page-header-icon" style={{ background: 'linear-gradient(135deg, #3B82F6, #06B6D4)' }}>
+                <School className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h1 className="page-header-title theme-text">Classroom</h1>
+                <p className="page-header-subtitle">All your assignments in one place</p>
               </div>
             </div>
 
-            {/* Join class button */}
-            {user && (
-              <button
-                onClick={() => setShowJoinModal(true)}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white text-sm font-bold transition-all hover:scale-105"
-                style={{ background: 'linear-gradient(135deg, #3B82F6, #06B6D4)', boxShadow: '0 4px 16px rgba(59,130,246,0.35)' }}
-              >
-                <UserPlus className="w-4 h-4" />
-                Join a Class
-              </button>
-            )}
+            <div className="flex items-center gap-3">
+              {/* Join class button */}
+              {user && (
+                <button
+                  onClick={() => setShowJoinModal(true)}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white text-sm font-bold transition-all hover:scale-105"
+                  style={{ background: 'linear-gradient(135deg, #3B82F6, #06B6D4)', boxShadow: '0 4px 16px rgba(59,130,246,0.35)' }}
+                >
+                  <UserPlus className="w-4 h-4" />
+                  Join a Class
+                </button>
+              )}
+            </div>
+          </div>
 
-            {/* Quick stats */}
-            {user && !loading && (
-              <div className="flex gap-3 flex-wrap">
-                {[
-                  { label: 'Pending', value: pendingAssignments.length, color: '#F59E0B', bg: 'rgba(245,158,11,0.1)', icon: Clock },
-                  { label: 'Overdue', value: overdueCount, color: '#EF4444', bg: 'rgba(239,68,68,0.1)', icon: AlertCircle },
-                  { label: 'Done', value: completedAssignments.length, color: '#10B981', bg: 'rgba(16,185,129,0.1)', icon: CheckCircle2 },
-                ].map((stat, i) => (
-                  <div key={i} className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl fadeInScale"
-                    style={{ background: stat.bg, border: `1px solid ${stat.color}30`, animationDelay: `${i * 0.1}s` }}>
-                    <stat.icon className="w-4 h-4" style={{ color: stat.color }} />
-                    <div>
-                      <div className="text-xl font-black" style={{ color: stat.color }}>{stat.value}</div>
-                      <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: stat.color, opacity: 0.8 }}>{stat.label}</div>
-                    </div>
+          {/* Quick stats */}
+          {user && !loading && (
+            <div className="flex gap-3 flex-wrap mb-5">
+              {[
+                { label: 'Pending', value: pendingAssignments.length, color: '#F59E0B', bg: 'rgba(245,158,11,0.1)', icon: Clock },
+                { label: 'Overdue', value: overdueCount, color: '#EF4444', bg: 'rgba(239,68,68,0.1)', icon: AlertCircle },
+                { label: 'Done', value: completedAssignments.length, color: '#10B981', bg: 'rgba(16,185,129,0.1)', icon: CheckCircle2 },
+              ].map((stat, i) => (
+                <div key={i} className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl fadeInScale"
+                  style={{ background: stat.bg, border: `1px solid ${stat.color}30`, animationDelay: `${i * 0.1}s` }}>
+                  <stat.icon className="w-4 h-4" style={{ color: stat.color }} />
+                  <div>
+                    <div className="text-xl font-black" style={{ color: stat.color }}>{stat.value}</div>
+                    <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: stat.color, opacity: 0.8 }}>{stat.label}</div>
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Mini Nav */}
+          <div className="mini-nav">
+            <button onClick={() => setClassroomTab('assignments')} className={`mini-nav-item ${classroomTab === 'assignments' ? 'active' : ''}`}>
+              <FileText className="nav-icon" />
+              My Assignments
+            </button>
+            <button onClick={() => setClassroomTab('google')} className={`mini-nav-item ${classroomTab === 'google' ? 'active' : ''}`}>
+              <Globe className="nav-icon" />
+              Google Classroom
+            </button>
           </div>
         </header>
 
@@ -314,7 +326,7 @@ export default function Classroom() {
         )}
 
         {/* ENROLLED CLASSES */}
-        {classes.length > 0 && (
+        {classroomTab === 'assignments' && classes.length > 0 && (
           <div className="space-y-3 malum-fadeInUp">
             <h2 className="text-base font-black theme-text flex items-center gap-2">
               <School className="w-4 h-4 text-blue-400" />
@@ -342,7 +354,7 @@ export default function Classroom() {
         )}
 
         {/* ASSIGNED WORK */}
-        {user && (
+        {classroomTab === 'assignments' && user && (
           <div className="space-y-8 malum-fadeInUp stagger-2">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center"
@@ -463,12 +475,11 @@ export default function Classroom() {
         )}
 
         {/* Google Classroom Integration */}
-        <div
-          className="malum-fadeInUp"
-          style={{ borderTop: '1px solid var(--border-color)', paddingTop: '3rem', marginTop: '1rem', animationDelay: '0.4s' }}
-        >
-          <GoogleClassroom />
-        </div>
+        {classroomTab === 'google' && (
+          <div className="malum-fadeInUp" style={{ animationDelay: '0.1s' }}>
+            <GoogleClassroom />
+          </div>
+        )}
       </div>
     </div>
   );

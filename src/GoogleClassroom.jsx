@@ -549,7 +549,6 @@ function ClassroomCore() {
                   </div>
                 )}
               </div>
-            )}
 
           </div>
         )}

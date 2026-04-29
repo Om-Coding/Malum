@@ -92,44 +92,47 @@ export default function AdminDashboard() {
         {isDark && <div className="absolute w-[600px] h-[600px] rounded-full"
           style={{ top: '-120px', right: '-120px', background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)', filter: 'blur(40px)' }} />}
         
-        <div className="w-full max-w-md space-y-8 relative z-10 malum-fadeInUp">
-          <div className="text-center">
-            <div className="w-24 h-24 rounded-[2rem] mx-auto flex items-center justify-center mb-8"
-              style={{ background: 'linear-gradient(135deg, #8B5CF6, #6366F1)', boxShadow: isDark ? '0 0 50px rgba(139,92,246,0.3)' : 'none' }}>
-              <Shield className="w-12 h-12 text-white" />
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black malum-text-gradient mb-4">Admin Security</h1>
-            <p className="theme-text-secondary text-lg font-medium opacity-80">Authentication required to proceed.</p>
-          </div>
-
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div className="relative group">
-              <input
-                type="password"
-                placeholder="Enter password..."
-                value={adminPass}
-                onChange={(e) => setAdminPass(e.target.value)}
-                className="w-full h-16 theme-bg-elevated border-2 theme-border rounded-2xl px-12 theme-text font-bold outline-none transition-all group-hover:border-purple-500/30 focus:border-purple-500/60 focus:bg-white/[0.05]"
-              />
-              <Shield className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400/50" />
+        <div className="w-full max-w-md relative z-10 malum-fadeInUp">
+          <div className="premium-card p-8 sm:p-10 theme-border flex flex-col items-center">
+            <div className="w-20 h-20 rounded-[2rem] flex items-center justify-center mb-6"
+              style={{ background: 'linear-gradient(135deg, #8B5CF6, #6366F1)', boxShadow: isDark ? '0 0 40px rgba(139,92,246,0.4)' : 'none' }}>
+              <Shield className="w-10 h-10 text-white" />
             </div>
             
-            {error && (
-              <div className="text-sm font-bold text-red-400 text-center flex items-center justify-center gap-2">
-                <AlertCircle className="w-4 h-4" />
-                {error}
-              </div>
-            )}
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-black malum-text-gradient mb-2">Admin Security</h1>
+              <p className="theme-text-secondary text-sm font-medium">Authentication required to proceed.</p>
+            </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full h-16 rounded-2xl font-black text-white transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, #8B5CF6, #6366F1)', boxShadow: isDark ? '0 0 30px rgba(139,92,246,0.4)' : 'none' }}
-            >
-              {loading ? <RefreshCw className="w-6 h-6 animate-spin mx-auto" /> : 'Enter Dashboard'}
-            </button>
-          </form>
+            <form onSubmit={handleLogin} className="w-full space-y-4">
+              <div className="relative group">
+                <input
+                  type="password"
+                  placeholder="Enter password..."
+                  value={adminPass}
+                  onChange={(e) => setAdminPass(e.target.value)}
+                  className="w-full h-14 bg-transparent border-2 theme-border rounded-xl px-12 theme-text font-bold outline-none transition-all group-hover:border-purple-500/30 focus:border-purple-500/60 focus:bg-white/[0.05]"
+                />
+                <Shield className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400/50" />
+              </div>
+              
+              {error && (
+                <div className="text-xs font-bold text-red-400 text-center flex items-center justify-center gap-1.5 py-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full h-14 rounded-xl font-black text-white transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 mt-2"
+                style={{ background: 'linear-gradient(135deg, #8B5CF6, #6366F1)', boxShadow: isDark ? '0 0 20px rgba(139,92,246,0.3)' : 'none' }}
+              >
+                {loading ? <RefreshCw className="w-5 h-5 animate-spin mx-auto" /> : 'Enter Dashboard'}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     );
@@ -153,14 +156,13 @@ export default function AdminDashboard() {
         {/* Header */}
         <header className="malum-fadeInUp">
           <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, #8B5CF6, #6366F1)', boxShadow: isDark ? '0 0 30px rgba(139,92,246,0.5)' : 'none' }}>
-                <Shield className="w-7 h-7 text-white" />
+            <div className="page-header">
+              <div className="page-header-icon" style={{ background: 'linear-gradient(135deg, #8B5CF6, #6366F1)' }}>
+                <Shield className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl md:text-4xl font-black malum-text-gradient">Admin Dashboard</h1>
-                <p className="theme-text-secondary text-sm font-medium">View all backend data</p>
+                <h1 className="page-header-title malum-text-gradient">Admin Dashboard</h1>
+                <p className="page-header-subtitle">View all backend data</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -204,6 +206,17 @@ export default function AdminDashboard() {
                 </div>
               </div>
             </div>
+          ))}
+        </div>
+
+        {/* Mini Nav */}
+        <div className="mini-nav malum-fadeInUp" style={{ animationDelay: '0.15s' }}>
+          {tabs.map(tab => (
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+              className={`mini-nav-item ${activeTab === tab.id ? 'active' : ''}`}>
+              <tab.icon className="nav-icon" />
+              {tab.label}
+            </button>
           ))}
         </div>
 

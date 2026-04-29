@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { Home, BookOpen, Calendar, TrendingUp, Sparkles, Award, Users, Menu, X, LogOut, Settings, Sun, Moon, Globe, MessageSquare, Palette, Check, ChevronRight, GraduationCap, Zap, Atom, Brain, Gamepad2, Folder, ChevronDown } from 'lucide-react';
+import { Home, BookOpen, Calendar, TrendingUp, Sparkles, Award, Users, Menu, X, LogOut, Settings, Sun, Moon, Globe, MessageSquare, Palette, Check, ChevronRight, GraduationCap, Zap, Atom, Brain, Gamepad2, Folder, ChevronDown, MessageCircle, Mail } from 'lucide-react';
 import { useTheme } from './ThemeContext';
 
 const LANGUAGES = [
@@ -259,52 +259,27 @@ function SectionNav({ navGroups, isDark }) {
     // Find the group that contains the current path
     const currentGroup = navGroups.find(group => 
         group.items.some(item => item.to === currentPath)
-    ) || navGroups[0]; // Default to first group if not found
+    ) || navGroups[0];
 
     return (
-        <div className="mb-8 malum-fadeInUp" style={{ animationDelay: '0.1s' }}>
-            <div className="flex items-center gap-2 mb-3 px-1">
-                <div className="w-1.5 h-4 rounded-full" style={{ background: currentGroup.color || 'var(--accent-primary)' }} />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] theme-text-muted opacity-60">
-                    {currentGroup.title} Section
-                </span>
-            </div>
-            
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar no-scrollbar" style={{ scrollSnapType: 'x mandatory' }}>
-                {currentGroup.items.map((item, i) => {
+        <div className="mb-6 malum-fadeInUp" style={{ animationDelay: '0.05s' }}>
+            <div className="section-nav" style={{ scrollSnapType: 'x mandatory' }}>
+                {currentGroup.items.map((item) => {
                     const isActive = currentPath === item.to;
-                    if (item.isAction) return null; // Don't show actions in mini nav for now
+                    if (item.isAction) return null;
                     
                     return (
                         <NavLink
                             key={item.to}
                             to={item.to}
-                            className={`flex items-center gap-2.5 px-5 py-3 rounded-2xl transition-all duration-300 whitespace-nowrap border ${
-                                isActive 
-                                    ? 'theme-bg-elevated theme-border shadow-lg scale-105' 
-                                    : 'theme-bg-faint border-transparent hover:theme-bg-elevated hover:theme-border'
-                            }`}
-                            style={{
-                                borderLeft: isActive ? `3px solid ${item.color}` : undefined,
-                                scrollSnapAlign: 'start',
-                                animation: 'fadeInScale 0.4s ease backwards',
-                                animationDelay: `${i * 0.05}s`
-                            }}
+                            className={`section-nav-item ${isActive ? 'active' : ''}`}
                         >
-                            <div className="w-5 h-5 rounded-lg flex items-center justify-center" 
-                                 style={{ background: isActive ? item.color : `${item.color}15` }}>
-                                <item.icon className="w-3 h-3" style={{ color: isActive ? 'white' : item.color }} />
-                            </div>
-                            <span className={`text-xs font-bold ${isActive ? 'theme-text' : 'theme-text-secondary'}`}>
-                                {item.label}
-                            </span>
+                            <div className="section-nav-dot" style={{ background: item.color }} />
+                            <span>{item.label}</span>
                         </NavLink>
                     );
                 })}
             </div>
-            
-            {/* Divider */}
-            <div className="h-px w-full mt-4 opacity-10" style={{ background: `linear-gradient(90deg, ${currentGroup.color || 'var(--accent-primary)'}, transparent)` }} />
         </div>
     );
 }
@@ -317,7 +292,7 @@ export default function Layout() {
     const [scrolled, setScrolled] = useState(false);
     const { theme, toggleTheme } = useTheme();
     const isDark = theme === 'dark';
-    const [openFolders, setOpenFolders] = useState(['Study', 'EXTRA']); // Folders open by default
+    const [openFolders, setOpenFolders] = useState(['Study', 'EXTRA', 'INFO']); // Folders open by default
 
     const toggleFolder = (name) => {
         setOpenFolders(prev => prev.includes(name) ? prev.filter(f => f !== name) : [...prev, name]);
@@ -380,12 +355,21 @@ export default function Layout() {
                 { to: '#settings', icon: Settings, label: 'Settings', isAction: true, color: '#6366F1', glow: 'rgba(99,102,241,0.4)' },
             ]
         },
+        {
+            title: 'INFO',
+            isFolder: true,
+            icon: Folder,
+            color: '#8B5CF6',
+            items: [
+                { to: '/contact', icon: MessageCircle, label: 'Contact & Info', color: '#8B5CF6', glow: 'rgba(139,92,246,0.4)' },
+            ]
+        },
     ];
 
     const NavContent = ({ onItemClick }) => (
         <div className="space-y-1 px-2">
             {/* Brand in sidebar */}
-            <div className="flex items-center gap-3.5 px-4 py-6 mb-4">
+            <div className="flex items-center gap-3.5 px-4 py-4 mb-2">
                 <div className="relative">
                     <div className="absolute inset-0 rounded-full blur-lg" style={{ background: isDark ? 'rgba(255,107,0,0.4)' : 'transparent', animation: 'glow-breathe 4s infinite' }} />
                     <img src="/malum-logo-round.png" alt="Malum" className="relative z-10 object-cover rounded-full overflow-hidden" style={{ width: '48px', height: '48px', clipPath: 'circle(50%)', filter: isDark ? 'drop-shadow(0 0 12px rgba(255,107,0,0.6))' : 'none' }} />
@@ -396,12 +380,12 @@ export default function Layout() {
                 </div>
             </div>
 
-            <div style={{ height: '1px', background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)', marginBottom: '16px', marginInline: '16px' }} />
+            <div style={{ height: '1px', background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)', marginBottom: '8px', marginInline: '16px' }} />
 
             {navGroups.map((group, groupIdx) => {
                 const isOpen = openFolders.includes(group.title);
                 return (
-                    <div key={group.title} className="mb-4 last:mb-0">
+                    <div key={group.title} className="mb-1.5 last:mb-0">
                         {group.isFolder ? (
                             <button
                                 onClick={() => toggleFolder(group.title)}
@@ -442,7 +426,7 @@ export default function Layout() {
                                             to={item.to}
                                             onClick={onItemClick}
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3.5 px-4 py-3.5 rounded-2xl transition-all duration-300 nav-item-animate group ${isActive ? 'premium-card' : ''}`
+                                                `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 nav-item-animate group ${isActive ? 'premium-card' : ''}`
                                             }
                                             style={({ isActive }) => ({
                                                 background: isActive
@@ -614,8 +598,8 @@ export default function Layout() {
                 <SettingsPanel isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} isDark={isDark} />
 
                 {/* Main Content */}
-                <main className="flex-1 h-full overflow-y-auto custom-scrollbar relative hud-grid hud-scanline">
-                    <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20 py-10 lg:py-16">
+                <main className="flex-1 h-full overflow-y-auto custom-scrollbar relative">
+                    <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20 py-8 lg:py-12">
                         <SectionNav navGroups={navGroups} isDark={isDark} />
                         <Outlet />
                     </div>

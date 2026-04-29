@@ -647,13 +647,13 @@ export default function CollegeAI() {
 
       <div className="relative z-10 max-w-6xl mx-auto p-6 md:p-10 space-y-6">
         {/* Header */}
-        <header className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#8B5CF6,#6366F1)', boxShadow: '0 0 30px rgba(139,92,246,0.5)' }}>
-            <GraduationCap className="w-7 h-7 text-white" />
+        <header className="page-header">
+          <div className="page-header-icon" style={{ background: 'linear-gradient(135deg,#8B5CF6,#6366F1)' }}>
+            <GraduationCap className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-black malum-text-gradient">College AI</h1>
-            <p className="text-sm theme-text-secondary font-medium">Track, write, and perfect your college applications</p>
+            <h1 className="page-header-title malum-text-gradient">College AI</h1>
+            <p className="page-header-subtitle">Track, write, and perfect your applications</p>
           </div>
         </header>
 
@@ -675,16 +675,11 @@ export default function CollegeAI() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 p-1 rounded-2xl theme-bg-elevated border theme-border overflow-x-auto">
+        <div className="mini-nav">
           {tabs.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-sm font-black transition-all whitespace-nowrap min-w-fit"
-              style={{
-                background: activeTab === tab.id ? 'linear-gradient(135deg,rgba(139,92,246,0.15),rgba(99,102,241,0.08))' : 'transparent',
-                color: activeTab === tab.id ? '#8B5CF6' : 'var(--text-secondary)',
-                boxShadow: activeTab === tab.id ? 'inset 0 0 0 1px rgba(139,92,246,0.3)' : 'none',
-              }}>
-              <tab.icon className="w-4 h-4" /><span className="hidden sm:inline">{tab.label}</span><span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+              className={`mini-nav-item ${activeTab === tab.id ? 'active' : ''}`}>
+              <tab.icon className="nav-icon" /><span className="hidden sm:inline">{tab.label}</span><span className="sm:hidden">{tab.label.split(' ')[0]}</span>
             </button>
           ))}
         </div>

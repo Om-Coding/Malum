@@ -252,7 +252,7 @@ const MalumHomePage = () => {
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 malum-fadeInUp stagger-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8 malum-fadeInUp stagger-4">
               <button
                 onClick={() => navigate('/study')}
                 className="btn-primary ripple"
@@ -401,7 +401,7 @@ const MalumHomePage = () => {
                       {/* Content */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3 mb-2 flex-wrap">
-                          <h3 className="text-2xl md:text-3xl font-black theme-text premium-heading group-hover:translate-x-1 transition-transform duration-300">
+                          <h3 className="text-2xl md:text-3xl font-black theme-text premium-heading group-hover:translate-x-1 transition-transform duration-300 m-0 leading-none">
                             {feature.title}
                           </h3>
                           {feature.badge && (
@@ -509,6 +509,7 @@ const MalumHomePage = () => {
         </section>
 
       </div>
+      <div className="h-24" /> {/* Extra bottom padding to prevent clipping */}
     </div>
   );
 };

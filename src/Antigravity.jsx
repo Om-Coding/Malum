@@ -244,17 +244,11 @@ Format in clean markdown.\n\nTopic: ${q}`,
         )}
 
         <div className="space-y-3">
-          <div className="flex gap-2 flex-wrap">
+          <div className="mini-nav" style={{ flexWrap: 'wrap' }}>
             {modes.map(m => (
               <button key={m.id} onClick={() => setMode(m.id)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black transition-all hover:scale-105"
-                style={{
-                  background: mode === m.id ? 'var(--bg-active-faint)' : 'var(--bg-faint)',
-                  border: `1px solid ${mode === m.id ? 'var(--border-active)' : 'var(--border-faint)'}`,
-                  color: mode === m.id ? 'var(--accent-color)' : 'var(--text-faint-muted)',
-                  boxShadow: mode === m.id ? '0 0 12px var(--accent-shadow)' : 'none',
-                }}>
-                <m.icon className="w-3.5 h-3.5" />
+                className={`mini-nav-item ${mode === m.id ? 'active' : ''}`}>
+                <m.icon className="nav-icon" />
                 {m.label}
               </button>
             ))}
