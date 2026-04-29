@@ -201,7 +201,7 @@ export default function Classroom() {
           style={{ bottom: '100px', left: '-80px', background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)', filter: 'blur(40px)' }} />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto p-8 md:p-14 space-y-12">
+      <div className="relative z-10 max-w-screen-xl mx-auto p-6 md:p-10 xl:p-14 space-y-10">
 
         {/* HEADER */}
         <header className="malum-fadeInUp">
@@ -382,13 +382,54 @@ export default function Classroom() {
                 <p className="text-gray-500 text-xs font-black uppercase tracking-widest">Synchronizing Assignments...</p>
               </div>
             ) : assignments.length === 0 ? (
-              <div className="text-center py-12 theme-bg-elevated border theme-border rounded-xl relative overflow-hidden">
-                <div className="relative z-10">
-                  <div className="w-10 h-10 mx-auto mb-4 rounded-full border border-orange-500/20 flex items-center justify-center">
-                    <CheckSquare className="w-5 h-5 text-orange-500" />
+              <div className="malum-fadeInUp">
+                {/* Hero empty state */}
+                <div className="rounded-3xl p-10 md:p-14 text-center relative overflow-hidden"
+                  style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.07), rgba(139,92,246,0.05))', border: '1px solid rgba(59,130,246,0.15)' }}>
+                  <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl">
+                    <div className="absolute -top-16 -right-16 w-52 h-52 rounded-full"
+                      style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)', filter: 'blur(24px)' }} />
+                    <div className="absolute -bottom-16 -left-16 w-52 h-52 rounded-full"
+                      style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)', filter: 'blur(24px)' }} />
                   </div>
-                  <p className="text-lg font-bold theme-text mb-1">All clear! 🎉</p>
-                  <p className="text-xs font-medium theme-text-muted max-w-xs mx-auto">When your teacher assigns work, it'll appear here.</p>
+                  <div className="relative z-10">
+                    <div className="w-20 h-20 mx-auto rounded-3xl flex items-center justify-center mb-6"
+                      style={{ background: 'linear-gradient(135deg, #3B82F6, #06B6D4)', boxShadow: '0 0 40px rgba(59,130,246,0.4)' }}>
+                      <GraduationCap className="w-10 h-10 text-white" />
+                    </div>
+                    <h3 className="text-2xl md:text-3xl font-black theme-text mb-3">No assignments yet!</h3>
+                    <p className="theme-text-secondary font-medium mb-8 max-w-sm mx-auto leading-relaxed">
+                      Your workspace is fresh and ready. Ask your teacher to assign work, or join a class below to get started.
+                    </p>
+                    <button
+                      onClick={() => setShowJoinModal(true)}
+                      className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-white font-black text-sm transition-all hover:scale-105 mx-auto"
+                      style={{ background: 'linear-gradient(135deg, #3B82F6, #06B6D4)', boxShadow: '0 4px 24px rgba(59,130,246,0.4)' }}>
+                      <UserPlus className="w-5 h-5" />
+                      Join Your First Class
+                    </button>
+                  </div>
+                </div>
+
+                {/* Step guide */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  {[
+                    { step: '01', icon: Hash, title: 'Get a Join Code', desc: 'Ask your teacher for the 6-character class join code.', color: '#3B82F6' },
+                    { step: '02', icon: UserPlus, title: 'Join the Class', desc: 'Click "Join a Class" above and enter the code to enroll instantly.', color: '#8B5CF6' },
+                    { step: '03', icon: CheckCircle2, title: 'See Your Work', desc: 'Assignments your teacher posts will appear here automatically.', color: '#10B981' },
+                  ].map((s, i) => (
+                    <div key={i} className="premium-card p-6 flex gap-4 items-start">
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                        style={{ background: `${s.color}15` }}>
+                        <s.icon className="w-5 h-5" style={{ color: s.color }} />
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-black uppercase tracking-widest theme-text-muted block mb-0.5">Step {s.step}</span>
+                        <h4 className="text-base font-black theme-text mb-1">{s.title}</h4>
+                        <p className="text-sm theme-text-muted leading-relaxed">{s.desc}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             ) : (
