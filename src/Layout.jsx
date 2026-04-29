@@ -339,9 +339,6 @@ export default function Layout() {
             color: '#8B5CF6',
             items: [
                 { to: '/study', icon: BookOpen, label: 'Study Corner', color: '#8B5CF6', glow: 'rgba(139,92,246,0.4)' },
-                { to: '/college', icon: Brain, label: 'College AI', color: '#8B5CF6', glow: 'rgba(139,92,246,0.4)' },
-                { to: '/antigravity', icon: Atom, label: 'Antigravity', color: '#6366F1', glow: 'rgba(99,102,241,0.4)' },
-                { to: '/khan', icon: Award, label: 'Learning Corner', color: '#EC4899', glow: 'rgba(236,72,153,0.4)' },
             ]
         },
         {
@@ -350,7 +347,6 @@ export default function Layout() {
             icon: Folder,
             color: '#F97316',
             items: [
-                { to: '/games', icon: Gamepad2, label: 'Study Games', color: '#F97316', glow: 'rgba(249,115,22,0.4)' },
                 ...(isTeacher ? [{ to: '/teacher', icon: GraduationCap, label: 'Teacher Dashboard', color: '#06B6D4', glow: 'rgba(6,182,212,0.4)' }] : []),
                 { to: '#settings', icon: Settings, label: 'Settings', isAction: true, color: '#6366F1', glow: 'rgba(99,102,241,0.4)' },
             ]
