@@ -385,11 +385,11 @@ export default function Layout() {
             {navGroups.map((group, groupIdx) => {
                 const isOpen = openFolders.includes(group.title);
                 return (
-                    <div key={group.title} className="mb-1.5 last:mb-0">
+                    <div key={group.title} className="mb-0.5 last:mb-0">
                         {group.isFolder ? (
                             <button
                                 onClick={() => toggleFolder(group.title)}
-                                className="w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all group hover:bg-white/5 mb-1"
+                                className="w-full flex items-center gap-3 px-3 py-1.5 rounded-xl transition-all group hover:bg-white/5"
                                 style={{ color: group.color }}
                             >
                                 <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-all group-hover:scale-110 flex-shrink-0"
@@ -406,7 +406,7 @@ export default function Layout() {
                                 {group.title}
                             </p>
                         )}
-                        <div className={`space-y-1 transition-all duration-300 overflow-hidden ${isOpen || !group.isFolder ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                        <div className={`space-y-1 transition-all duration-300 overflow-hidden ${isOpen || !group.isFolder ? 'max-h-[500px] opacity-100 mt-1' : 'max-h-0 opacity-0 mt-0'}`}>
                             {group.items.map((item, i) => (
                                 <div key={item.to} className={`${group.isFolder ? 'pl-4' : ''} w-full`} style={{ animationDelay: `${(groupIdx * 4 + i) * 0.04}s` }}>
                                     {item.isAction ? (
