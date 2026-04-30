@@ -252,22 +252,38 @@ function SettingsPanel({ isOpen, onClose, isDark }) {
     );
 }
 
-function SectionNav({ navGroups, isDark }) {
+function SectionNav({ navItems, isDark }) {
     const location = useLocation();
     const currentPath = location.pathname;
 
-    // Find the group that contains the current path
-    const currentGroup = navGroups.find(group => 
-        group.items.some(item => item.to === currentPath)
-    ) || navGroups[0];
+    // Group the flat navItems by dividers
+    const groups = [];
+    let currentGroup = [];
+    for (const item of (navItems || [])) {
+        if (item.divider) {
+            if (currentGroup.length > 0) {
+                groups.push(currentGroup);
+                currentGroup = [];
+            }
+        } else if (!item.isAction) {
+            currentGroup.push(item);
+        }
+    }
+    if (currentGroup.length > 0) groups.push(currentGroup);
+
+    // Find the group containing the current path
+    const activeGroup = groups.find(group => 
+        group.some(item => item.to === currentPath)
+    ) || groups[0];
+
+    // Don't render mini-nav if the section only has one page (redundant)
+    if (!activeGroup || activeGroup.length <= 1) return null;
 
     return (
         <div className="mb-6 malum-fadeInUp" style={{ animationDelay: '0.05s' }}>
             <div className="section-nav" style={{ scrollSnapType: 'x mandatory' }}>
-                {currentGroup.items.map((item) => {
+                {activeGroup.map((item) => {
                     const isActive = currentPath === item.to;
-                    if (item.isAction) return null;
-                    
                     return (
                         <NavLink
                             key={item.to}
@@ -538,7 +554,7 @@ export default function Layout() {
                 {/* Main Content */}
                 <main className="flex-1 h-full overflow-y-auto custom-scrollbar relative">
                     <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20 py-8 lg:py-12">
-                        <SectionNav navGroups={navGroups} isDark={isDark} />
+                        <SectionNav navItems={navItems} isDark={isDark} />
                         <Outlet />
                     </div>
                 </main>
