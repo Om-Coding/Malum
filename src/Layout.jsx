@@ -292,11 +292,7 @@ export default function Layout() {
     const [scrolled, setScrolled] = useState(false);
     const { theme, toggleTheme } = useTheme();
     const isDark = theme === 'dark';
-    const [openFolders, setOpenFolders] = useState(['Study', 'EXTRA', 'INFO']); // Folders open by default
-
-    const toggleFolder = (name) => {
-        setOpenFolders(prev => prev.includes(name) ? prev.filter(f => f !== name) : [...prev, name]);
-    };
+    const [openFolders, setOpenFolders] = useState([]); // unused, kept for safety
 
     useEffect(() => {
         setSidebarOpen(false);
@@ -322,49 +318,22 @@ export default function Layout() {
         return false;
     })();
 
-    const navGroups = [
-        {
-            title: 'MAIN',
-            items: [
-                { to: '/home', icon: Home, label: 'Home', color: '#FF6B00', glow: 'rgba(255,107,0,0.4)' },
-                { to: '/classroom', icon: Users, label: 'Classroom', color: '#3B82F6', glow: 'rgba(59,130,246,0.4)' },
-                { to: '/schedule', icon: Calendar, label: 'Schedule', color: '#F59E0B', glow: 'rgba(245,158,11,0.4)' },
-                { to: '/gradescout', icon: TrendingUp, label: 'GradeScout', color: '#10B981', glow: 'rgba(16,185,129,0.4)' },
-            ]
-        },
-        {
-            title: 'STUDY',
-            isFolder: true,
-            icon: Folder,
-            color: '#8B5CF6',
-            items: [
-                { to: '/study', icon: BookOpen, label: 'Study Corner', color: '#8B5CF6', glow: 'rgba(139,92,246,0.4)' },
-            ]
-        },
-        {
-            title: 'EXTRA',
-            isFolder: true,
-            icon: Folder,
-            color: '#F97316',
-            items: [
-                ...(isTeacher ? [{ to: '/teacher', icon: GraduationCap, label: 'Teacher Dashboard', color: '#06B6D4', glow: 'rgba(6,182,212,0.4)' }] : []),
-                { to: '#settings', icon: Settings, label: 'Settings', isAction: true, color: '#6366F1', glow: 'rgba(99,102,241,0.4)' },
-            ]
-        },
-        {
-            title: 'INFO',
-            isFolder: true,
-            icon: Folder,
-            color: '#8B5CF6',
-            items: [
-                { to: '/contact', icon: MessageCircle, label: 'Contact & Info', color: '#8B5CF6', glow: 'rgba(139,92,246,0.4)' },
-            ]
-        },
+    const navItems = [
+        { to: '/home', icon: Home, label: 'Home', color: '#FF6B00', glow: 'rgba(255,107,0,0.4)' },
+        { to: '/classroom', icon: Users, label: 'Classroom', color: '#3B82F6', glow: 'rgba(59,130,246,0.4)' },
+        { to: '/schedule', icon: Calendar, label: 'Schedule', color: '#F59E0B', glow: 'rgba(245,158,11,0.4)' },
+        { to: '/gradescout', icon: TrendingUp, label: 'GradeScout', color: '#10B981', glow: 'rgba(16,185,129,0.4)' },
+        { divider: true },
+        { to: '/study', icon: BookOpen, label: 'Study Corner', color: '#8B5CF6', glow: 'rgba(139,92,246,0.4)' },
+        { to: '/contact', icon: MessageCircle, label: 'Contact & Info', color: '#8B5CF6', glow: 'rgba(139,92,246,0.4)' },
+        { divider: true },
+        ...(isTeacher ? [{ to: '/teacher', icon: GraduationCap, label: 'Teacher Dashboard', color: '#06B6D4', glow: 'rgba(6,182,212,0.4)' }] : []),
+        { to: '#settings', icon: Settings, label: 'Settings', isAction: true, color: '#6366F1', glow: 'rgba(99,102,241,0.4)' },
     ];
 
     const NavContent = ({ onItemClick }) => (
-        <div className="space-y-1 px-2">
-            {/* Brand in sidebar */}
+        <div className="px-2">
+            {/* Brand */}
             <div className="flex items-center gap-3.5 px-4 py-4 mb-2">
                 <div className="relative">
                     <div className="absolute inset-0 rounded-full blur-lg" style={{ background: isDark ? 'rgba(255,107,0,0.4)' : 'transparent', animation: 'glow-breathe 4s infinite' }} />
@@ -378,85 +347,58 @@ export default function Layout() {
 
             <div style={{ height: '1px', background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)', marginBottom: '8px', marginInline: '16px' }} />
 
-            {navGroups.map((group, groupIdx) => {
-                const isOpen = openFolders.includes(group.title);
-                return (
-                    <div key={group.title} className="mb-0.5 last:mb-0">
-                        {group.isFolder ? (
-                            <button
-                                onClick={() => toggleFolder(group.title)}
-                                className="w-full flex items-center gap-3 px-3 py-1.5 rounded-xl transition-all group hover:bg-white/5"
-                                style={{ color: group.color }}
-                            >
-                                <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-all group-hover:scale-110 flex-shrink-0"
-                                    style={{ background: `${group.color}15` }}>
-                                    <group.icon className="h-4 w-4" style={{ color: group.color }} />
-                                </div>
-                                <span className="font-black text-[10px] tracking-[0.2em] flex-1 text-left uppercase">
-                                    {group.title}
-                                </span>
-                                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
-                            </button>
-                        ) : (
-                            <p className="px-4 mb-2 text-[10px] font-black theme-text-muted tracking-[0.2em] opacity-40">
-                                {group.title}
-                            </p>
-                        )}
-                        <div className={`space-y-1 transition-all duration-300 overflow-hidden ${isOpen || !group.isFolder ? 'max-h-[500px] opacity-100 mt-1' : 'max-h-0 opacity-0 mt-0'}`}>
-                            {group.items.map((item, i) => (
-                                <div key={item.to} className={`${group.isFolder ? 'pl-4' : ''} w-full`} style={{ animationDelay: `${(groupIdx * 4 + i) * 0.04}s` }}>
-                                    {item.isAction ? (
-                                        <button
-                                            onClick={() => { onItemClick(); setSettingsOpen(true); }}
-                                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all nav-item-animate group"
-                                            style={{ color: 'var(--text-secondary)' }}
-                                        >
-                                            <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-all group-hover:scale-110"
-                                                style={{ background: `${item.color}18` }}>
-                                                <item.icon className="h-4 w-4" style={{ color: item.color }} />
-                                            </div>
-                                            <span className="font-semibold text-sm flex-1 text-left">{item.label}</span>
-                                        </button>
-                                    ) : (
-                                        <NavLink
-                                            to={item.to}
-                                            onClick={onItemClick}
-                                            className={({ isActive }) =>
-                                                `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 nav-item-animate group ${isActive ? 'premium-card' : ''}`
-                                            }
-                                            style={({ isActive }) => ({
-                                                background: isActive
-                                                    ? `linear-gradient(135deg, ${item.color}1a, ${item.color}05)`
-                                                    : 'transparent',
-                                                color: isActive 
-                                                    ? 'white' 
-                                                    : 'var(--text-secondary)',
-                                                border: isActive ? `1px solid ${item.color}40` : '1px solid transparent',
-                                            })}
-                                        >
-                                            {({ isActive }) => (
-                                                <>
-                                                    <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 flex-shrink-0"
-                                                        style={{
-                                                            background: isActive ? item.color : `${item.color}15`,
-                                                            boxShadow: (isDark && isActive) ? `0 0 20px ${item.glow}` : 'none',
-                                                        }}>
-                                                        <item.icon className="h-4 w-4" style={{ color: isActive ? 'white' : item.color, filter: (isDark && isActive) ? `drop-shadow(0 0 4px rgba(255,255,255,0.5))` : 'none' }} />
-                                                    </div>
-                                                    <span className={`font-bold text-sm flex-1 ${isActive ? 'premium-glow-text' : ''}`}>{item.label}</span>
-                                                    {isActive && (
-                                                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.color, boxShadow: `0 0 12px ${item.color}`, animation: 'pulse-glow 2s infinite', flexShrink: 0 }} />
-                                                    )}
-                                                </>
-                                            )}
-                                        </NavLink>
+            <div className="space-y-0.5">
+                {navItems.map((item, i) => {
+                    if (item.divider) return (
+                        <div key={`div-${i}`} style={{ height: '1px', background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.05)', margin: '6px 12px' }} />
+                    );
+                    if (item.isAction) return (
+                        <button
+                            key={item.to}
+                            onClick={() => { onItemClick(); setSettingsOpen(true); }}
+                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all nav-item-animate group"
+                            style={{ color: 'var(--text-secondary)' }}
+                        >
+                            <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all group-hover:scale-110"
+                                style={{ background: `${item.color}18` }}>
+                                <item.icon className="h-4 w-4" style={{ color: item.color }} />
+                            </div>
+                            <span className="font-bold text-sm flex-1 text-left">{item.label}</span>
+                        </button>
+                    );
+                    return (
+                        <NavLink
+                            key={item.to}
+                            to={item.to}
+                            onClick={onItemClick}
+                            className={({ isActive }) =>
+                                `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 nav-item-animate group ${isActive ? 'premium-card' : ''}`
+                            }
+                            style={({ isActive }) => ({
+                                background: isActive ? `linear-gradient(135deg, ${item.color}1a, ${item.color}05)` : 'transparent',
+                                color: isActive ? 'white' : 'var(--text-secondary)',
+                                border: isActive ? `1px solid ${item.color}40` : '1px solid transparent',
+                            })}
+                        >
+                            {({ isActive }) => (
+                                <>
+                                    <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 flex-shrink-0"
+                                        style={{
+                                            background: isActive ? item.color : `${item.color}15`,
+                                            boxShadow: (isDark && isActive) ? `0 0 20px ${item.glow}` : 'none',
+                                        }}>
+                                        <item.icon className="h-4 w-4" style={{ color: isActive ? 'white' : item.color, filter: (isDark && isActive) ? `drop-shadow(0 0 4px rgba(255,255,255,0.5))` : 'none' }} />
+                                    </div>
+                                    <span className={`font-bold text-sm flex-1 ${isActive ? 'premium-glow-text' : ''}`}>{item.label}</span>
+                                    {isActive && (
+                                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.color, boxShadow: `0 0 12px ${item.color}`, animation: 'pulse-glow 2s infinite', flexShrink: 0 }} />
                                     )}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                );
-            })}
+                                </>
+                            )}
+                        </NavLink>
+                    );
+                })}
+            </div>
         </div>
     );
 
