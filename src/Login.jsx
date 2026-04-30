@@ -298,24 +298,67 @@ const MalumLogin = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const localFallback = () => {
-    if (formData.email && formData.password) {
-      localStorage.setItem('user', JSON.stringify({
-        email: formData.email,
-        name: formData.name || formData.email.split('@')[0],
-        role,
-      }));
-      if (formData.gradingUrl) {
-        let url = formData.gradingUrl.trim();
-        if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-        localStorage.setItem('classroom_grading_url', url);
-      }
-      setLoading(false);
-      navigate('/home');
-    } else {
-      setError('Please enter your email and password.');
-      setLoading(false);
+  // ── Local auth helpers ──────────────────────────────────────────
+  // Simple but effective: store a salted hash in localStorage so
+  // login works even when the Render backend is sleeping/wiped.
+  const localKey = 'malum_local_users';
+
+  const getLocalUsers = () => {
+    try { return JSON.parse(localStorage.getItem(localKey) || '[]'); } catch { return []; }
+  };
+
+  // Very simple hash (not bcrypt, but good enough for local storage auth)
+  const simpleHash = async (str) => {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str + 'malum_salt'));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  };
+
+  const localSignup = async () => {
+    const { email, password, confirmPassword, name } = formData;
+    if (!email || !password) { setError('Email and password are required.'); setLoading(false); return; }
+    if (password !== confirmPassword) { setError('Passwords do not match.'); setLoading(false); return; }
+    if (password.length < 6) { setError('Password must be at least 6 characters.'); setLoading(false); return; }
+
+    const users = getLocalUsers();
+    if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+      setError('Email already registered. Please log in instead.'); setLoading(false); return;
     }
+
+    const hash = await simpleHash(password);
+    const newUser = { email: email.toLowerCase(), name: name || email.split('@')[0], passwordHash: hash, role: role || 'student' };
+    users.push(newUser);
+    localStorage.setItem(localKey, JSON.stringify(users));
+
+    // Also store as active user
+    localStorage.setItem('user', JSON.stringify({ email: newUser.email, name: newUser.name, role: newUser.role }));
+    if (formData.gradingUrl) {
+      let url = formData.gradingUrl.trim();
+      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+      localStorage.setItem('classroom_grading_url', url);
+    }
+    setLoading(false);
+    navigate('/home');
+  };
+
+  const localLogin = async () => {
+    const { email, password } = formData;
+    if (!email || !password) { setError('Please enter your email and password.'); setLoading(false); return; }
+
+    const users = getLocalUsers();
+    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    if (!user) { setError('No account found. Please sign up first.'); setLoading(false); return; }
+
+    const hash = await simpleHash(password);
+    if (hash !== user.passwordHash) { setError('Incorrect password.'); setLoading(false); return; }
+
+    localStorage.setItem('user', JSON.stringify({ email: user.email, name: user.name, role: user.role }));
+    if (formData.gradingUrl) {
+      let url = formData.gradingUrl.trim();
+      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+      localStorage.setItem('classroom_grading_url', url);
+    }
+    setLoading(false);
+    navigate('/home');
   };
 
   const handleSubmit = async (e) => {
@@ -325,54 +368,60 @@ const MalumLogin = () => {
 
     const apiRoot = import.meta.env.VITE_API_URL;
 
-    // No backend configured — use local storage fallback directly
-    if (!apiRoot) {
-      localFallback();
-      return;
+    // Try backend first if configured; on ANY failure fall back to local auth
+    if (apiRoot) {
+      try {
+        const endpoint = isLogin ? '/api/auth/login' : '/api/auth/signup';
+        const body = isLogin
+          ? { email: formData.email, password: formData.password }
+          : { name: formData.name, email: formData.email, password: formData.password, confirmPassword: formData.confirmPassword, role };
+
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 6000);
+        const res = await fetch(`${apiRoot}${endpoint}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+          signal: controller.signal,
+        });
+        clearTimeout(timeout);
+
+        if (res.ok) {
+          const data = await res.json();
+          const userRecord = { ...data.user, role: data.user.role || role };
+          localStorage.setItem('user', JSON.stringify(userRecord));
+          if (formData.gradingUrl) {
+            let url = formData.gradingUrl.trim();
+            if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+            localStorage.setItem('classroom_grading_url', url);
+          }
+          // Also save to local store so future logins work offline
+          if (!isLogin) {
+            const hash = await simpleHash(formData.password);
+            const users = getLocalUsers();
+            if (!users.some(u => u.email.toLowerCase() === formData.email.toLowerCase())) {
+              users.push({ email: formData.email.toLowerCase(), name: formData.name || formData.email.split('@')[0], passwordHash: hash, role: role || 'student' });
+              localStorage.setItem(localKey, JSON.stringify(users));
+            }
+          }
+          setLoading(false);
+          navigate('/home');
+          return;
+        }
+        // Backend returned an error → fall through to local auth
+      } catch {
+        // Network error / timeout → fall through to local auth
+      }
     }
 
-    try {
-      const endpoint = isLogin ? '/api/auth/login' : '/api/auth/signup';
-      const body = isLogin
-        ? { email: formData.email, password: formData.password }
-        : { name: formData.name, email: formData.email, password: formData.password, confirmPassword: formData.confirmPassword, role };
-
-      // 8-second timeout — prevents hanging on Vercel when backend is slow/down
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000);
-
-      const res = await fetch(`${apiRoot}${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-        signal: controller.signal,
-      });
-      clearTimeout(timeout);
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || 'Something went wrong.');
-        setLoading(false);
-        return;
-      }
-
-      const userRecord = { ...data.user, role: data.user.role || role };
-      localStorage.setItem('user', JSON.stringify(userRecord));
-
-      if (formData.gradingUrl) {
-        let url = formData.gradingUrl.trim();
-        if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-        localStorage.setItem('classroom_grading_url', url);
-      }
-
-      setLoading(false);
-      navigate('/home');
-    } catch (err) {
-      // Backend unreachable or timed out — fall back to local
-      localFallback();
+    // Local-first auth (always works, even offline)
+    if (isLogin) {
+      await localLogin();
+    } else {
+      await localSignup();
     }
   };
+
 
 
   /* ── Role Picker screen ── */
