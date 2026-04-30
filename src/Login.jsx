@@ -298,10 +298,38 @@ const MalumLogin = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const localFallback = () => {
+    if (formData.email && formData.password) {
+      localStorage.setItem('user', JSON.stringify({
+        email: formData.email,
+        name: formData.name || formData.email.split('@')[0],
+        role,
+      }));
+      if (formData.gradingUrl) {
+        let url = formData.gradingUrl.trim();
+        if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+        localStorage.setItem('classroom_grading_url', url);
+      }
+      setLoading(false);
+      navigate('/home');
+    } else {
+      setError('Please enter your email and password.');
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    const apiRoot = import.meta.env.VITE_API_URL;
+
+    // No backend configured — use local storage fallback directly
+    if (!apiRoot) {
+      localFallback();
+      return;
+    }
 
     try {
       const endpoint = isLogin ? '/api/auth/login' : '/api/auth/signup';
@@ -309,12 +337,18 @@ const MalumLogin = () => {
         ? { email: formData.email, password: formData.password }
         : { name: formData.name, email: formData.email, password: formData.password, confirmPassword: formData.confirmPassword, role };
 
-      const apiRoot = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      // 8-second timeout — prevents hanging on Vercel when backend is slow/down
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000);
+
       const res = await fetch(`${apiRoot}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
+        signal: controller.signal,
       });
+      clearTimeout(timeout);
+
       const data = await res.json();
 
       if (!res.ok) {
@@ -323,7 +357,6 @@ const MalumLogin = () => {
         return;
       }
 
-      // Ensure role is honoured (login returns stored role; signup uses selected role)
       const userRecord = { ...data.user, role: data.user.role || role };
       localStorage.setItem('user', JSON.stringify(userRecord));
 
@@ -336,26 +369,11 @@ const MalumLogin = () => {
       setLoading(false);
       navigate('/home');
     } catch (err) {
-      // Fallback: backend offline → store locally (dev mode)
-      if (formData.email && formData.password) {
-        localStorage.setItem('user', JSON.stringify({
-          email: formData.email,
-          name: formData.name || formData.email.split('@')[0],
-          role,
-        }));
-        if (formData.gradingUrl) {
-          let url = formData.gradingUrl.trim();
-          if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-          localStorage.setItem('classroom_grading_url', url);
-        }
-        setLoading(false);
-        navigate('/home');
-        return;
-      }
-      setError('Could not reach server. Make sure the backend is running.');
-      setLoading(false);
+      // Backend unreachable or timed out — fall back to local
+      localFallback();
     }
   };
+
 
   /* ── Role Picker screen ── */
   if (step === 'role') return <RolePicker onSelect={handleRoleSelect} />;
